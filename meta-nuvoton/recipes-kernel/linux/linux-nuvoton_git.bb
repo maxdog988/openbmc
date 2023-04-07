@@ -4,7 +4,7 @@ SRCREV:npcm7xx = "91140a4c93b3d314a2865059645d7d57e5ec6e1e"
 
 KBRANCH:npcm8xx = "NPCM-6.1-OpenBMC"
 LINUX_VERSION:npcm8xx = "6.1.12"
-SRCREV:npcm8xx = "c84e3090cebe5c889d61859b24a357928bfbae00"
+SRCREV:npcm8xx = "7724f353addf6f186e2dc096b32740bafa1fab94"
 
 require linux-nuvoton.inc
 
