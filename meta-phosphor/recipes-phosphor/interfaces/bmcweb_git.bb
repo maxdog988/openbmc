@@ -12,7 +12,7 @@ DEPENDS = " \
     ${@bb.utils.contains('PTEST_ENABLED', '1', 'gtest', '', d)} \
     ${@bb.utils.contains('PTEST_ENABLED', '1', 'gmock', '', d)} \
 "
-SRCREV = "6c3e94511027133db407f9e1c3c628927ec1332f"
+SRCREV = "df7f12f0d4111a4646d5cad261473894676df132"
 PV = "1.0+git${SRCPV}"
 
 SRC_URI = "git://github.com/openbmc/bmcweb.git;branch=master;protocol=https"
@@ -48,5 +48,5 @@ USERADD_PACKAGES = "${PN}"
 # add a user called httpd for the server to assume
 USERADD_PARAM:${PN} = "-r -s /sbin/nologin bmcweb"
 
-GROUPADD_PARAM:${PN} = "web; redfish"
+GROUPADD_PARAM:${PN} = "web; redfish; hostconsole"
 FULL_OPTIMIZATION:append = " -Os"

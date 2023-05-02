@@ -16,7 +16,7 @@ DEPENDS += "libcereal"
 DEPENDS += "sdeventplus"
 DEPENDS += "packagegroup-obmc-yaml-providers"
 DEPENDS += "dbus"
-SRCREV = "9f5c7349233ee7f2d52d893409d00bac68558958"
+SRCREV = "e340325b66fe62b00706ab50d58ad4c00c7425eb"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[openpower-pels] = " \
         -Dopenpower-pel-extension=enabled, \
@@ -27,7 +27,7 @@ PACKAGECONFIG[openpower-pels] = " \
 PV = "1.0+git${SRCPV}"
 PR = "r1"
 
-SRC_URI += "git://github.com/openbmc/phosphor-logging;branch=master;protocol=https"
+SRC_URI = "git://github.com/openbmc/phosphor-logging;branch=master;protocol=https"
 
 SYSTEMD_PACKAGES = "${LOGGING_PACKAGES}"
 S = "${WORKDIR}/git"

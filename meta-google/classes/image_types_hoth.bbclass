@@ -3,11 +3,14 @@
 FLASH_IMAGE_DESC_OFFSET:hoth = "${@960 if FLASH_SIZE == '65536' else 7232}"
 FLASH_HOTH_UPDATE_OFFSET:hoth = "${@1024 if FLASH_SIZE == '65536' else 31744}"
 FLASH_HOTH_MAILBOX_OFFSET:hoth = "${@65472 if FLASH_SIZE == '65536' else 7168}"
-unset FLASH_UBOOT_ENV_OFFSET
+FLASH_HOTH_SECONDARY_OFFSET:hoth = "${@61376 if FLASH_SIZE == '65536' else 7296}"
 
 # 64 bit kernels are larger, so they require a different layout
 FLASH_IMAGE_DESC_OFFSET:hoth:aarch64 = "${@61312 if FLASH_SIZE == '65536' else 7232}"
 FLASH_HOTH_UPDATE_OFFSET:hoth:aarch64 = "${@61376 if FLASH_SIZE == '65536' else 31744}"
+
+# Leave a zero-size u-boot env partition.
+FLASH_UBOOT_ENV_OFFSET = "${FLASH_KERNEL_OFFSET}"
 
 python do_generate_static:append() {
     _append_image(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
@@ -110,9 +113,13 @@ python do_generate_layout () {
             convertPart(
                     'rofs',
                     d.getVar('FLASH_ROFS_OFFSET'),
-                    d.getVar('FLASH_RWFS_OFFSET'),
+                    d.getVar('FLASH_HOTH_SECONDARY_OFFSET'),
                     static=True,
                     wp=True),
+            convertPart(
+                    'hoth_secondary',
+                    d.getVar('FLASH_HOTH_SECONDARY_OFFSET'),
+                    d.getVar('FLASH_RWFS_OFFSET')),
             convertPart(
                     'rwfs',
                     d.getVar('FLASH_RWFS_OFFSET'),

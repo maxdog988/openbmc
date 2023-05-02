@@ -18,11 +18,11 @@ DEPENDS += "cli11"
 DEPENDS += "libmapper"
 DEPENDS += "systemd"
 DEPENDS += "phosphor-ipmi-host"
-SRCREV = "6d206811c91cd13d75d110ad173202ebef1dc731"
+SRCREV = "e81b7c9d1aa571694200cc2afdca238cb23a7442"
 PV = "1.0+git${SRCPV}"
 PR = "r1"
 
-SRC_URI += "git://github.com/openbmc/phosphor-net-ipmid;branch=master;protocol=https"
+SRC_URI = "git://github.com/openbmc/phosphor-net-ipmid;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 # install parameterized service and socket files
@@ -33,6 +33,10 @@ SYSTEMD_SERVICE:${PN} = " \
 
 inherit meson pkgconfig
 inherit systemd
+
+PACKAGECONFIG ??= "pam-authenticate rmcp-ping"
+PACKAGECONFIG[rmcp-ping] = "-Drmcp_ping=enabled,-Drmcp_ping=disabled"
+PACKAGECONFIG[pam-authenticate] = "-Dpam_authenticate=enabled,-Dpam_authenticate=disabled"
 
 EXTRA_OEMESON = " \
         -Dtests=disabled \

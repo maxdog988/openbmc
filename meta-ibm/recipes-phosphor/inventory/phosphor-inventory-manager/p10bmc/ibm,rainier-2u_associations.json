@@ -733,6 +733,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cpu0_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "power_managed_by",
+                        "fType": "power_managing"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/control/occ0"
+                    ]
                 }
             ]
         },
@@ -760,6 +771,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cpu0_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "power_managed_by",
+                        "fType": "power_managing"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/control/occ1"
                     ]
                 }
             ]
@@ -789,6 +811,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cpu1_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "power_managed_by",
+                        "fType": "power_managing"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/control/occ2"
+                    ]
                 }
             ]
         },
@@ -816,6 +849,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cpu1_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "power_managed_by",
+                        "fType": "power_managing"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/control/occ3"
                     ]
                 }
             ]
@@ -2282,6 +2326,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cablecard0_cxp_top_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
+                    ]
                 }
             ]
         },
@@ -2309,6 +2364,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cablecard0_cxp_bot_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
                     ]
                 }
             ]
@@ -2338,6 +2404,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cablecard3_cxp_top_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
+                    ]
                 }
             ]
         },
@@ -2365,6 +2442,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cablecard3_cxp_bot_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
                     ]
                 }
             ]
@@ -2394,6 +2482,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cablecard4_cxp_top_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
+                    ]
                 }
             ]
         },
@@ -2421,6 +2520,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cablecard4_cxp_bot_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
                     ]
                 }
             ]
@@ -2450,6 +2560,17 @@
                     [
                         "/xyz/openbmc_project/led/groups/cablecard10_cxp_top_identify"
                     ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
+                    ]
                 }
             ]
         },
@@ -2477,6 +2598,17 @@
                     "paths":
                     [
                         "/xyz/openbmc_project/led/groups/cablecard10_cxp_bot_identify"
+                    ]
+                },
+                {
+                    "types":
+                    {
+                        "rType": "inventory",
+                        "fType": "chassis"
+                    },
+                    "paths":
+                    [
+                        "/xyz/openbmc_project/inventory/system/chassis"
                     ]
                 }
             ]
