@@ -45,6 +45,7 @@ Please submit any patches against the meta-evb-npcm845 layer to the maintainer o
   * [FIU](#fiu)
   * [Network](#network)
   * [I3C](#i3c)
+    + [I3C Slave](#i3c-slave)
   * [JTAG Master](#jtag-master)
   * [SMBus](#smbus)
   * [ESPI](#espi)
@@ -899,6 +900,40 @@ Success on message 0
   received data:
     0x40
 ```
+
+### I3C Slave
+
+This section will describe how to test i3c master/slave on the EVB by running mctp over i3c applications.
+- Connect EVB I3C0 to I3C4. I3C0 is slave, I3C4 is master
+  * wire J_I3C.1 to J_I3c.9
+  * wire J_I3c.2 to J_I3C.10
+
+- Modify [linux-nuvoton_6.1%.bbappend](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_6.1%25.bbappend) to include below patch and config.
+```
+SRC_URI:append:evb-npcm845 = " file://0001-dts-i3c-slave.patch"
+SRC_URI:append:evb-npcm845 = " file://i3c_mctp.cfg"
+```
+
+- Enter Openbmc, there will be 2 mctp device nodes. i3c-mctp-0 is the device node of I3C master, i3c-mctp-target-0 is the device node of I3C slave.
+```
+root@evb-npcm845:~# ls /dev/i3c-mctp*
+/dev/i3c-mctp-0         /dev/i3c-mctp-target-0
+```
+
+- [mctp test applications](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-phosphor/libmctp)
+
+- Start the mctp daemon, the daemon will echo the received messages to the sender, like an echo server.
+```
+root@evb-npcm845:~# mctp-npcmi3c-daemon -p /dev/i3c-mctp-target-0 -e 32&
+```
+
+- Run the mctp test application, it will send message to mctp daemon and receive the response. If the received message is same as the sent message, the execution result will show "test complete"
+```
+root@evb-npcm845:~# test_npcmi3c -p /dev/i3c-mctp-0 -e 8 -d 32
+mctp_npcmi3c_daemon test
+mctp_npcmi3c_daemon test complete
+```
+
 ## JTAG Master
 
 The EVB has JTAG Master 1 interface on the J_JTAGM header.
