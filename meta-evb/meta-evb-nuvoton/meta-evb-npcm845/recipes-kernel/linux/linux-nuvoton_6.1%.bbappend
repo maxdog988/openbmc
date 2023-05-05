@@ -12,3 +12,7 @@ SRC_URI:append:evb-npcm845 = " file://0015-dts-add-reserved-memory.patch"
 # for i3c slave test
 # SRC_URI:append:evb-npcm845 = " file://0001-dts-i3c-slave.patch"
 # SRC_URI:append:evb-npcm845 = " file://i3c_mctp.cfg"
+
+# for mctp i2c test
+# SRC_URI:append:evb-npcm845 = " file://0001-dts-mctp-i2c-controller.patch"
+# SRC_URI:append:evb-npcm845 = " file://mctp.cfg"
