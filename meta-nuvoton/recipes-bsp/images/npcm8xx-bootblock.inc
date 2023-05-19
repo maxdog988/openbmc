@@ -4,19 +4,22 @@ HOMEPAGE = "https://github.com/Nuvoton-Israel/npcm8xx-bootblock"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-FILENAME = "arbel_a35_bootblock_${PV}.bin"
+BB_TIP = "arbel_a35_bootblock.bin"
+BB_NO_TIP = "arbel_a35_bootblock_no_tip.bin"
 
 S = "${WORKDIR}/git"
 
 SRC_URI = " \
-    git://github.com/Nuvoton-Israel/npcm8xx-bootblock;branch=main;protocol=https \
-    https://github.com/Nuvoton-Israel/npcm8xx-bootblock/releases/download/${RELEASE}/arbel_a35_bootblock.${PV}.bin;downloadfilename=${FILENAME};name=bin \
-"
+    git://github.com/Nuvoton-Israel/npcm8xx-bootblock;branch=main;protocol=https"
 
 inherit deploy
 
 do_deploy () {
-	install -D -m 644 ${WORKDIR}/${FILENAME} ${DEPLOYDIR}/arbel_a35_bootblock.bin
+    if [ "${TIP_FW}" = "True" ] ; then
+        install -D -m 644 ${OUTPUT_BB_TIP_BIN}/${BB_TIP} ${DEPLOYDIR}/${BB_TIP}
+    else
+        install -D -m 644 ${OUTPUT_BB_NO_TIP_BIN}/${BB_NO_TIP} ${DEPLOYDIR}/${BB_NO_TIP}
+    fi
 }
 
 addtask deploy before do_build after do_compile

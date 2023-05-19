@@ -1,15 +1,21 @@
 UBOOT_BINARY := "u-boot.${UBOOT_SUFFIX}"
-BOOTBLOCK = "BootBlockAndHeader.bin"
-ATF_BINARY := "bl31AndHeader.bin"
-OPTEE_BINARY := "teeAndHeader.bin"
+BB_HEADER_BINARY := "BootBlockAndHeader.bin"
+BL31_HEADER_BINARY := "bl31AndHeader.bin"
+OPTEE_HEADER_BINARY := "teeAndHeader.bin"
 KMT_TIPFW_BINARY := "Kmt_TipFwL0_Skmt_TipFwL1.bin"
 KMT_TIPFW_BB_BINARY = "Kmt_TipFw_BootBlock.bin"
 KMT_TIPFW_BB_BL31_BINARY = "Kmt_TipFw_BootBlock_BL31.bin"
 KMT_TIPFW_BB_BL31_TEE_BINARY = "Kmt_TipFw_BootBlock_BL31_Tee.bin"
 KMT_TIPFW_BB_UBOOT_BINARY = "u-boot.bin.merged"
+
+BB_BL31_BINARY = "BootBlock_BL31_no_tip.bin"
+BB_BL31_TEE_BINARY = "BootBlock_BL31_Tee_no_tip_bin.bin"
+BB_BL31_TEE_UBOOT_BINARY = "u-boot.bin.merged"
+
 FULL_SUFFIX = "full"
 MERGED_SUFFIX = "merged"
 UBOOT_SUFFIX:append = ".${MERGED_SUFFIX}"
+UBOOT_HEADER_BINARY := "${UBOOT_BINARY}.${FULL_SUFFIX}"
 
 IGPS_DIR = "${STAGING_DIR_NATIVE}/${datadir}/npcm8xx-igps"
 
@@ -17,9 +23,11 @@ BB_BIN = "arbel_a35_bootblock.bin"
 BL31_BIN = "bl31.bin"
 OPTEE_BIN = "tee.bin"
 UBOOT_BIN = "u-boot.bin"
+BB_NO_TIP_BIN = "arbel_a35_bootblock_no_tip.bin"
 
 # Align images if needed
 python do_pad_binary() {
+    TIP_FW = d.getVar('TIP_FW', True)
     def Pad_bin_file_inplace(inF, align):
         padding_size = 0
         padding_size_end = 0
@@ -33,14 +41,18 @@ python do_pad_binary() {
         infile.write(b'\x00' * padding_size)
         infile.close()
 
-    Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
+    if TIP_FW == "True":
+        Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
         '%s' % d.getVar('BB_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
+    else:
+        Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
+        '%s' % d.getVar('BB_NO_TIP_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
 
     Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
-        '%s' % d.getVar('BL31_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
+    '%s' % d.getVar('BL31_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
 
     Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
-        '%s' % d.getVar('OPTEE_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
+    '%s' % d.getVar('OPTEE_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
 
     Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
         '%s' % d.getVar('UBOOT_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
@@ -52,16 +64,21 @@ do_prepare_bootloaders() {
     cd ${DEPLOY_DIR_IMAGE}
 
     bingo ${IGPS_DIR}/BL31_AndHeader.xml \
-            -o ${DEPLOY_DIR_IMAGE}/${ATF_BINARY}
+            -o ${BL31_HEADER_BINARY}
 
     bingo ${IGPS_DIR}/OpTeeAndHeader.xml \
-            -o ${DEPLOY_DIR_IMAGE}/${OPTEE_BINARY}
+            -o ${OPTEE_HEADER_BINARY}
 
+    if [ "${TIP_FW}" = "True" ]; then
     bingo ${IGPS_DIR}/BootBlockAndHeader_${DEVICE_GEN}_${IGPS_MACHINE}.xml \
-            -o ${DEPLOY_DIR_IMAGE}/${BOOTBLOCK}
+            -o ${BB_HEADER_BINARY}
+    else
+    bingo ${IGPS_DIR}/BootBlockAndHeader_A1_${IGPS_MACHINE}_NoTip.xml \
+            -o ${BB_HEADER_BINARY}
+    fi
 
     bingo ${IGPS_DIR}/UbootHeader_${DEVICE_GEN}.xml \
-            -o ${UBOOT_BINARY}.${FULL_SUFFIX}
+            -o ${UBOOT_HEADER_BINARY}
 
     cd "$olddir"
 }
@@ -71,33 +88,33 @@ do_sign_binary() {
     if [ "${SECURED_IMAGE}" = "True" ]; then
         # Used to embed the key index inside the image, usually at offset 0x140
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${BOOTBLOCK} 140 ${KEY_BB_INDEX}
+            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 140 ${KEY_BB_INDEX}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${ATF_BINARY} 140 ${KEY_BL31_INDEX}
+            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 140 ${KEY_BL31_INDEX}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_BINARY} 140 ${KEY_OPTEE_INDEX}
+            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 140 ${KEY_OPTEE_INDEX}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_BINARY}.${FULL_SUFFIX} 140 ${KEY_UBOOT_INDEX}
+            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 140 ${KEY_UBOOT_INDEX}
 
         # Sign specific image with specific key
         res=`python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${BOOTBLOCK} 112 ${KEY_BB} 16 \
-            ${DEPLOY_DIR_IMAGE}/${BOOTBLOCK} ${KEY_SIGN} 0 ${KEY_BB_ID}
+            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 112 ${KEY_BB} 16 \
+            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BB_ID}
 
             python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${ATF_BINARY} 112 ${KEY_BL31} 16 \
-            ${DEPLOY_DIR_IMAGE}/${ATF_BINARY} ${KEY_SIGN} 0 ${KEY_BL31_ID}
+            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 112 ${KEY_BL31} 16 \
+            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BL31_ID}
 
             python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_BINARY} 112 ${KEY_OPTEE} 16 \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_BINARY} ${KEY_SIGN} 0 ${KEY_OPTEE_ID}
+            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 112 ${KEY_OPTEE} 16 \
+            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_OPTEE_ID}
 
             python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_BINARY}.${FULL_SUFFIX} 112 ${KEY_UBOOT} 16 \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_BINARY}.${FULL_SUFFIX} ${KEY_SIGN} 0 ${KEY_UBOOT_ID}`
+            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 112 ${KEY_UBOOT} 16 \
+            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_UBOOT_ID}`
 
         # Stop full image build process when sign binary got failed
         set +e
@@ -112,7 +129,7 @@ do_sign_binary() {
 }
 
 python do_merge_bootloaders() {
-
+    TIP_FW = d.getVar('TIP_FW', True)
     def Merge_bin_files_and_pad(inF1, inF2, outF, align, align_end):
         padding_size = 0
         padding_size_end = 0
@@ -138,24 +155,40 @@ python do_merge_bootloaders() {
 
             file3.write(b'\xFF' * padding_size_end)
 
-    Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BINARY',True)),
-        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BOOTBLOCK',True)),
+    if TIP_FW == "True":
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_HEADER_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BINARY',True)),
         int(d.getVar('BB_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
 
-    Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BINARY',True)),
-        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('ATF_BINARY',True)),
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BL31_HEADER_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_BINARY',True)),
         int(d.getVar('ATF_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
 
-    Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_BINARY',True)),
-        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('OPTEE_BINARY',True)),
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('OPTEE_HEADER_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_TEE_BINARY',True)),
         int(d.getVar('OPTEE_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
 
-    Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_TEE_BINARY',True)),
-        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s.full' % d.getVar('UBOOT_BINARY',True)),
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BL31_TEE_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('UBOOT_HEADER_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_UBOOT_BINARY',True)),
+        int(d.getVar('UBOOT_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
+    else:
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_HEADER_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BL31_HEADER_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_BL31_BINARY',True)),
+        int(d.getVar('ATF_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
+
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_BL31_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('OPTEE_HEADER_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_BL31_TEE_BINARY',True)),
+        int(d.getVar('OPTEE_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
+
+        Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_BL31_TEE_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('UBOOT_HEADER_BINARY',True)),
+        os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_BL31_TEE_UBOOT_BINARY',True)),
         int(d.getVar('UBOOT_ALIGN', True)), int(d.getVar('ALIGN_END', True)))
 }
 
