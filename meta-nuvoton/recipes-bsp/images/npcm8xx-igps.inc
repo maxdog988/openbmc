@@ -31,6 +31,8 @@ do_install() {
 	install py_scripts/ImageGeneration/inputs/OpTeeAndHeader.xml ${DEST}
 	install py_scripts/ImageGeneration/asn1.py ${DEST}
 	install py_scripts/ImageGeneration/BinarySignatureGenerator.py ${DEST}
+	# copy default keys to deploy folder
+	cp -vur py_scripts/ImageGeneration/keys/openssl ${DEPLOY_DIR_IMAGE}/
 }
 
 inherit native
