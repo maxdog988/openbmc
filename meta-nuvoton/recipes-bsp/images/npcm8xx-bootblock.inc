@@ -7,6 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 BB_TIP = "arbel_a35_bootblock.bin"
 BB_NO_TIP = "arbel_a35_bootblock_no_tip.bin"
 
+OUTPUT_BB_TIP_BIN    = "Images/tip"
+OUTPUT_BB_NO_TIP_BIN = "Images/no_tip"
+
 S = "${WORKDIR}/git"
 
 SRC_URI = " \
