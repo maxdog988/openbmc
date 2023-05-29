@@ -34,7 +34,7 @@ PAD_ALIGN ?= "32"
 
 SECURED_IMAGE ?= "False"
 
-TIP_FW ?= "True"
+TIP_IMAGE ?= "True"
 
 SOC_FAMILY = "npcm8xx"
 include conf/machine/include/soc-family.inc

@@ -21,7 +21,7 @@ do_patch() {
 
 do_install() {
 	install -d ${DEST}
-    if [ "${TIP_FW}" = "True" ] ; then
+    if [ "${TIP_IMAGE}" = "True" ] ; then
         install py_scripts/ImageGeneration/references/BootBlockAndHeader_${DEVICE_GEN}_${IGPS_MACHINE}.xml ${DEST}
 	else
         install py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_${IGPS_MACHINE}_NoTip.xml ${DEST}

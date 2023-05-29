@@ -18,7 +18,7 @@ SRC_URI = " \
 inherit deploy
 
 do_deploy () {
-    if [ "${TIP_FW}" = "True" ] ; then
+    if [ "${TIP_IMAGE}" = "True" ] ; then
         install -D -m 644 ${OUTPUT_BB_TIP_BIN}/${BB_TIP} ${DEPLOYDIR}/${BB_TIP}
     else
         install -D -m 644 ${OUTPUT_BB_NO_TIP_BIN}/${BB_NO_TIP} ${DEPLOYDIR}/${BB_NO_TIP}
