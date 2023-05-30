@@ -27,7 +27,7 @@ BB_NO_TIP_BIN = "arbel_a35_bootblock_no_tip.bin"
 
 # Align images if needed
 python do_pad_binary() {
-    TIP_FW = d.getVar('TIP_FW', True)
+    TIP_IMAGE = d.getVar('TIP_IMAGE', True)
     def Pad_bin_file_inplace(inF, align):
         padding_size = 0
         padding_size_end = 0
@@ -41,7 +41,7 @@ python do_pad_binary() {
         infile.write(b'\x00' * padding_size)
         infile.close()
 
-    if TIP_FW == "True":
+    if TIP_IMAGE == "True":
         Pad_bin_file_inplace(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True),
         '%s' % d.getVar('BB_BIN',True)), int(d.getVar('PAD_ALIGN', True)))
     else:
@@ -69,7 +69,7 @@ do_prepare_bootloaders() {
     bingo ${IGPS_DIR}/OpTeeAndHeader.xml \
             -o ${OPTEE_HEADER_BINARY}
 
-    if [ "${TIP_FW}" = "True" ]; then
+    if [ "${TIP_IMAGE}" = "True" ]; then
     bingo ${IGPS_DIR}/BootBlockAndHeader_${DEVICE_GEN}_${IGPS_MACHINE}.xml \
             -o ${BB_HEADER_BINARY}
     else
@@ -154,7 +154,7 @@ do_sign_binary() {
 }
 
 python do_merge_bootloaders() {
-    TIP_FW = d.getVar('TIP_FW', True)
+    TIP_IMAGE = d.getVar('TIP_IMAGE', True)
     def Merge_bin_files_and_pad(inF1, inF2, outF, align, align_end):
         padding_size = 0
         padding_size_end = 0
@@ -180,7 +180,7 @@ python do_merge_bootloaders() {
 
             file3.write(b'\xFF' * padding_size_end)
 
-    if TIP_FW == "True":
+    if TIP_IMAGE == "True":
         Merge_bin_files_and_pad(os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('BB_HEADER_BINARY',True)),
         os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), '%s' % d.getVar('KMT_TIPFW_BB_BINARY',True)),
