@@ -1,39 +1,20 @@
-1:
-  /system:
-    entityID: 25
-    entityInstance: 1
-    interfaces:
-      xyz.openbmc_project.Inventory.Decorator.Asset:
-        Manufacturer:
-          IPMIFruProperty: Manufacturer
-          IPMIFruSection: Product
-        Model:
-          IPMIFruProperty: Custom Field 1
-          IPMIFruSection: Product
-        SerialNumber:
-          IPMIFruProperty: Serial Number
-          IPMIFruSection: Product
-      xyz.openbmc_project.Inventory.Decorator.Revision:
-        Version:
-          IPMIFruProperty: Version
-          IPMIFruSection: Product
-      xyz.openbmc_project.Inventory.Item.System:
+0x0:
   /system/chassis/motherboard:
     entityID: 7
-    entityInstance: 1
+    entityInstance: 0x00
     interfaces:
       xyz.openbmc_project.Inventory.Decorator.Asset:
         BuildDate:
           IPMIFruProperty: Mfg Date
+          IPMIFruSection: Board
+        Manufacturer:
+          IPMIFruProperty: Manufacturer
           IPMIFruSection: Board
         SerialNumber:
           IPMIFruProperty: Serial Number
           IPMIFruSection: Board
         PartNumber:
           IPMIFruProperty: Part Number
-          IPMIFruSection: Board
-        Manufacturer:
-          IPMIFruProperty: Manufacturer
           IPMIFruSection: Board
       xyz.openbmc_project.Inventory.Item:
         PrettyName:
@@ -48,11 +29,11 @@
           IPMIFruProperty: Custom Field 1
           IPMIFruSection: Board
           IPMIFruValueDelimiter: 58
-      xyz.openbmc_project.Inventory.Item.Board:
-2:
+      xyz.openbmc_project.Inventory.Item.System:
+0x1:
   /system/chassis/motherboard/management_card/bmc:
     entityID: 6
-    entityInstance: 1
+    entityInstance: 0
     interfaces:
       xyz.openbmc_project.Inventory.Decorator.Asset:
         BuildDate:
@@ -71,23 +52,8 @@
         PrettyName:
           IPMIFruProperty: Name
           IPMIFruSection: Board
-      xyz.openbmc_project.Inventory.Decorator.Revision:
-        Version:
-          IPMIFruProperty: FRU File ID
-          IPMIFruSection: Board
-      xyz.openbmc_project.Common.UUID:
-        UUID:
-          IPMIFruProperty: Custom Field 1
-          IPMIFruSection: Board
-          IPMIFruValueDelimiter: 58
-      xyz.openbmc_project.Inventory.Item.Board:
-      xyz.openbmc_project.Inventory.Item.Bmc:
-      xyz.openbmc_project.Inventory.Item.NetworkInterface:
-        MACAddress:
-          IPMIFruProperty: Custom Field 2
-          IPMIFruSection: Board
-      xyz.openbmc_project.Inventory.Item.Ethernet:
-3:
+      xyz.openbmc_project.Inventory.Item.BMC:
+0x2:
     /system/chassis/motherboard/powersupply0:
         entityID: 10
         entityInstance: 1
@@ -113,7 +79,7 @@
                     IPMIFruProperty: Name
                     IPMIFruSection: Board
             xyz.openbmc_project.Inventory.Item.PowerSupply:
-4:
+0x3:
     /system/chassis/motherboard/powersupply1:
         entityID: 10
         entityInstance: 2

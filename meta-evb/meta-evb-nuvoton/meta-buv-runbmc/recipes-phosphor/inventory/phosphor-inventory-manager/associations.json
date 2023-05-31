@@ -24,6 +24,53 @@
                 [
                     "/xyz/openbmc_project/led/physical/heartbeat"
                 ]
+            },
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            }
+        ]
+    },
+    {
+        "path": "system/chassis/motherboard/fan",
+        "endpoints":
+        [
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "inventory",
+                    "fType": "sensors"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/sensors/fan_tach/fan1",
+                    "/xyz/openbmc_project/sensors/fan_tach/fan2",
+                    "/xyz/openbmc_project/sensors/fan_tach/fan3",
+                    "/xyz/openbmc_project/sensors/fan_tach/fan4"
+                ]
+            },
+            {
+                "types": {
+                    "rType": "cooled_by",
+                    "fType": "cooling"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/inventory/system/chassis"
+                ]
             }
         ]
     },
@@ -31,6 +78,127 @@
         "path": "system/chassis/motherboard",
         "endpoints":
         [
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "inventory",
+                    "fType": "sensors"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/sensors/temperature/BUV_Temp",
+                    "/xyz/openbmc_project/sensors/voltage/ADC1",
+                    "/xyz/openbmc_project/sensors/voltage/ADC2",
+                    "/xyz/openbmc_project/sensors/voltage/ADC3",
+                    "/xyz/openbmc_project/sensors/voltage/ADC4",
+                    "/xyz/openbmc_project/sensors/voltage/ADC5",
+                    "/xyz/openbmc_project/sensors/voltage/ADC6",
+                    "/xyz/openbmc_project/sensors/voltage/ADC7",
+                    "/xyz/openbmc_project/sensors/voltage/ADC8"
+                ]
+            }
+        ]
+    },
+    {
+        "path": "system/chassis/motherboard/powersupply0",
+        "endpoints":
+        [
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "inventory",
+                    "fType": "sensors"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/sensors/current/MB_P12V_INA219_Output_Current",
+                    "/xyz/openbmc_project/sensors/voltage/MB_P12V_INA219_Output_Voltage",
+                    "/xyz/openbmc_project/sensors/power/MB_P12V_INA219_Output_Power"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "powered_by",
+                    "fType": "powering"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/inventory/system/chassis"
+                ]
+            }
+        ]
+    },
+    {
+        "path": "system/chassis/motherboard/powersupply1",
+        "endpoints":
+        [
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "inventory",
+                    "fType": "sensors"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/sensors/current/MB_P3V3_INA219_Output_Current",
+                    "/xyz/openbmc_project/sensors/voltage/MB_P3V3_INA219_Output_Voltage",
+                    "/xyz/openbmc_project/sensors/power/MB_P3V3_INA219_Output_Power"
+                ]
+            },
+            {
+                "types":
+                {
+                    "rType": "powered_by",
+                    "fType": "powering"
+                },
+                "paths":
+                [
+                    "/xyz/openbmc_project/inventory/system/chassis"
+                ]
+            }
+        ]
+    },
+    {
+        "path": "system/chassis",
+        "endpoints":
+        [
+            {
+                "types": {
+                    "rType": "identified_by",
+                    "fType": "identifying"
+                },
+                "paths": [
+                    "/xyz/openbmc_project/led/groups/enclosure_identify"
+                ]
+            },
             {
                 "types":
                 {
@@ -59,44 +227,6 @@
                     "/xyz/openbmc_project/sensors/power/MB_P3V3_INA219_Output_Power",
                     "/xyz/openbmc_project/sensors/current/MB_P12V_INA219_Output_Current",
                     "/xyz/openbmc_project/sensors/current/MB_P3V3_INA219_Output_Current"
-                ]
-            }
-        ]
-    },
-    {
-        "path": "system/chassis/motherboard/powersupply0",
-        "endpoints":
-        [
-            {
-                "types":
-                {
-                    "rType": "inventory",
-                    "fType": "sensors"
-                },
-                "paths":
-                [
-                    "/xyz/openbmc_project/sensors/current/MB_P12V_INA219_Output_Current",
-                    "/xyz/openbmc_project/sensors/voltage/MB_P12V_INA219_Output_Voltage",
-                    "/xyz/openbmc_project/sensors/power/MB_P12V_INA219_Output_Power"
-                ]
-            }
-        ]
-    },
-    {
-        "path": "system/chassis/motherboard/powersupply1",
-        "endpoints":
-        [
-            {
-                "types":
-                {
-                    "rType": "inventory",
-                    "fType": "sensors"
-                },
-                "paths":
-                [
-                    "/xyz/openbmc_project/sensors/current/MB_P3V3_INA219_Output_Current",
-                    "/xyz/openbmc_project/sensors/voltage/MB_P3V3_INA219_Output_Voltage",
-                    "/xyz/openbmc_project/sensors/power/MB_P3V3_INA219_Output_Power"
                 ]
             }
         ]
