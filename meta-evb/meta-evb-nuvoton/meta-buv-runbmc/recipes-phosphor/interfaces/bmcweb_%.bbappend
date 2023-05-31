@@ -2,12 +2,7 @@ inherit buv-entity-utils
 
 FILESEXTRAPATHS:prepend:buv-runbmc := "${THISDIR}/${PN}:"
 
-SRC_URI:append:buv-runbmc = " \
-    ${@entity_enabled(d, 'file://0001-bmcweb-add-Server-Sent-Events-support.patch', '')}"
-
-# Enable CPU Log and Raw PECI support
-#EXTRA_OEMESON:append:buv-runbmc = " -Dredfish-cpu-log=enabled"
-#EXTRA_OEMESON:append:buv-runbmc = " -Dredfish-raw-peci=enabled"
+SRC_URI:append:buv-runbmc = " file://0001-bmcweb-add-Server-Sent-Events-support.patch"
 
 # Enable Redfish DBUS log/Journal support
 EXTRA_OEMESON:append:buv-runbmc = " ${@entity_enabled(d, '-Dredfish-bmc-journal=enabled', '-Dredfish-dbus-log=enabled')}"
@@ -23,3 +18,5 @@ EXTRA_OEMESON:append:buv-runbmc = " -Dhttp-body-limit=65"
 
 # Enable dbus rest API /xyz/
 EXTRA_OEMESON:append:buv-runbmc = " -Drest=enabled"
+
+EXTRA_OEMESON:append:buv-runbmc = " -Dredfish-new-powersubsystem-thermalsubsystem=enabled"
