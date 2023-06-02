@@ -32,7 +32,7 @@ UBOOT_ALIGN ?= "4096"
 ALIGN_END ?= "4096"
 PAD_ALIGN ?= "32"
 
-SECURED_IMAGE ?= "False"
+SECURED_IMAGE ?= "True"
 
 TIP_IMAGE ?= "True"
 

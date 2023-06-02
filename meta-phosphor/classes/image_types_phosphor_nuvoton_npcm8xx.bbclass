@@ -93,64 +93,64 @@ check_keys() {
 
 # Sign images for secure os be enabled
 do_sign_binary() {
-    if [ "${SECURED_IMAGE}" = "True" ]; then
-        checked=`check_keys`
-        if [ "${checked}" = "local" ]; then
-            bbnote "Sign image with local keys"
-            key_bb=${KEY_FOLDER}/${KEY_BB}
-            key_bl31=${KEY_FOLDER}/${KEY_BL31}
-            key_optee=${KEY_FOLDER}/${KEY_OPTEE}
-            key_uboot=${KEY_FOLDER}/${KEY_UBOOT}
-        else
-            bbnote "Sign image with default keys"
-            key_bb=${KEY_FOLDER_DEFAULT}/${KEY_BB}
-            key_bl31=${KEY_FOLDER_DEFAULT}/${KEY_BL31}
-            key_optee=${KEY_FOLDER_DEFAULT}/${KEY_OPTEE}
-            key_uboot=${KEY_FOLDER_DEFAULT}/${KEY_UBOOT}
-        fi
-        bbnote "BB sign key from ${checked}: ${key_bb}"
-        bbnote "BL31 sign key from ${checked}: ${key_bl31}"
-        bbnote "OPTEE sign key from ${checked}: ${key_optee}"
-        bbnote "UBOOT sign key from ${checked}: ${key_uboot}"
-        # Used to embed the key index inside the image, usually at offset 0x140
-        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 140 ${KEY_BB_INDEX}
-
-        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 140 ${KEY_BL31_INDEX}
-
-        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 140 ${KEY_OPTEE_INDEX}
-
-        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 140 ${KEY_UBOOT_INDEX}
-
-        # Sign specific image with specific key
-        res=`python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 112 ${key_bb} 16 \
-            ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BB_ID}
-
-            python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 112 ${key_bl31} 16 \
-            ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BL31_ID}
-
-            python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 112 ${key_optee} 16 \
-            ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_OPTEE_ID}
-
-            python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 112 ${key_uboot} 16 \
-            ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_UBOOT_ID}`
-
-        # Stop full image build process when sign binary got failed
-        set +e
-        err=`echo $res | grep -E "missing|Invalid|failed"`
-        if [ -n "${err}" ]; then
-            MSG="Sign binary failed: keys are not found or invalid. Please check your KEY_FOLDER and KEY definition."
-            bbfatal $MSG
-        fi
-        set -e
+    if [ "${SECURED_IMAGE}" != "True" ]; then
+       return
     fi
+    checked=`check_keys`
+    if [ "${checked}" = "local" ]; then
+        bbnote "Sign image with local keys"
+        key_bb=${KEY_FOLDER}/${KEY_BB}
+        key_bl31=${KEY_FOLDER}/${KEY_BL31}
+        key_optee=${KEY_FOLDER}/${KEY_OPTEE}
+        key_uboot=${KEY_FOLDER}/${KEY_UBOOT}
+    else
+        bbnote "Sign image with default keys"
+        key_bb=${KEY_FOLDER_DEFAULT}/${KEY_BB}
+        key_bl31=${KEY_FOLDER_DEFAULT}/${KEY_BL31}
+        key_optee=${KEY_FOLDER_DEFAULT}/${KEY_OPTEE}
+        key_uboot=${KEY_FOLDER_DEFAULT}/${KEY_UBOOT}
+    fi
+    bbnote "BB sign key from ${checked}: ${key_bb}"
+    bbnote "BL31 sign key from ${checked}: ${key_bl31}"
+    bbnote "OPTEE sign key from ${checked}: ${key_optee}"
+    bbnote "UBOOT sign key from ${checked}: ${key_uboot}"
+    # Used to embed the key index inside the image, usually at offset 0x140
+    python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
+        ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 140 ${KEY_BB_INDEX}
+
+    python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
+        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 140 ${KEY_BL31_INDEX}
+
+    python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
+        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 140 ${KEY_OPTEE_INDEX}
+
+    python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
+        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 140 ${KEY_UBOOT_INDEX}
+
+    # Sign specific image with specific key
+    res=`python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
+        ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 112 ${key_bb} 16 \
+        ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BB_ID}
+
+        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
+        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 112 ${key_bl31} 16 \
+        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BL31_ID}
+
+        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
+        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 112 ${key_optee} 16 \
+        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_OPTEE_ID}
+
+        python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
+        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 112 ${key_uboot} 16 \
+        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_UBOOT_ID}`
+
+    # Stop full image build process when sign binary got failed
+    set +e
+    err=`echo $res | grep -E "missing|Invalid|failed"`
+    if [ -n "${err}" ]; then
+        bbfatal "Sign binary failed: keys are not found or invalid. Please check your KEY_FOLDER and KEY definition."
+    fi
+    set -e
 }
 
 python do_merge_bootloaders() {
