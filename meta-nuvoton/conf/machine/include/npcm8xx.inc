@@ -32,10 +32,6 @@ UBOOT_ALIGN ?= "4096"
 ALIGN_END ?= "4096"
 PAD_ALIGN ?= "32"
 
-SECURED_IMAGE ?= "True"
-
-TIP_IMAGE ?= "True"
-
 SOC_FAMILY = "npcm8xx"
 include conf/machine/include/soc-family.inc
 MACHINEOVERRIDES .= ":npcm8xx"
@@ -63,3 +59,7 @@ TFA_UBOOT = "1"
 TFA_BUILD_TARGET = "bl31"
 
 OPTEEMACHINE ?= "nuvoton"
+
+SECURED_IMAGE ?= "True"
+
+TIP_IMAGE ?= "True"

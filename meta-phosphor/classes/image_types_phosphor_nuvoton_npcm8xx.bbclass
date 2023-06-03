@@ -73,7 +73,7 @@ do_prepare_bootloaders() {
     bingo ${IGPS_DIR}/BootBlockAndHeader_${DEVICE_GEN}_${IGPS_MACHINE}.xml \
             -o ${BB_HEADER_BINARY}
     else
-    bingo ${IGPS_DIR}/BootBlockAndHeader_A1_${IGPS_MACHINE}_NoTip.xml \
+    bingo ${IGPS_DIR}/BootBlockAndHeader_${DEVICE_GEN}_${IGPS_MACHINE}_NoTip.xml \
             -o ${BB_HEADER_BINARY}
     fi
 
@@ -130,19 +130,19 @@ do_sign_binary() {
     # Sign specific image with specific key
     res=`python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
         ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 112 ${key_bb} 16 \
-        ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BB_ID}
+        ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} ${SIGN_TYPE} 0 ${KEY_BB_ID}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
         ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 112 ${key_bl31} 16 \
-        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_BL31_ID}
+        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} ${SIGN_TYPE} 0 ${KEY_BL31_ID}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
         ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 112 ${key_optee} 16 \
-        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_OPTEE_ID}
+        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} ${SIGN_TYPE} 0 ${KEY_OPTEE_ID}
 
         python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \
         ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 112 ${key_uboot} 16 \
-        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} ${KEY_SIGN} 0 ${KEY_UBOOT_ID}`
+        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} ${SIGN_TYPE} 0 ${KEY_UBOOT_ID}`
 
     # Stop full image build process when sign binary got failed
     set +e
@@ -240,7 +240,7 @@ do_generate_ext4_tar:append() {
 addtask do_pad_binary before do_prepare_bootloaders
 addtask do_sign_binary before do_merge_bootloaders after do_prepare_bootloaders
 addtask do_prepare_bootloaders before do_generate_static after do_generate_rwfs_static
-addtask do_merge_bootloaders before do_generate_static after do_prepare_bootloaders
+addtask do_merge_bootloaders before do_generate_static after do_sign_binary
 addtask do_merge_bootloaders before do_generate_ext4_tar after do_prepare_bootloaders
 
 # Include the full bootblock and u-boot in the final static image
