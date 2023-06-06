@@ -43,6 +43,6 @@ do_install:append:scm-npcm845() {
     #install -m 0644 ${WORKDIR}/${BPN}@.service ${D}${systemd_unitdir}/system/${BPN}@.service
 
     # handle Nuvoton rules
-    rm -f ${D}/lib/udev/rules.d/80-obmc-console-uart.rules
-    install -D -m 0644 ${WORKDIR}/80-scm-npcm845-sol.rules ${D}/lib/udev/rules.d
+    rm -f ${D}/${nonarch_base_libdir}/udev/rules.d/80-obmc-console-uart.rules
+    install -D -m 0644 ${WORKDIR}/80-scm-npcm845-sol.rules ${D}/${nonarch_base_libdir}/udev/rules.d
 }
