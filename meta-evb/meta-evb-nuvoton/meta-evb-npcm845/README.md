@@ -13,15 +13,10 @@ This layer depends on:
   branch: npcm-master
 ```
 
-# Contacts for Patches
+# Contact
 
-Please submit any patches against the meta-evb-npcm845 layer to the maintainer of nuvoton:
-* Joseph Liu, <KWLIU@nuvoton.com>
-* Stanley Chu, <YSCHU@nuvoton.com>
-* Tyrone Ting, <KFTING@nuvoton.com>
-* Tim Lee, <CHLI30@nuvoton.com>
-* Jim Liu, <JJLIU0@nuvoton.com>
-* Marvin Lin, <KFLIN@nuvoton.com>
+For more product questions, please contact us at:
+* bmc_marketing@nuvoton.com
 
 # Table of Contents
 
