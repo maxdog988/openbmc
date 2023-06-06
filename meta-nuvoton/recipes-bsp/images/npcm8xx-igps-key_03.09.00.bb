@@ -11,6 +11,4 @@ do_deploy () {
 	cp -vur py_scripts/ImageGeneration/keys/${SIGN_TYPE} ${DEPLOY_DIR_IMAGE}/
 }
 
-deltask do_install
-deltask do_patch
 addtask deploy before do_build after do_compile
