@@ -40,6 +40,8 @@ to run multiple builds and to cache build artifacts, improving build efficiency.
 If you have a shortage of disk space, see the ":doc:`/dev-manual/disk-space`"
 section of the Development Tasks Manual.
 
+.. _system-requirements-minimum-ram:
+
 Minimum System RAM
 ==================
 
@@ -182,7 +184,7 @@ AlmaLinux Packages
 Here are the packages needed to build an image on a headless system
 with a supported AlmaLinux distribution::
 
-   $ sudo dnf install &ALMALINUX8_HOST_PACKAGES_ESSENTIAL;
+   $ sudo dnf install &ALMALINUX_HOST_PACKAGES_ESSENTIAL;
 
 .. note::
 

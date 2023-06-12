@@ -8,37 +8,34 @@ New Features / Enhancements in 4.2
 
 -  Linux kernel 6.1, glibc 2.37 and ~350 other recipe upgrades
 
--  Python 3.8 is the minimum Python version required on the build host.
+-  Python 3.8+ and GCC 8.0+ are now the minimum required versions on the build host.
    For host distributions that do not provide it, this is included as part of the
    :term:`buildtools` tarball.
 
 -  BitBake in this release now supports a new ``addpylib`` directive to enable
-   Python libraries within layers.
+   Python libraries within layers. For more information,
+   see :ref:`bitbake-user-manual/bitbake-user-manual-metadata:extending python library code`.
 
    This directive should be added to your layer configuration
    as in the below example from ``meta/conf/layer.conf``::
 
       addpylib ${LAYERDIR}/lib oe
 
--  BitBake has seen multiple internal changes that may impact
+-  BitBake has seen multiple internal changes that may improve
    memory and disk usage as well as parsing time, in particular:
 
    -  BitBake's Cooker server is now multithreaded.
+
+   -  Ctrl+C can now be used to interrupt some long-running operations
+      that previously ignored it.
 
    -  BitBake's cache has been extended to include more hash
       debugging data, but has also been optimized to :yocto_git:`compress
       cache data <https://git.yoctoproject.org/poky/commit/?h=mickledore&id=7d010055e2af3294e17db862f42664ca689a9356>`.
 
-   -  BitBake's Cooker server :yocto_git:`can now be pinged
-      </poky/commit/?h=mickledore&id=26f255da09>`
-      from the UI.
-
--  Architecture-specific enhancements:
-
-   -  This release adds initial support for the
-      :wikipedia:`LoongArch <Loongson#LoongArch>`
-      (``loongarch64``) architecture, though there is no testing for it yet.
-
+   -  BitBake's UI will now ping the server regularly to ensure
+      it is still alive.
+ 
 -  New variables:
 
    -  :term:`VOLATILE_TMP_DIR` allows to specify
@@ -70,27 +67,6 @@ New Features / Enhancements in 4.2
 
    -  Use built-in Rust targets for ``-native`` builds to save several
       minutes building the Rust toolchain
-
--  Python 3.8+ and GCC 8.0+ are now the minimum required versions on the build host
-
--  BitBake in this release now supports a new ``addpylib`` directive to enable
-   Python libraries within layers. For more information,
-   see :ref:`bitbake-user-manual/bitbake-user-manual-metadata:extending python library code`.
-
--  BitBake has seen multiple internal changes that may improve
-   memory and disk usage as well as parsing time, in particular:
-
-   -  BitBake's Cooker server is now multithreaded.
-
-   -  Ctrl+C can now be used to interrupt some long-running operations
-      that previously ignored it.
-
-   -  BitBake's cache has been extended to include more hash
-      debugging data, but has also been optimized to :yocto_git:`compress
-      cache data <https://git.yoctoproject.org/poky/commit/?h=mickledore&id=7d010055e2af3294e17db862f42664ca689a9356>`.
-
-   -  BitBake's UI will now ping the server regularly to ensure
-      it is still alive.
 
 -  Architecture-specific enhancements:
 
@@ -227,7 +203,6 @@ New Features / Enhancements in 4.2
    - ``base-passwd``
    - ``cronie``
    - ``cups``
-   - ``cups``
    - ``curl``
    - ``file``
    - ``gstreamer1.0-plugins-good``
@@ -296,6 +271,24 @@ New Features / Enhancements in 4.2
    -  ``xinetd``: move ``xconv.pl`` script to separate package
    -  ``perf``: enable debug/source packaging
 
+-  Prominent documentation updates:
+
+   -  Substantially expanded the ":doc:`/dev-manual/vulnerabilities`" section.
+   -  Added a new ":doc:`/dev-manual/sbom`" section about SPDX SBoM generation.
+   -  Expanded ":ref:`init-manager`" documentation.
+   -  New section about :ref:`ref-long-term-support-releases`.
+   -  System Requirements: details about :ref:`system-requirements-minimum-ram`.
+   -  Details about :ref:`ref-building-meson-package` and the
+      :ref:`ref-classes-meson` class.
+   -  Documentation about how to write recipes for Rust programs. See the
+      :ref:`ref-classes-cargo` class.
+   -  Documentation about how to write recipes for Go programs. See the
+      :ref:`ref-classes-go` class.
+   -  Variable index: added references to variables only documented in the
+      BitBake manual. All variables should be easy to access through the Yocto
+      Manual variable index.
+   -  Expanded the description of the :term:`BB_NUMBER_THREADS` variable.
+      
 -  Miscellaneous changes:
 
    -  Supporting 64 bit dates on 32 bit platforms: several packages have been
@@ -309,9 +302,6 @@ New Features / Enhancements in 4.2
       -  ``patch-fuzz`` is now in :term:`ERROR_QA` by default, and actually stops the build
 
    -  Many packages were updated to add large file support.
-
-   -  New :term:`VOLATILE_TMP_DIR` variable allows to specify whether ``/tmp``
-      should be on persistent storage or in RAM.
 
    -  ``vulkan-loader``: allow headless targets to build the loader
    -  ``dhcpcd``: fix to work with systemd
@@ -344,6 +334,8 @@ New Features / Enhancements in 4.2
 Known Issues in 4.2
 ~~~~~~~~~~~~~~~~~~~
 
+- N/A
+
 Recipe License changes in 4.2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -356,7 +348,7 @@ The following corrections have been made to the :term:`LICENSE` values set by re
 Security Fixes in 4.2
 ~~~~~~~~~~~~~~~~~~~~~
 
-- binutils: :cve:`2022-4285`, `CVE-2023-25586 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-25586>`__
+- binutils: :cve:`2022-4285`, :cve_mitre:`2023-25586`
 - curl: :cve:`2022-32221`, :cve:`2022-35260`, :cve:`2022-42915`, :cve:`2022-42916`
 - epiphany: :cve:`2023-26081`
 - expat: :cve:`2022-43680`
@@ -364,7 +356,7 @@ Security Fixes in 4.2
 - git: :cve:`2022-39260`, :cve:`2022-41903`, :cve:`2022-23521`, :cve:`2022-41953` (ignored)
 - glibc: :cve:`2023-25139` (ignored)
 - go: :cve:`2023-24532`, :cve:`2023-24537`
-- grub2: :cve:`2022-2601`, :cve:`2022-3775`, `CVE-2022-28736 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-28736>`__
+- grub2: :cve:`2022-2601`, :cve:`2022-3775`, :cve_mitre:`2022-28736`
 - inetutils: :cve:`2019-0053`
 - less: :cve:`2022-46663`
 - libarchive: :cve:`2022-36227`
@@ -376,7 +368,7 @@ Security Fixes in 4.2
 - openssl: :cve:`2022-3358`, :cve:`2022-3786`, :cve:`2022-3602`, :cve:`2022-3996`, :cve:`2023-0286`, :cve:`2022-4304`, :cve:`2022-4203`, :cve:`2023-0215`, :cve:`2022-4450`, :cve:`2023-0216`, :cve:`2023-0217`, :cve:`2023-0401`, :cve:`2023-0464`
 - ppp: :cve:`2022-4603`
 - python3-cryptography{-vectors}: :cve:`2022-3602`, :cve:`2022-3786`, :cve:`2023-23931`
-- python3: `CVE-2022-37460 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-37460>`__
+- python3: :cve_mitre:`2022-37460`
 - qemu: :cve:`2022-3165`
 - rust: :cve:`2022-46176`
 - rxvt-unicode: :cve:`2022-4170`
@@ -930,4 +922,63 @@ Thanks to the following people who contributed to this release:
 - Zheng Ruoqin
 - Zoltan Boszormenyi
 - 张忠山
+
+
+Repositories / Downloads for Yocto-4.2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+poky
+
+-  Repository Location: :yocto_git:`/poky`
+-  Branch: :yocto_git:`mickledore </poky/log/?h=mickledore>`
+-  Tag:  :yocto_git:`yocto-4.2 </poky/log/?h=yocto-4.2>`
+-  Git Revision: :yocto_git:`21790e71d55f417f27cd51fae9dd47549758d4a0 </poky/commit/?id=21790e71d55f417f27cd51fae9dd47549758d4a0>`
+-  Release Artefact: poky-21790e71d55f417f27cd51fae9dd47549758d4a0
+-  sha: 38606076765d912deec84e523403709ef1249122197e61454ae08818e60f83c2
+-  Download Locations:
+   http://downloads.yoctoproject.org/releases/yocto/yocto-4.2/poky-21790e71d55f417f27cd51fae9dd47549758d4a0.tar.bz2
+   http://mirrors.kernel.org/yocto/yocto/yocto-4.2/poky-21790e71d55f417f27cd51fae9dd47549758d4a0.tar.bz2
+
+openembedded-core
+
+-  Repository Location: :oe_git:`/openembedded-core`
+-  Branch: :oe_git:`mickledore </openembedded-core/log/?h=mickledore>`
+-  Tag:  :oe_git:`yocto-4.2 </openembedded-core/log/?h=yocto-4.2>`
+-  Git Revision: :oe_git:`c57d1a561db563ed2f521bbac5fc12d4ac8e11a7 </openembedded-core/commit/?id=c57d1a561db563ed2f521bbac5fc12d4ac8e11a7>`
+-  Release Artefact: oecore-c57d1a561db563ed2f521bbac5fc12d4ac8e11a7
+-  sha: e8cdd870492017be7e7b74b8c2fb73ae6771b2d2125b2aa1f0e65d0689f96af8
+-  Download Locations:
+   http://downloads.yoctoproject.org/releases/yocto/yocto-4.2/oecore-c57d1a561db563ed2f521bbac5fc12d4ac8e11a7.tar.bz2
+   http://mirrors.kernel.org/yocto/yocto/yocto-4.2/oecore-c57d1a561db563ed2f521bbac5fc12d4ac8e11a7.tar.bz2
+
+meta-mingw
+
+-  Repository Location: :yocto_git:`/meta-mingw`
+-  Branch: :yocto_git:`mickledore </meta-mingw/log/?h=mickledore>`
+-  Tag:  :yocto_git:`yocto-4.2 </meta-mingw/log/?h=yocto-4.2>`
+-  Git Revision: :yocto_git:`250617ffa524c082b848487359b9d045703d59c2 </meta-mingw/commit/?id=250617ffa524c082b848487359b9d045703d59c2>`
+-  Release Artefact: meta-mingw-250617ffa524c082b848487359b9d045703d59c2
+-  sha: 873a97dfd5ed6fb26e1f6a2ddc2c0c9d7a7b3c7f5018588e912294618775c323
+-  Download Locations:
+   http://downloads.yoctoproject.org/releases/yocto/yocto-4.2/meta-mingw-250617ffa524c082b848487359b9d045703d59c2.tar.bz2
+   http://mirrors.kernel.org/yocto/yocto/yocto-4.2/meta-mingw-250617ffa524c082b848487359b9d045703d59c2.tar.bz2
+
+bitbake
+
+-  Repository Location: :oe_git:`/bitbake`
+-  Branch: :oe_git:`2.4 </bitbake/log/?h=2.4>`
+-  Tag:  :oe_git:`yocto-4.2 </bitbake/log/?h=yocto-4.2>`
+-  Git Revision: :oe_git:`d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c </bitbake/commit/?id=d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c>`
+-  Release Artefact: bitbake-d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c
+-  sha: 5edcb97cb545011226b778355bb840ebcc790552d4a885a0d83178153697ba7a
+-  Download Locations:
+   http://downloads.yoctoproject.org/releases/yocto/yocto-4.2/bitbake-d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c.tar.bz2
+   http://mirrors.kernel.org/yocto/yocto/yocto-4.2/bitbake-d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c.tar.bz2
+
+yocto-docs
+
+-  Repository Location: :yocto_git:`/yocto-docs`
+-  Branch: :yocto_git:`mickledore </yocto-docs/log/?h=mickledore>`
+-  Tag: :yocto_git:`yocto-4.2 </yocto-docs/log/?h=yocto-4.2>`
+-  Git Revision: :yocto_git:`4d6807e34adf5d92d9b6e5852736443a867c78fa </yocto-docs/commit/?id=4d6807e34adf5d92d9b6e5852736443a867c78fa>`
 

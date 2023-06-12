@@ -9,7 +9,7 @@ KMT_TIPFW_BB_BL31_TEE_BINARY = "Kmt_TipFw_BootBlock_BL31_Tee.bin"
 KMT_TIPFW_BB_UBOOT_BINARY = "u-boot.bin.merged"
 
 BB_BL31_BINARY = "BootBlock_BL31_no_tip.bin"
-BB_BL31_TEE_BINARY = "BootBlock_BL31_Tee_no_tip_bin.bin"
+BB_BL31_TEE_BINARY = "BootBlock_BL31_Tee_no_tip.bin"
 BB_BL31_TEE_UBOOT_BINARY = "u-boot.bin.merged"
 
 FULL_SUFFIX = "full"
@@ -119,13 +119,13 @@ do_sign_binary() {
         ${DEPLOY_DIR_IMAGE}/${BB_HEADER_BINARY} 140 ${KEY_BB_INDEX}
 
     python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 140 ${KEY_BL31_INDEX}
+        ${DEPLOY_DIR_IMAGE}/${BL31_HEADER_BINARY} 140 ${SKMT_BL31_KEY_INDEX}
 
     python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 140 ${KEY_OPTEE_INDEX}
+        ${DEPLOY_DIR_IMAGE}/${OPTEE_HEADER_BINARY} 140 ${SKMT_BL32_KEY_INDEX}
 
     python3 ${IGPS_DIR}/BinarySignatureGenerator.py Replace_binary_single_byte \
-        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 140 ${KEY_UBOOT_INDEX}
+        ${DEPLOY_DIR_IMAGE}/${UBOOT_HEADER_BINARY} 140 ${SKMT_BL33_KEY_INDEX}
 
     # Sign specific image with specific key
     res=`python3 ${IGPS_DIR}/BinarySignatureGenerator.py Sign_binary \

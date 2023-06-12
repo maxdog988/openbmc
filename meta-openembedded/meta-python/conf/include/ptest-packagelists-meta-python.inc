@@ -23,9 +23,11 @@ PTESTS_FAST_META_PYTHON = "\
     python3-ipy \
     python3-iso3166 \
     python3-parse-type \
+    python3-platformdirs \
     python3-polyline \
     python3-precise-runner \
     python3-prettytable \
+    python3-pylint \
     python3-ptyprocess \
     python3-pyasn1-modules \
     python3-pyroute2 \
@@ -39,6 +41,7 @@ PTESTS_FAST_META_PYTHON = "\
     python3-smpplib \
     python3-soupsieve \
     python3-sqlparse \
+    python3-tomlkit \
     python3-u-msgpack-python \
     python3-unidiff \
     python3-uritemplate \
@@ -69,6 +72,7 @@ PTESTS_PROBLEMS_META_PYTHON ="\
     python3-pint \
     python3-py-cpuinfo \
     python3-pytest-lazy-fixture \
+    python3-pytest-mock \
     python3-pyzmq \
     python3-scrypt \
     python3-service-identity \

@@ -1,7 +1,7 @@
 SUMMARY = "Image Generation and Programming Scripts for NPCM8XX (Arbel) devices"
 DESCRIPTION = "Image Generation and Programming Scripts for NPCM8XX (Arbel) devices"
 HOMEPAGE = "https://github.com/Nuvoton-Israel/igps-npcm8xx"
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 IGPS_BRANCH ?= "main"
@@ -37,7 +37,7 @@ inherit deploy
 
 do_deploy () {
 	# copy default keys to deploy folder
-	install -d ${DEPLOYDIR}/${SIGN_TYPE}
+	install -d ${DEPLOYDIR}
 	cp -vur py_scripts/ImageGeneration/keys/${SIGN_TYPE} ${DEPLOYDIR}/
 }
 

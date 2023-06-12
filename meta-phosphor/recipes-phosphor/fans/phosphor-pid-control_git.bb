@@ -17,7 +17,7 @@ DEPENDS += "cli11"
 DEPENDS += "boost"
 # We depend on this to be built first so we can build our providers.
 DEPENDS += "phosphor-ipmi-host"
-SRCREV = "8c051121ade815a46e39d5c669fee77302df2b6d"
+SRCREV = "9fe3a3c767cc7932f526edb2fded7962d848b8a4"
 PV = "0.1+git${SRCPV}"
 PR = "r1"
 
