@@ -1,7 +1,7 @@
-From 92f7a4fa5f4913c994f0ec7e5d4495acd5f57774 Mon Sep 17 00:00:00 2001
+From a9e1f242162954c2056657b8b178a175c45c9351 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 17:23:50 +0800
-Subject: [PATCH 03/20] Add sensor type command
+Subject: [PATCH 3/3] Add sensor type command
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
@@ -10,10 +10,10 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  2 files changed, 39 insertions(+), 5 deletions(-)
 
 diff --git a/dbus-sdr/sensorcommands.cpp b/dbus-sdr/sensorcommands.cpp
-index 16860dcb..96d3aac8 100644
+index e48cd911..a4fb737b 100644
 --- a/dbus-sdr/sensorcommands.cpp
 +++ b/dbus-sdr/sensorcommands.cpp
-@@ -2303,6 +2303,35 @@ static ipmi::RspType<uint8_t, // respcount
+@@ -2304,6 +2304,35 @@ static ipmi::RspType<uint8_t, // respcount
                                   sdrLastAdd);
  }
  
@@ -49,9 +49,9 @@ index 16860dcb..96d3aac8 100644
  /* end sensor commands */
  
  /* storage commands */
-@@ -2652,5 +2681,10 @@ void registerSensorFunctions()
+@@ -2653,5 +2682,10 @@ void registerSensorFunctions()
                                 ipmi::dcmi::cmdGetDcmiSensorInfo,
-                                ipmi::Privilege::User,
+                                ipmi::Privilege::Operator,
                                 ipmi::dcmi::getSensorInfo);
 +
 +    // <Get Sensor Type>
@@ -61,7 +61,7 @@ index 16860dcb..96d3aac8 100644
  }
  } // namespace ipmi
 diff --git a/sensorhandler.cpp b/sensorhandler.cpp
-index 84b6e9df..29bc58af 100644
+index a8191005..1a376e80 100644
 --- a/sensorhandler.cpp
 +++ b/sensorhandler.cpp
 @@ -1527,6 +1527,11 @@ void register_netfn_sen_functions()
