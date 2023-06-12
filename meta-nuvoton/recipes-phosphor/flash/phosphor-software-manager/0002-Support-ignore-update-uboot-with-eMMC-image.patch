@@ -1,7 +1,7 @@
-From 2e0b0534569bf84f17cc5c705706599c59a60d44 Mon Sep 17 00:00:00 2001
+From 400f9524f333c3115ba069fecc65e508492300b5 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 17 Feb 2022 08:50:52 +0800
-Subject: [PATCH 2/2] Support ignore update uboot with eMMC image
+Subject: [PATCH] Support ignore update uboot with eMMC image
 
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Brian Ma <chma0@nuvoton.com>
  1 file changed, 29 insertions(+), 12 deletions(-)
 
 diff --git a/obmc-flash-bmc b/obmc-flash-bmc
-index b76ad62..bd4506c 100644
+index 442bb7a..5e4c1e2 100644
 --- a/obmc-flash-bmc
 +++ b/obmc-flash-bmc
 @@ -1,6 +1,8 @@
@@ -54,7 +54,7 @@ index b76ad62..bd4506c 100644
      if [ "${imgSum}" == "${devSum}" ]; then
          echo "0";
      else
-@@ -555,35 +567,33 @@ function mmc_mount() {
+@@ -562,36 +574,34 @@ function mmc_mount() {
  }
  
  function mmc_update() {
@@ -93,12 +93,13 @@ index b76ad62..bd4506c 100644
 +    # fix some mtd device get Invalid partition table
 +    partprobe /dev/mmcblk0
  
-     # Update hostfw
+     # Update hostfw. The remove function doesn't touch the hostfw image, so
+     # need to unmount and delete it prior to updating it.
 +    echo "start try to update hostfw" >> "${ulog}"
      if [ -f "${imgpath}"/"${version}"/image-hostfw ]; then
          # Remove patches
-         patchdir="/usr/local/share/hostfw/alternate"
-@@ -596,7 +606,14 @@ function mmc_update() {
+         hostfw_alt="hostfw/alternate"
+@@ -610,7 +620,14 @@ function mmc_update() {
          mount "${hostfwdir}"/hostfw-"${label}" "${hostfwdir}"/alternate -o ro
      fi
  
