@@ -59,8 +59,6 @@ RDEPENDS:${PN}-system = " \
         phosphor-post-code-manager \
         adm1278-hotswap-power-cycle \
         google-ipmi-sys \
-        mac-address \
-        smbios-mdr \
         loadmcu \
         usb-network \
 	nuvoton-ipmi-oem \
@@ -70,6 +68,7 @@ RDEPENDS:${PN}-system = " \
         phosphor-power-systemd-links-monitor \
         phosphor-power-utils \
         phosphor-power \
+        gbmc-mac-config \
         "
 #RDEPENDS:${PN}-system:append = " \
 #        ${@entity_enabled(d, '', 'first-boot-set-psu')} \

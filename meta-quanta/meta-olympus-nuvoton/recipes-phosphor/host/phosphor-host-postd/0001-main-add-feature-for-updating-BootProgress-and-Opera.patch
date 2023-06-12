@@ -1,4 +1,4 @@
-From 462a32d0fefb30ca25b61044f87fe60e0892ada0 Mon Sep 17 00:00:00 2001
+From 8d2469091ecbe71827021229c360b1d6e49a2420 Mon Sep 17 00:00:00 2001
 From: Eason Yang <yhyang2@nuvoton.com>
 Date: Wed, 8 Feb 2023 14:32:27 +0800
 Subject: [PATCH] main: add feature for updating BootProgress and
@@ -146,9 +146,9 @@ index 53a075e..1752d19 100644
 +        auto json = nlohmann::json::parse(biosd, nullptr, true);
 +        auto defs = json["bios_definitions"];
 +
-+        auto bios =
-+            std::find_if(defs.begin(), defs.end(), [&biosName](const auto g) {
-+                return biosName == g["name"];
++        auto bios = std::find_if(defs.begin(), defs.end(), [&biosName](const auto& g) {
++            auto it = g.find("name");
++            return it != g.end() and it.value() == biosName;
 +            });
 +
 +        if (bios != defs.end())

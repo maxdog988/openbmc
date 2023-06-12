@@ -1,4 +1,4 @@
-From 85ee857e686f576a10830f62ac30ded09541426e Mon Sep 17 00:00:00 2001
+From b721cb2984c7c38fb381bac6852f2d07c175fa80 Mon Sep 17 00:00:00 2001
 From: Allen <jhkang@nuvoton.com>
 Date: Tue, 20 Sep 2022 14:34:25 +0800
 Subject: [PATCH] drivers: misc: porting mcu flash driver
@@ -12,10 +12,10 @@ Signed-off-by: Allen <jhkang@nuvoton.com>
  create mode 100644 drivers/misc/npcm7xx-mcu-flash.c
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 9c6f40440914..768b8e90ab75 100644
+index 90d113c3f6fe..92fc3883758b 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
-@@ -485,6 +485,12 @@ config NPCM_PCI_MBOX
+@@ -533,6 +533,12 @@ config NPCM_PCI_MBOX
  	  Expose the NPCM BMC PCI MBOX registers found on Nuvoton SOCs
  	  to userspace.
  
@@ -29,16 +29,14 @@ index 9c6f40440914..768b8e90ab75 100644
  	tristate "NPCM7xx JTAG Master driver"
  	depends on (ARCH_NPCM7XX || COMPILE_TEST)
 diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 879fe9fbcdc0..854df1358b16 100644
+index 1cc4c1c90860..caacceb793df 100644
 --- a/drivers/misc/Makefile
 +++ b/drivers/misc/Makefile
-@@ -61,5 +61,6 @@ obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
- obj-$(CONFIG_HI6421V600_IRQ)	+= hi6421v600-irq.o
- obj-$(CONFIG_NPCM_LPC_BPC)	+= npcm7xx-lpc-bpc.o
- obj-$(CONFIG_NPCM_PCI_MBOX)	+= npcm7xx-pci-mbox.o
+@@ -70,3 +70,4 @@ obj-$(CONFIG_NPCM7XX_JTAG_MASTER) += npcm7xx-jtag-master.o
+ obj-$(CONFIG_NPCM8XX_JTAG_MASTER) += npcm8xx-jtag-master.o
+ obj-$(CONFIG_NPCM750_VCD)	+= npcm750_vcd.o
+ obj-$(CONFIG_NPCM750_ECE)	+= npcm750_ece.o
 +obj-$(CONFIG_NPCM7XX_MCU_FLASH) += npcm7xx-mcu-flash.o
- obj-$(CONFIG_NPCM7XX_JTAG_MASTER)	+= npcm7xx-jtag-master.o
- obj-$(CONFIG_NPCM8XX_JTAG_MASTER)       += npcm8xx-jtag-master.o
 diff --git a/drivers/misc/npcm7xx-mcu-flash.c b/drivers/misc/npcm7xx-mcu-flash.c
 new file mode 100644
 index 000000000000..228e08a65b87
