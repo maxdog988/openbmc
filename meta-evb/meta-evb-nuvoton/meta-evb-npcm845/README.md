@@ -915,7 +915,7 @@ root@evb-npcm845:~# ls /dev/i3c-mctp*
 /dev/i3c-mctp-0         /dev/i3c-mctp-target-0
 ```
 
-- [mctp test applications](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-phosphor/libmctp)
+- [mctp test applications](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton/recipes-phosphor/libmctp)
 
 - Start the mctp daemon, the daemon will echo the received messages to the sender, like an echo server.
 ```
