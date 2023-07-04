@@ -15,7 +15,7 @@ PR = "r1"
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/openbmc/openpower-hw-diags;branch=master;protocol=https"
-SRCREV = "bdb8667c351f22c461b4184603b4b03fe01085a8"
+SRCREV = "7ad677a03cf85a2359335264c1b2a59eb4e6d9f3"
 
 S = "${WORKDIR}/git"
 

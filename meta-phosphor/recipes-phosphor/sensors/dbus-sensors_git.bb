@@ -11,7 +11,7 @@ DEPENDS = " \
     phosphor-logging \
     sdbusplus \
     "
-SRCREV = "cebb28c2a0247ccefe6e14f290029358f3d66672"
+SRCREV = "a71095744edd2b5b3be4db0d42d57a5818f3b0df"
 PACKAGECONFIG ??= " \
     adcsensor \
     intelcpusensor \
