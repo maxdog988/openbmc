@@ -1,7 +1,7 @@
-From 1ddef8715cdba9574e69100c0967241eaca13d0d Mon Sep 17 00:00:00 2001
+From ce68bceede6675e647e1a6ad8f07b1cf7429476c Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 14:42:20 +0800
-Subject: [PATCH 1/5] add NIC temp sensor
+Subject: [PATCH] add NIC temp sensor
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
@@ -10,7 +10,7 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  2 files changed, 83 insertions(+), 7 deletions(-)
 
 diff --git a/src/MCUTempSensor.cpp b/src/MCUTempSensor.cpp
-index dc7782c3..d0933fb1 100644
+index e82c80fb..201be188 100644
 --- a/src/MCUTempSensor.cpp
 +++ b/src/MCUTempSensor.cpp
 @@ -55,12 +55,12 @@ MCUTempSensor::MCUTempSensor(std::shared_ptr<sdbusplus::asio::connection>& conn,
@@ -125,8 +125,8 @@ index dc7782c3..d0933fb1 100644
 +                    scale = loadVariant<uint16_t>(cfg, "Scale");
 +                }
  
-                 std::string sensorClass =
-                     loadVariant<std::string>(cfg, "Class");
+                 std::string sensorClass = loadVariant<std::string>(cfg,
+                                                                    "Class");
 @@ -247,7 +318,8 @@ void createSensors(
  
                  sensor = std::make_unique<MCUTempSensor>(
