@@ -1,19 +1,19 @@
-From 5fdccbb2edea6862b379b918b4099e37273107e8 Mon Sep 17 00:00:00 2001
+From 09e3c4da01574862a00e0332704f26e33eace856 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
-Date: Tue, 11 Apr 2023 16:42:25 +0800
+Date: Wed, 19 Jul 2023 09:02:21 +0800
 Subject: [PATCH] add npcmi3c binding
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  Makefile.am                 |   8 +-
  configure.ac                |   1 +
- libmctp-npcmi3c.h           |  41 +++++++
+ libmctp-npcmi3c.h           |  43 ++++++++
  npcmi3c.c                   | 176 ++++++++++++++++++++++++++++++
  pec.c                       |  34 ++++++
  pec.h                       |   9 ++
- tests/test_npcmi3c.c        | 209 ++++++++++++++++++++++++++++++++++++
+ tests/test_npcmi3c.c        | 212 ++++++++++++++++++++++++++++++++++++
  utils/mctp-npcmi3c-daemon.c | 106 ++++++++++++++++++
- 8 files changed, 583 insertions(+), 1 deletion(-)
+ 8 files changed, 588 insertions(+), 1 deletion(-)
  create mode 100644 libmctp-npcmi3c.h
  create mode 100644 npcmi3c.c
  create mode 100644 pec.c
@@ -60,10 +60,10 @@ index 28d517e..fadb8b0 100644
  AS_IF([test "x$enable_tests" = "xno"], [enable_valgrind=no])
 diff --git a/libmctp-npcmi3c.h b/libmctp-npcmi3c.h
 new file mode 100644
-index 0000000..c524429
+index 0000000..1a26b9a
 --- /dev/null
 +++ b/libmctp-npcmi3c.h
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,43 @@
 +/* SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later */
 +
 +#ifndef _LIBMCTP_ASTI3C_H
@@ -81,10 +81,12 @@ index 0000000..c524429
 +
 +#include "libmctp.h"
 +
-+/* MCTP over I3C transmission unit needs to be atlenpcm MCTP_BTU +
-+   MCTP_HEADER + PEC_BYTE_SIZE i.e. 69 bytes. Support buffer sizes
-+   of minimum transmission sizes */
-+#define MCTP_I3C_BUFFER_SIZE 69
++/*
++ * I3C HDR transmit data by words(16 bits), let packet size to be word aligned.
++ * 4-byte MCTP_HEADER + 65-byte MCTP payload + 1-byte PEC
++ */
++#define MCTP_BTU_I3C 65
++#define MCTP_I3C_PKT_SIZE 70
 +#define MCTP_HEADER_SIZE 4
 +
 +struct mctp_binding_npcmi3c {
@@ -107,7 +109,7 @@ index 0000000..c524429
 +#endif /* _LIBMCTP_NPCMI3C_H */
 diff --git a/npcmi3c.c b/npcmi3c.c
 new file mode 100644
-index 0000000..cba13a6
+index 0000000..69883cc
 --- /dev/null
 +++ b/npcmi3c.c
 @@ -0,0 +1,176 @@
@@ -182,7 +184,7 @@ index 0000000..cba13a6
 +
 +int mctp_npcmi3c_rx(struct mctp_binding_npcmi3c *npcmi3c)
 +{
-+	uint8_t data[MCTP_I3C_BUFFER_SIZE];
++	uint8_t data[MCTP_I3C_PKT_SIZE];
 +	struct mctp_pktbuf *pkt;
 +	ssize_t read_len;
 +	uint8_t pec, cal_pec;
@@ -205,7 +207,7 @@ index 0000000..cba13a6
 +	}
 +
 +	/* PEC byte is handled by libmctp-npcmi3c */
-+	if ((read_len > (MCTP_BTU + MCTP_HEADER_SIZE + 1)) ||
++	if ((read_len > (npcmi3c->binding.pkt_size + 1)) ||
 +	    (read_len < (MCTP_HEADER_SIZE + 1))) {
 +		mctp_prerr("Incorrect packet size: %zd", read_len);
 +		return -1;
@@ -274,7 +276,7 @@ index 0000000..cba13a6
 +
 +	npcmi3c->binding.name = "npcmi3c";
 +	npcmi3c->binding.version = 1;
-+	npcmi3c->binding.pkt_size = MCTP_PACKET_SIZE(MCTP_BTU);
++	npcmi3c->binding.pkt_size = MCTP_PACKET_SIZE(MCTP_BTU_I3C);
 +	npcmi3c->binding.start = mctp_npcmi3c_core_start;
 +	npcmi3c->binding.tx = mctp_npcmi3c_tx;
 +
@@ -344,10 +346,10 @@ index 0000000..9cb3766
 +#endif
 diff --git a/tests/test_npcmi3c.c b/tests/test_npcmi3c.c
 new file mode 100644
-index 0000000..87334bb
+index 0000000..5fbb951
 --- /dev/null
 +++ b/tests/test_npcmi3c.c
-@@ -0,0 +1,209 @@
+@@ -0,0 +1,212 @@
 +#include <stdio.h>
 +#include <assert.h>
 +#include <poll.h>
@@ -369,7 +371,7 @@ index 0000000..87334bb
 +		0x00, 0x01, 0x20, 0x09, 0xC8, 0x81, 0x04, 0x00, 0x01, 0x20,    \
 +		0x09, 0xC8, 0x00, 0x04, 0x00, 0x01, 0x20, 0x09, 0xC8, 0x00,    \
 +		0x81, 0x04, 0x00, 0x01, 0x20, 0x09, 0xC8, 0x00, 0x81, 0x00,    \
-+		0x01, 0x20, 0x09
++		0x01, 0x20, 0x09, 0x09,
 +
 +typedef enum testcase {
 +	i3c_packet_read = 0,
@@ -429,13 +431,13 @@ index 0000000..87334bb
 +static void test_npcmi3c_daemon(struct mctp_binding_npcmi3c *npcmi3c,
 +				struct mctp *mctp, uint8_t dst_eid)
 +{
-+	uint8_t test_payload[MCTP_BTU];
++	uint8_t test_payload[MCTP_BTU_I3C];
 +	bool tag_owner = true;
 +	uint8_t tag = 0;
 +	int rc = 0;
 +	int i;
 +
-+	for (i = 0; i < MCTP_BTU; i++)
++	for (i = 0; i < MCTP_BTU_I3C; i++)
 +		test_payload[i] = (char)random();
 +	rc = mctp_message_tx(mctp, dst_eid, tag_owner, tag, test_payload, sizeof(test_payload));
 +	assert(rc == 0);
@@ -453,7 +455,7 @@ index 0000000..87334bb
 +		printf("\n");
 +#endif
 +#if 1
-+		assert(MCTP_BTU == len);
++		assert(MCTP_BTU_I3C == len);
 +
 +		rc = memcmp(expected_data, msg, len);
 +		assert(rc == 0);
@@ -549,8 +551,11 @@ index 0000000..87334bb
 +		break;
 +	case mctp_npcmi3c_daemon_test:
 +		printf("mctp_npcmi3c_daemon test\n");
-+		for (i = 0; i < loop; i++)
++		mctp_set_log_stdio(MCTP_LOG_WARNING);
++		for (i = 0; i < loop; i++) {
++			printf("loop %d\n", i);
 +			test_npcmi3c_daemon(npcmi3c, mctp, dst_eid);
++		}
 +		printf("mctp_npcmi3c_daemon test complete\n");
 +		break;
 +	}
@@ -669,3 +674,6 @@ index 0000000..41777e0
 +
 +	return EXIT_SUCCESS;
 +}
+-- 
+2.17.1
+
