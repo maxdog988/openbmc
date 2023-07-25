@@ -37,7 +37,7 @@ SYSTEMD_PACKAGES = "${PN}-discover \
 
 PACKAGECONFIG ??= "no-warm-reboot \
                    only-run-apr-on-power-loss \
-                   only-boot-when-bmc-ready"
+                   only-allow-boot-when-bmc-ready"
 
 # Disable warm reboots of host
 PACKAGECONFIG[no-warm-reboot] = "-Dwarm-reboot=disabled,-Dwarm-reboot=enabled"
@@ -46,7 +46,7 @@ PACKAGECONFIG[no-warm-reboot] = "-Dwarm-reboot=disabled,-Dwarm-reboot=enabled"
 PACKAGECONFIG[only-run-apr-on-power-loss] = "-Donly-run-apr-on-power-loss=true,-Donly-run-apr-on-power-loss=false"
 
 # Only allow boot operations when BMC is in Ready state
-PACKAGECONFIG[only-boot-when-bmc-ready] = "-Donly-allow-boot-when-bmc-ready=true,-Donly-allow-boot-when-bmc-ready=false"
+PACKAGECONFIG[only-allow-boot-when-bmc-ready] = "-Donly-allow-boot-when-bmc-ready=true,-Donly-allow-boot-when-bmc-ready=false"
 
 # The host-check function will check if the host is running
 # after a BMC reset.
@@ -256,6 +256,6 @@ RESET_FMT_CTRL = "../${RESET_TMPL_CTRL}:${SYSD_TGT}.wants/${RESET_INSTFMT_CTRL}"
 SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'RESET_FMT_CTRL', 'OBMC_CHASSIS_INSTANCES')}"
 
 SRC_URI = "git://github.com/openbmc/phosphor-state-manager;branch=master;protocol=https"
-SRCREV = "2038e4925b56c4c7471c763794d02b4bf94f3ae8"
+SRCREV = "9beba5ab92268bc008e5f627546982f1f7d8ba93"
 
 S = "${WORKDIR}/git"
