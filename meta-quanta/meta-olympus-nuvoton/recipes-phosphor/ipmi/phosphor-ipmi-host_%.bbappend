@@ -15,9 +15,9 @@ EXTRA_OEMESON:append:olympus-nuvoton = " \
     ${@entity_enabled(d, '', '-Dfru-yaml-gen=${STAGING_DIR_HOST}${datadir}/olympus-nuvoton-yaml-config/ipmi-fru-read.yaml')} \
     ${@entity_enabled(d, '', '-Dinvsensor-yaml-gen=${STAGING_DIR_HOST}${datadir}/olympus-nuvoton-yaml-config/ipmi-inventory-sensors.yaml')} \
     "
-PACKAGECONFIG:append:olympus-entity = " dynamic-sensors"
+PACKAGECONFIG:append:olympus-nuvoton = " ${@entity_enabled(d, 'dynamic-sensors', '')}"
 
-EXTRA_OEMESON:append:buv-runbmc = " -Di2c-whitelist-check=disabled"
+EXTRA_OEMESON:append:olympus-nuvoton = " -Di2c-whitelist-check=disabled"
 
 # for intel ipmi oem
 do_install:append:olympus-nuvoton(){
