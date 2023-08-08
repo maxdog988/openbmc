@@ -6,3 +6,5 @@ SRCREV = "ac7b0c4752378ed9fccfb6345b80d56de5baf1bc"
 require linux-nuvoton.inc
 SRC_URI:append:nuvoton = " file://enable_emmc_510.cfg"
 SRC_URI:append:nuvoton = " file://disalbe_stackprotector.cfg"
+SRC_URI:append:nuvoton = " file://enable-pcie-vdm.cfg"
+SRC_URI:append:nuvoton = " file://enable-usb-legacy.cfg"
