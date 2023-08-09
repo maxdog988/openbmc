@@ -1,4 +1,4 @@
-From 0807ccf23a9e65d56eeb108e49955e86a75f2d91 Mon Sep 17 00:00:00 2001
+From 4ac35f942f732e89147ded01327db24ecdb51a4d Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 16:13:12 +0800
 Subject: [PATCH 4/5] add dimm sensor
@@ -10,8 +10,8 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  meson_options.txt  |   1 +
  src/DIMMSensor.cpp | 577 +++++++++++++++++++++++++++++++++++++++++++++
  src/DIMMSensor.hpp |  51 ++++
- src/meson.build    |  15 ++
- 6 files changed, 757 insertions(+)
+ src/meson.build    |  14 ++
+ 6 files changed, 756 insertions(+)
  create mode 100644 include/amd-apml.h
  create mode 100644 include/i3cdev.h
  create mode 100644 src/DIMMSensor.cpp
@@ -792,10 +792,10 @@ index 00000000..86888cf6
 +    boost::asio::steady_timer waitTimer;
 +};
 diff --git a/src/meson.build b/src/meson.build
-index 0adbabca..eac16e5f 100644
+index 9f56c315..f46acceb 100644
 --- a/src/meson.build
 +++ b/src/meson.build
-@@ -244,3 +244,18 @@ if get_option('external').enabled()
+@@ -234,3 +234,17 @@ if get_option('external').enabled()
          install: true,
      )
  endif
@@ -810,7 +810,6 @@ index 0adbabca..eac16e5f 100644
 +            utils_dep,
 +        ],
 +        include_directories: '../include',
-+        cpp_args: uring_args,
 +        install: true,
 +    )
 +endif

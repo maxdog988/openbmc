@@ -1,7 +1,7 @@
-From 17392c831bb9aebca564f9e3ef32a0f0a7e62680 Mon Sep 17 00:00:00 2001
+From 18cbf4ad7d0a06c7e5676ff512c8bf460648001e Mon Sep 17 00:00:00 2001
 From: Tim Lee <timlee660101@gmail.com>
 Date: Tue, 19 Jul 2022 10:54:08 +0800
-Subject: [PATCH 2/2] Support bridging commands
+Subject: [PATCH] Support bridging commands
 
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
@@ -779,17 +779,17 @@ index 00000000..545d24a4
 +    std::vector<IpmbResponse> responseQueue;
 +};
 diff --git a/meson.build b/meson.build
-index 3ecd4441..696919cc 100644
+index 0cd2f440..4d4653d3 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -221,6 +221,7 @@ libipmi20_src = [
+@@ -230,6 +230,7 @@ libipmi20_src = [
    'read_fru_data.cpp',
    'sensordatahandler.cpp',
    'user_channel/channelcommands.cpp',
 +  'bridgingcommands.cpp',
    generated_src,
    transportoem_src,
-   conf_h,
+   storage_cmds_src,
 -- 
-2.17.1
+2.34.1
 
