@@ -853,30 +853,21 @@ The EVB has I3C0~I3C5 interfaces on the J_I3C header.
 ### Linux Test
 
 **SPD5118 device**
-- Connect a Renesas SPD5118 module to EVB I3C2 interface
-  * connect J_I3C.5 to device SCL
-  * connect J_I3C.6 to device SDA
+- Connect a Renesas SPD5118 module to EVB I3C0 interface
+  * connect J_I3C.1 to device SCL
+  * connect J_I3C.2 to device SDA
   * connect J3.1 (VCC_3.3V) to device 3V3
   * Wire GND between EVB and DIMM
 - Edit nuvoton-npcm845-evb.dts. (The slave static address of SPD Hub depends on HSA pin of DIMM)
 ```
-    i3c2: i3c@fff12000 {
+    i3c0: i3c@fff10000 {
         status = "okay";
         i2c-scl-hz = <400000>;
         i3c-scl-hz = <4000000>;
         jedec,jesd403;
-        hub@0x57 {
+        spd@0x57 {
             reg = <0x57 0x4CC 0x51180000>;
         };
-        ts0@0x17 {
-            reg = <0x17 0x4CC 0x51110000>;
-        }
-        ts1@0x37 {
-            reg = <0x37 0x4CC 0x51110001>;
-        }
-        pmic@0x4f {
-            reg = <0x4F 0x4CC 0x89000000>;
-        }
     };
 ```
 - Enable Kernel config
@@ -885,53 +876,72 @@ CONFIG_I3C=y
 CONFIG_I3CDEV=y
 CONFIG_SVC_I3C_MASTER=y
 ```
-- There are 4 I3C device nodes on Bus 2.
+- There are one I3C device node on Bus 0.
 ```
-# ls /dev/i3c-2-*
-/dev/i3c-2-4cc51110000  /dev/i3c-2-4cc51180000
-/dev/i3c-2-4cc51110001  /dev/i3c-2-4cc89000000
+# ls /dev/i3c-0-*
+/dev/i3c-0-4cc51180000
 
-HUB: /dev/i3c-2-4cc51180000
-Temperature Sensor 0: /dev/i3c-2-4cc51110000
-Temperature Sensor 1: /dev/i3c-2-4cc51110001
-PMIC: /dev/i3c-2-4cc89000000
 ```
 - Use [i3ctransfer](https://github.com/vitor-soares-snps/i3c-tools) tool to test
-- Read HUB device type
+- Read SPD device type
 ```
-root@evb-npcm845:~# i3ctransfer -d /dev/i3c-2-4cc51180000 -w "0x00,0x00" -r 2
+root@evb-npcm845:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
 Success on message 0
   received data:
     0x51
     0x18
 ```
-- Read 10 bytes from SPD5118 NVM addr 0x0
+
+**I3C Hub**
+
+- Connect a Renesas I3C Hub to EVB I3C0 interface and attach a SPD5118 device to Hub's slave port1
+  * connect J_I3C.1 to Hub SCL
+  * connect J_I3C.2 to Hub SDA
+  * Wire GND between EVB and Hub
+
+- Edit nuvoton-npcm845-evb.dts. (The static address of Hub/SPD depends on the design).
+  The example configures the hub slave port IO voltage to 1.0V and assign dynamic address 0x10 to the hub.
 ```
-i3ctransfer -d /dev/i3c-2-4cc51180000 -w "0x80,0x00"
-i3ctransfer -d /dev/i3c-2-4cc51180000 -r 10
+    i3c0: i3c@fff10000 {
+        status = "okay";
+        i2c-scl-hz = <400000>;
+        i3c-scl-hz = <4000000>;
+        jedec,jesd403;
+        hub@0x70 {
+                reg = <0x70 0x3c0 0x00700000>;
+                assigned-address = <0x10>;
+                cp0-ldo = "1.0V";
+                cp1-ldo = "1.0V";
+                tp0145-ldo = "1.0V";
+                tp2367-ldo = "1.0V";
+                tp0145-pullup = "500R";
+                tp2367-pullup = "500R";
+                target-port@1 {
+                        mode = "i3c";
+                        pullup = "enabled";
+                };
+        };
+        spd@0x57 {
+            reg = <0x57 0x4CC 0x51180000>;
+        };
+    };
 ```
-- Read TS0 device type
+
+- Enable Kernel config
 ```
-root@evb-npcm845:~# i3ctransfer -d /dev/i3c-2-4cc51110000 -w "0x00" -r 2
+CONFIG_I3C=y
+CONFIG_I3CDEV=y
+CONFIG_SVC_I3C_MASTER=y
+CONFIG_I3C_HUB=y
+```
+
+- Use i3ctransfer tool to read SPD device type
+```
+root@evb-npcm845:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
 Success on message 0
   received data:
     0x51
-    0x11
-```
-- Read TS0 temperature data
-```
-root@evb-npcm845:~# i3ctransfer -d /dev/i3c-2-4cc51110000 -w "0x31" -r 2
-Success on message 0
-  received data:
-    0xb4
-    0x01
-```
-- Read PMIC register. The following example is to read register 0x32.
-```
-# i3ctransfer -d /dev/i3c-2-4cc89000000 -w "0x32" -r 1
-Success on message 0
-  received data:
-    0x40
+    0x18
 ```
 
 ### I3C Slave
