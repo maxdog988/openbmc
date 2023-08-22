@@ -1,0 +1,10 @@
+[
+    {
+        "Name": "DP_INTP_BMC",
+        "GpioNum": 29,
+        "ChipId": "gpiochip1",
+        "EventMon": "FALLING",
+        "Target": "dp_hotplug.service",
+        "Continue": true
+    }
+]
