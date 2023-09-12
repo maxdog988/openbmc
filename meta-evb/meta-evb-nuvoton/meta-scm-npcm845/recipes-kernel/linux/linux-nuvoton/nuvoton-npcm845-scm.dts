@@ -45,9 +45,9 @@
 		i2c15 = &i2c15;
 		i2c19 = &i2c19;
 		fiu0 = &fiu0;
-		fiu1 = &fiu1;
-		fiu2 = &fiu3;
-		fiu3 = &fiux;
+		fiu1 = &fiu3;
+		fiu2 = &fiux;
+		fiu3 = &fiu1;
 	};
 
 	chosen {
