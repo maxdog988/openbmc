@@ -20,13 +20,13 @@ PTESTS_FAST_META_OE = "\
     libee \
     libio-pty-perl \
     libmanette \
+    librelp \
     libssh \
     libtinyxml2 \
     libxml++-5.0 \
     libxmlb \
     libyang \
     lmdb \
-    mcelog \
     minicoredumper \
     neon \
     nodejs \
@@ -38,6 +38,9 @@ PTESTS_FAST_META_OE = "\
     xmlsec1 \
     zeromq \
 "
+PTESTS_FAST_META_OE:append:x86 = " mcelog"
+PTESTS_FAST_META_OE:append:x86-64 = " mcelog"
+
 PTESTS_FAST_META_OE:remove:libc-musl = "minicoredumper"
 PTESTS_FAST_META_OE:remove:riscv64 = "nodejs"
 PTESTS_FAST_META_OE:remove:riscv32 = "nodejs"

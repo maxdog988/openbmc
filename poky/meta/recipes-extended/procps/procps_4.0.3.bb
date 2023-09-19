@@ -15,6 +15,8 @@ inherit autotools gettext pkgconfig update-alternatives
 SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https;branch=master \
            file://sysctl.conf \
            file://0001-src-w.c-use-utmp.h-only.patch \
+           file://0001-po-fr.po-address-failures-with-gettext-0.22.patch \
+           file://CVE-2023-4016.patch \
            "
 SRCREV = "806eb270f217ff7e1e745c7bda2b002b5be74be4"
 
@@ -71,10 +73,6 @@ python __anonymous() {
     for prog in d.getVar('base_sbindir_progs').split():
         d.setVarFlag('ALTERNATIVE_LINK_NAME', prog, '%s/%s' % (d.getVar('base_sbindir'), prog))
 }
-
-# 'ps' isn't suitable for use as a security tool so whitelist this CVE.
-# https://bugzilla.redhat.com/show_bug.cgi?id=1575473#c3
-CVE_CHECK_IGNORE += "CVE-2018-1121"
 
 PROCPS_PACKAGES = "${PN}-lib \
                    ${PN}-ps \

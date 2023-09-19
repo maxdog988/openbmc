@@ -650,7 +650,7 @@ class BBCooker:
                 raise
         else:
             if not mc in self.databuilder.mcdata:
-                bb.fatal('Not multiconfig named "%s" found' % mc)
+                bb.fatal('No multiconfig named "%s" found' % mc)
             envdata = self.databuilder.mcdata[mc]
             data.expandKeys(envdata)
             parse.ast.runAnonFuncs(envdata)
@@ -1666,6 +1666,7 @@ class BBCooker:
             self.updateCacheSync()
 
         if self.state != state.parsing and not self.parsecache_valid:
+            bb.server.process.serverlog("Parsing started")
             self.setupParserWatcher()
 
             bb.parse.siggen.reset(self.data)
