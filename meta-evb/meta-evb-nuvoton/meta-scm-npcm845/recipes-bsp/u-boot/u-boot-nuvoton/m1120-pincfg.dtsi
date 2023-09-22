@@ -13,11 +13,11 @@
 			bias-disable;
 			output-high;
 		};
-		gpio12oh_pins: gpio12oh-pins {
+		gpio12ol_pins: gpio12ol-pins {
 			pins = "GPIO12/GSPI_CK/SMB5B_SCL";
 			persist-disable;
 			bias-disable;
-			output-high;
+			output-low;
 		};
 		gpio13i_pins: gpio13i-pins {
 			pins = "GPIO13/GSPI_DO/SMB5B_SDA";

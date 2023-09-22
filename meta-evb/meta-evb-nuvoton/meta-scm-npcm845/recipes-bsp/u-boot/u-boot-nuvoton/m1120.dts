@@ -274,7 +274,7 @@
 			&bu5_pins
 			&gpio8ol_pins
 			&gpio9oh_pins
-			&gpio12oh_pins
+			&gpio12ol_pins
 			&gpio13i_pins
 			&gpio15i_pins
 			&gpio16oh_pins
