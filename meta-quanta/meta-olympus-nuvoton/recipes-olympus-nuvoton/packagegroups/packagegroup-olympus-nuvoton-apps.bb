@@ -41,7 +41,6 @@ RDEPENDS:${PN}-flash = " \
 
 SUMMARY:${PN}-system = "OLYMPUS NUVOTON System"
 RDEPENDS:${PN}-system = " \
-        webui-vue \
         obmc-ikvm \
         obmc-console \
         phosphor-host-postd \

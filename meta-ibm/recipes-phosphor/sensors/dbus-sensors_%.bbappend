@@ -1,4 +1,7 @@
-PACKAGECONFIG:p10bmc = "hwmontempsensor"
+PACKAGECONFIG:p10bmc = " \
+    hwmontempsensor \
+    adcsensor \
+    "
 
 PACKAGECONFIG:genesis3 = " \
     hwmontempsensor \
@@ -12,6 +15,11 @@ PACKAGECONFIG:sbp1 = " \
     fansensor \
     psusensor \
     intelcpusensor \
+    ipmbsensor \
     adcsensor \
     nvmesensor \
+    "
+
+PACKAGECONFIG:system1 = " \
+    adcsensor \
     "

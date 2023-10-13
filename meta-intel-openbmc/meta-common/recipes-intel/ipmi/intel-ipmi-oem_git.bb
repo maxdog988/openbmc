@@ -5,16 +5,14 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a6a4edad4aed50f39a66d098d74b265b"
 
 SRC_URI = "git://github.com/openbmc/intel-ipmi-oem;branch=master;protocol=https"
-SRCREV = "51cf3110bc18981129b62748dd7dd6df0970e66d"
+SRCREV = "e61e8ec82fa4a00d37f95e234e3ff192d90c7376"
 
 S = "${WORKDIR}/git"
 PV = "0.1+git${SRCPV}"
 
 DEPENDS = "boost phosphor-ipmi-host phosphor-logging systemd phosphor-dbus-interfaces libgpiod libtinyxml2"
 
-inherit cmake obmc-phosphor-ipmiprovider-symlink pkgconfig
-
-EXTRA_OECMAKE="-DENABLE_TEST=0 -DYOCTO=1"
+inherit meson obmc-phosphor-ipmiprovider-symlink pkgconfig
 
 LIBRARY_NAMES = "libzinteloemcmds.so"
 

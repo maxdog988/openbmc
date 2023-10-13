@@ -8,7 +8,6 @@ RDEPENDS:${PN}-extras:append = " \
 
 RDEPENDS:${PN}-devtools:append = " \
     entity-manager \
-    webui-vue \
     ethtool \
     net-tools \
     lmsensors-sensors \
@@ -34,12 +33,15 @@ RDEPENDS:${PN}-chassis += " \
     phosphor-post-code-manager \
     phosphor-host-postd \
     phosphor-state-manager-chassis \
+    phosphor-hwmon \
+    phosphor-virtual-sensor \
     "
 
 SUMMARY:${PN}-flash = "IBM Flash"
 RDEPENDS:${PN}-flash = " \
     phosphor-software-manager \
     phosphor-ipmi-flash \
+    zram \
     "
 
 SUMMARY:${PN}-fans = "IBM fan"
