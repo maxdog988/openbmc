@@ -1,7 +1,7 @@
-From 3e91df432fdebcceb22889a557b15527b099751e Mon Sep 17 00:00:00 2001
+From 9f9f210ca085ab1c29764b0fe7bb181a690ed365 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 5 Jul 2022 15:18:37 +0800
-Subject: [PATCH 05/20] get system guid command
+Subject: [PATCH 05/19] get system guid command
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 46 insertions(+)
 
 diff --git a/apphandler.cpp b/apphandler.cpp
-index 4dd2bc8f..f0e535bc 100644
+index d8964bd4..5e305d1c 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
-@@ -833,6 +833,7 @@ auto ipmiAppGetBtCapabilities()
+@@ -839,6 +839,7 @@ auto ipmiAppGetBtCapabilities()
      return ipmi::responseSuccess(nrOutstanding, inputBufferSize,
                                   outputBufferSize, transactionTime, nrRetries);
  }
@@ -20,7 +20,7 @@ index 4dd2bc8f..f0e535bc 100644
  
  auto ipmiAppGetSystemGuid(ipmi::Context::ptr& ctx)
      -> ipmi::RspType<std::array<uint8_t, 16>>
-@@ -881,6 +882,51 @@ auto ipmiAppGetSystemGuid(ipmi::Context::ptr& ctx)
+@@ -887,6 +888,51 @@ auto ipmiAppGetSystemGuid(ipmi::Context::ptr& ctx)
      }
      return ipmi::responseSuccess(uuid);
  }

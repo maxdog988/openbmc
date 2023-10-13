@@ -1,7 +1,7 @@
-From 6ee2d3b99eed0df361260654af924252c6ee0b93 Mon Sep 17 00:00:00 2001
+From 697dc6cde72c65079c676de08f3bbe4aa32bf813 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 4 Jul 2023 17:22:44 +0800
-Subject: [PATCH] add psu sesnor: p2011 and mx16550
+Subject: [PATCH 5/5] add psu sesnor: p2011 and mx16550
 
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/src/PSUSensorMain.cpp b/src/PSUSensorMain.cpp
-index e40c05d2..bf7456c2 100644
+index 74918109..71eb393c 100644
 --- a/src/PSUSensorMain.cpp
 +++ b/src/PSUSensorMain.cpp
 @@ -43,6 +43,8 @@
@@ -18,9 +18,9 @@ index e40c05d2..bf7456c2 100644
  static const I2CDeviceTypeMap sensorTypes{
 +    {"P2011", I2CDeviceType{"p2011", true}},
 +    {"MAX16550", I2CDeviceType{"max16550", true}},
+     {"ADC128D818", I2CDeviceType{"adc128d818", true}},
      {"ADM1266", I2CDeviceType{"adm1266", true}},
      {"ADM1272", I2CDeviceType{"adm1272", true}},
-     {"ADM1275", I2CDeviceType{"adm1275", true}},
 -- 
 2.34.1
 

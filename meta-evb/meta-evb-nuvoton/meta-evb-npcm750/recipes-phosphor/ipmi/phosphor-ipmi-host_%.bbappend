@@ -11,8 +11,6 @@ EXTRA_OEMESON:append:evb-npcm750 = " \
     "
 
 EXTRA_OEMESON:append:evb-npcm750 = " -Di2c-whitelist-check=disabled"
-EXTRA_OEMESON:append:evb-npcm750 = " -Dsel-logger-clears-sel=enabled"
-
 
 # Add send/get message support
 # ipmid <-> ipmb <-> i2c

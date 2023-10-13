@@ -1,7 +1,7 @@
-From 850857463499c2854913da338a2ca6c567e72cac Mon Sep 17 00:00:00 2001
+From 485d290b9757febd05590b73a8200da68f9b0168 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:00:00 +0800
-Subject: [PATCH 10/20] Add reset SEL
+Subject: [PATCH 09/19] Add reset SEL
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
@@ -11,7 +11,7 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  3 files changed, 48 insertions(+), 2 deletions(-)
 
 diff --git a/dbus-sdr/sdrutils.cpp b/dbus-sdr/sdrutils.cpp
-index 399b59a5..98a2782a 100644
+index a5a82e9e..4a2589b9 100644
 --- a/dbus-sdr/sdrutils.cpp
 +++ b/dbus-sdr/sdrutils.cpp
 @@ -264,6 +264,10 @@ uint16_t getSensorNumberFromPath(const std::string& path)
@@ -26,7 +26,7 @@ index 399b59a5..98a2782a 100644
      try
      {
 diff --git a/globalhandler.cpp b/globalhandler.cpp
-index cf6e01d3..73c6fe68 100644
+index 974b0746..ced801f2 100644
 --- a/globalhandler.cpp
 +++ b/globalhandler.cpp
 @@ -29,8 +29,44 @@ constexpr auto SYSTEMD_OBJ_PATH = "/org/freedesktop/systemd1";
