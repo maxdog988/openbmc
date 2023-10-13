@@ -1,0 +1,78 @@
+From ade3086ff0d1ff3203bfb9bccbd271dd71efcb3f Mon Sep 17 00:00:00 2001
+From: Mia Lin <mimi05633@gmail.com>
+Date: Wed, 4 Oct 2023 11:20:20 +0800
+Subject: [PATCH] libpldm: fix pldmtool cmd fail issue
+
+ - Add an API to set netid and send request message with netid.
+
+Signed-off-by: Mia Lin <mimi05633@gmail.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ include/libpldm/transport/af-mctp.h |  2 ++
+ src/transport/af-mctp.c             | 16 +++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/include/libpldm/transport/af-mctp.h b/include/libpldm/transport/af-mctp.h
+index e47b1aa6..412bb1de 100644
+--- a/include/libpldm/transport/af-mctp.h
++++ b/include/libpldm/transport/af-mctp.h
+@@ -29,6 +29,8 @@ int pldm_transport_af_mctp_init_pollfd(struct pldm_transport *t,
+ 				       struct pollfd *pollfd);
+ #endif
+ 
++void pldm_transport_af_mctp_set_netid(struct pldm_transport *t, uint8_t netid);
++
+ /* Inserts a TID-to-EID mapping into the transport's device map */
+ int pldm_transport_af_mctp_map_tid(struct pldm_transport_af_mctp *ctx,
+ 				   pldm_tid_t tid, mctp_eid_t eid);
+diff --git a/src/transport/af-mctp.c b/src/transport/af-mctp.c
+index 252c56d7..85b7d4e8 100644
+--- a/src/transport/af-mctp.c
++++ b/src/transport/af-mctp.c
+@@ -36,6 +36,7 @@ struct pldm_transport_af_mctp {
+ 	struct pldm_socket_sndbuf socket_send_buf;
+ 	bool bound;
+ 	struct pldm_responder_cookie cookie_jar;
++	uint8_t netid;
+ };
+ 
+ #define transport_to_af_mctp(ptr)                                              \
+@@ -116,7 +117,12 @@ static pldm_requester_rc_t pldm_transport_af_mctp_recv(struct pldm_transport *t,
+ 	void *msg;
+ 	int rc;
+ 
+-	length = recv(af_mctp->socket, NULL, 0, MSG_PEEK | MSG_TRUNC);
++	addr.smctp_family = AF_MCTP;
++	addr.smctp_addr.s_addr = eid;
++	addr.smctp_type = MCTP_MSG_TYPE_PLDM;
++	addr.smctp_tag = MCTP_TAG_OWNER;
++	addr.smctp_network = af_mctp->netid;
++	length = recvfrom(af_mctp->socket, NULL, 0, MSG_PEEK | MSG_TRUNC, NULL, 0);
+ 	if (length <= 0) {
+ 		return PLDM_REQUESTER_RECV_FAIL;
+ 	}
+@@ -213,6 +219,7 @@ static pldm_requester_rc_t pldm_transport_af_mctp_send(struct pldm_transport *t,
+ 		}
+ 
+ 		addr.smctp_family = AF_MCTP;
++		addr.smctp_network = af_mctp->netid;
+ 		addr.smctp_addr.s_addr = eid;
+ 		addr.smctp_type = MCTP_MSG_TYPE_PLDM;
+ 		addr.smctp_tag = MCTP_TAG_OWNER;
+@@ -233,6 +240,13 @@ static pldm_requester_rc_t pldm_transport_af_mctp_send(struct pldm_transport *t,
+ 	return PLDM_REQUESTER_SUCCESS;
+ }
+ 
++LIBPLDM_ABI_STABLE
++void pldm_transport_af_mctp_set_netid(struct pldm_transport *t, uint8_t netid)
++{
++	struct pldm_transport_af_mctp *af_mctp = transport_to_af_mctp(t);
++	af_mctp->netid = netid;
++}
++
+ LIBPLDM_ABI_STABLE
+ int pldm_transport_af_mctp_init(struct pldm_transport_af_mctp **ctx)
+ {
+-- 
+2.34.1
+

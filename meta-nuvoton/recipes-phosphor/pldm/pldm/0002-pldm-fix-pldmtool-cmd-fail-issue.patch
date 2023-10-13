@@ -1,0 +1,160 @@
+From 0343e5f218978425b912b93f7804cffe40de5513 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Fri, 27 Oct 2023 16:16:40 +0800
+Subject: [PATCH] pldm: fix pldmtool cmd fail issue
+
+- Add netid parameter for sending request message.
+- Modify the value of the response message sent by pldmd to the correct value.
+
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ common/transport.cpp         |  7 +++++++
+ common/transport.hpp         |  4 ++++
+ pldmd/pldmd.cpp              | 33 ++++++++++++++++++++-------------
+ pldmtool/pldm_cmd_helper.cpp |  4 ++++
+ pldmtool/pldm_cmd_helper.hpp |  4 +++-
+ 5 files changed, 38 insertions(+), 14 deletions(-)
+
+diff --git a/common/transport.cpp b/common/transport.cpp
+index d9924151f..32ec37efb 100644
+--- a/common/transport.cpp
++++ b/common/transport.cpp
+@@ -134,6 +134,13 @@ PldmTransport::~PldmTransport()
+     transport_impl_destroy(impl);
+ }
+ 
++#if defined(PLDM_TRANSPORT_WITH_AF_MCTP)
++void PldmTransport::setNetid(uint8_t netid)
++{
++    pldm_transport_af_mctp_set_netid(transport, netid);
++}
++#endif
++
+ int PldmTransport::getEventSource() const
+ {
+     return pfd.fd;
+diff --git a/common/transport.hpp b/common/transport.hpp
+index 060148852..d2bd8c84c 100644
+--- a/common/transport.hpp
++++ b/common/transport.hpp
+@@ -34,6 +34,10 @@ class PldmTransport
+      */
+     int getEventSource() const;
+ 
++#if defined(PLDM_TRANSPORT_WITH_AF_MCTP)
++    void setNetid(uint8_t netid);
++#endif
++
+     /** @brief Asynchronously send a PLDM message to the specified terminus
+      *
+      * The message may be either a request or a response.
+diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
+index 23499e473..a84aff29f 100644
+--- a/pldmd/pldmd.cpp
++++ b/pldmd/pldmd.cpp
+@@ -66,6 +66,7 @@ PHOSPHOR_LOG2_USING;
+ #endif
+ 
+ constexpr uint8_t MCTP_MSG_TYPE_PLDM = 1;
++uint8_t netid = 0;
+ 
+ using namespace pldm;
+ using namespace sdeventplus;
+@@ -151,27 +152,33 @@ void optionUsage(void)
+     info("Usage: pldmd [options]");
+     info("Options:");
+     info(" [--verbose] - would enable verbosity");
++    info(" [--netid] - assign netid");
+ }
+ 
+ int main(int argc, char** argv)
+ {
++    int argflag;
+     bool verbose = false;
+     static struct option long_options[] = {{"verbose", no_argument, 0, 'v'},
++                                           {"netid", required_argument, 0, 'n'},
+                                            {0, 0, 0, 0}};
+ 
+-    auto argflag = getopt_long(argc, argv, "v", long_options, nullptr);
+-    switch (argflag)
+-    {
+-        case 'v':
+-            verbose = true;
+-            break;
+-        case -1:
+-            break;
+-        default:
+-            optionUsage();
+-            exit(EXIT_FAILURE);
++    while ((argflag = getopt_long(argc, argv, "n:v", long_options, nullptr)) != -1) {
++        switch (argflag)
++        {
++            case 'v':
++                verbose = true;
++                break;
++            case 'n':
++                netid = (unsigned char)atoi(optarg);
++                break;
++            case -1:
++                break;
++            default:
++                optionUsage();
++                exit(EXIT_FAILURE);
++        }
+     }
+-
+     // Setup PLDM requester transport
+     auto hostEID = pldm::utils::readHostEID();
+     /* To maintain current behaviour until we have the infrastructure to find
+@@ -192,7 +199,7 @@ int main(int argc, char** argv)
+     Invoker invoker{};
+     requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
+                                                       instanceIdDb, verbose);
+-
++    pldmTransport.setNetid(netid);
+ #ifdef LIBPLDMRESPONDER
+     using namespace pldm::state_sensor;
+     dbus_api::Host dbusImplHost(bus, "/xyz/openbmc_project/pldm");
+diff --git a/pldmtool/pldm_cmd_helper.cpp b/pldmtool/pldm_cmd_helper.cpp
+index 9c7f94a34..ddc876aaf 100644
+--- a/pldmtool/pldm_cmd_helper.cpp
++++ b/pldmtool/pldm_cmd_helper.cpp
+@@ -68,6 +68,10 @@ int CommandInterface::pldmSendRecv(std::vector<uint8_t>& requestMsg,
+     auto tid = mctp_eid;
+     PldmTransport pldmTransport{};
+ 
++#if defined(PLDM_TRANSPORT_WITH_AF_MCTP)
++    pldmTransport.setNetid(mctp_netid);
++#endif
++
+     int rc = pldmTransport.sendRecvMsg(tid, requestMsg.data(),
+                                        requestMsg.size(), responseMessage,
+                                        responseMessageSize);
+diff --git a/pldmtool/pldm_cmd_helper.hpp b/pldmtool/pldm_cmd_helper.hpp
+index 2488135ab..0d34157a4 100644
+--- a/pldmtool/pldm_cmd_helper.hpp
++++ b/pldmtool/pldm_cmd_helper.hpp
+@@ -80,10 +80,11 @@ class CommandInterface
+     explicit CommandInterface(const char* type, const char* name,
+                               CLI::App* app) :
+         pldmType(type),
+-        commandName(name), mctp_eid(PLDM_ENTITY_ID), pldmVerbose(false),
++        commandName(name), mctp_eid(PLDM_ENTITY_ID), mctp_netid(0), pldmVerbose(false),
+         instanceId(0)
+     {
+         app->add_option("-m,--mctp_eid", mctp_eid, "MCTP endpoint ID");
++        app->add_option("-n,--mctp_netid", mctp_netid, "MCTP endpoint net ID");
+         app->add_flag("-v, --verbose", pldmVerbose);
+         app->callback([&]() { exec(); });
+     }
+@@ -134,6 +135,7 @@ class CommandInterface
+     const std::string pldmType;
+     const std::string commandName;
+     uint8_t mctp_eid;
++    uint8_t mctp_netid;
+     bool pldmVerbose;
+ 
+   protected:
+-- 
+2.34.1
+
