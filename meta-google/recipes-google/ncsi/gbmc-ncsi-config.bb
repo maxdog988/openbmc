@@ -5,6 +5,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/Apache-2.0;md5
 
 inherit systemd
 
+GBMC_NCSI_IF_OLD ??= ""
+GBMC_NCSI_PURGE_ETC ??= ""
+
 SRC_URI += " \
   file://-bmc-gbmcbrncsidhcp.netdev \
   file://-bmc-gbmcbrncsidhcp.network \
@@ -23,6 +26,8 @@ SRC_URI += " \
   file://gbmc-ncsi-set-nicenabled.service.in \
   file://gbmc-ncsi-alias.service.in \
   file://50-gbmc-ncsi-clear-ip.sh.in \
+  file://gbmc-ncsi-old.service.in \
+  file://gbmc-ncsi-purge.service.in \
   "
 
 S = "${WORKDIR}"
@@ -50,6 +55,8 @@ SYSTEMD_SERVICE:${PN} += " \
   gbmc-ncsi-sslh.socket \
   gbmc-ncsi-set-nicenabled.service \
   gbmc-ncsi-ip-from-ra.service \
+  ${@'' if d.getVar('GBMC_NCSI_IF_OLD') == '' else 'gbmc-ncsi-old.service'} \
+  ${@'' if d.getVar('GBMC_NCSI_PURGE_ETC') == '' else 'gbmc-ncsi-purge.service'} \
   "
 
 do_install:append() {
@@ -127,6 +134,16 @@ do_install:append() {
 
   sed "s,@NCSI_IF@,$if_name,g" ${WORKDIR}/gbmc-ncsi-dhcrelay.service.in \
     >${D}${systemd_system_unitdir}/gbmc-ncsi-dhcrelay.service
+
+  if [ -n "${GBMC_NCSI_IF_OLD}" ]; then
+    sed -e "s,@NCSI_IF@,$if_name,g" -e "s,@OLD_IF@,${GBMC_NCSI_IF_OLD},g" ${WORKDIR}/gbmc-ncsi-old.service.in \
+      >${D}${systemd_system_unitdir}/gbmc-ncsi-old.service
+  fi
+
+  if [ -n "${GBMC_NCSI_PURGE_ETC}" ]; then
+    sed -e "s,@NCSI_IF@,$if_name,g" ${WORKDIR}/gbmc-ncsi-purge.service.in \
+      >${D}${systemd_system_unitdir}/gbmc-ncsi-purge.service
+  fi
 
   sed "s,@NCSI_IF@,$if_name,g" ${WORKDIR}/gbmc-ncsi-ip-from-ra.service.in \
     >${WORKDIR}/gbmc-ncsi-ip-from-ra.service

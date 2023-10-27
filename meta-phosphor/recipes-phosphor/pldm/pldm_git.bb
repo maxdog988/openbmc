@@ -2,7 +2,7 @@ HOMEPAGE = "https://github.com/openbmc/pldm"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 SRC_URI = "git://github.com/openbmc/pldm;branch=master;protocol=https"
-SRCREV = "d310f8213a41b29c8e36e67c1a9570b72deaa958"
+SRCREV = "4ddee3a0fda62e647cadafe07062d10e9db275b4"
 
 SUMMARY = "PLDM Stack"
 DESCRIPTION = "Implementation of the PLDM specifications"
@@ -23,6 +23,11 @@ SYSTEMD_SERVICE:${PN} += "pldmSoftPowerOff.service"
 
 inherit meson pkgconfig
 inherit systemd
+
+PACKAGECONFIG[transport-mctp-demux] = "-Dtransport-implementation=mctp-demux"
+PACKAGECONFIG[transport-af-mctp] = "-Dtransport-implementation=af-mctp"
+PACKAGECONFIG ??= ""
+PACKAGECONFIG:append:df-mctp = " transport-af-mctp"
 
 EXTRA_OEMESON = " \
         -Dtests=disabled \

@@ -13,3 +13,12 @@ IMAGE_FEATURES:remove = " \
 OBMC_IMAGE_EXTRA_INSTALL:append = " \
     libusb1 \
 "
+# Temporarily add plat-svc for gpio initialization
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    plat-svc \
+"
+
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    phosphor-gpio-monitor \
+"
+
