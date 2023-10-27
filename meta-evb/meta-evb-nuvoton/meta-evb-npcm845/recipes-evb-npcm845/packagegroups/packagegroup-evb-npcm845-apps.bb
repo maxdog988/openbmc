@@ -72,5 +72,6 @@ RDEPENDS:${PN}-system = " \
         estoraged \
         cryptsetup \
         systemd-analyze \
-        libmctp \
+        pldm \
+        mctp \
         "

@@ -12,6 +12,7 @@ SRC_URI:append:evb-npcm845 = " file://0001-dts-nuvoton-evb-npcm845-support-openb
 # SRC_URI:append:evb-npcm845 = " file://0001-dts-i3c-slave.patch"
 # SRC_URI:append:evb-npcm845 = " file://i3c_mctp.cfg"
 
-# for mctp i2c test
-# SRC_URI:append:evb-npcm845 = " file://0001-dts-mctp-i2c-controller.patch"
-# SRC_URI:append:evb-npcm845 = " file://mctp.cfg"
+# for af_mctp test
+SRC_URI:append:evb-npcm845 = " file://0001-dts-mctp-i2c-controller.patch"
+SRC_URI:append:evb-npcm845 = " file://0002-dts-mctp-i3c-controller.patch"
+SRC_URI:append:evb-npcm845 = " file://mctp.cfg"
