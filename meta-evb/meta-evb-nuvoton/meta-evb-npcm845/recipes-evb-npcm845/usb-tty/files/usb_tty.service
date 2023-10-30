@@ -1,0 +1,9 @@
+[Unit]
+Description=enable usb tty
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/usr/sbin/usb_tty.sh'
+
+[Install]
+WantedBy=multi-user.target

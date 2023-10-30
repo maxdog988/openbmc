@@ -74,4 +74,5 @@ RDEPENDS:${PN}-system = " \
         systemd-analyze \
         pldm \
         mctp \
+        usb-tty \
         "
