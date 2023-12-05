@@ -26,12 +26,13 @@ For more product questions, please contact us at:
   * [Setting up EVB](#setting-up-evb)
   * [Building your OpenBMC project](#building-your-openbmc-project)
     + [Enable Secure Image](#enable-secure-image)
+    + [Enable TIP FW](#enable-tip-fw)
     + [Enable NO TIP FW](#enable-no-tip-fw)
     + [Enable ECC](#enable-ecc)
+    + [Change FIU Speed](#change-fiu-speed)
     + [Configuration](#configuration)
     + [Build](#build)
     + [Output Images](#output-images)
-    + [Change FIU Speed](#change-fiu-speed)
   * [Flash Programing Tool](#flash-programing-tool)
     + [IGPS](#igps)
     + [ISP](#ISP)
@@ -112,30 +113,74 @@ To enable Secure Image function, please set below variable in your platform incl
 SECURED_IMAGE = "True"
 ```
 
+### Enable TIP FW
+
+The TIP FW currently is a pre-signed binary release, it is required a nuvoton key.
+
+We enable the tipfw build by defaule. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
+```ruby
+TIP_IMAGE = "True"
+```
+
 ### Enable NO TIP FW
 
-To enable NO TIP FW function, please set below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
+Please make sure that your BMC is non-tip version first.
+
+To enable NO TIP FW OpenBMC release, please set below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
 ```ruby
 TIP_IMAGE = "False"
 ```
 
 ### Enable ECC
 
-To enable memory ECC function, please enable [MC_CAPABILITY_ECC_EN](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/recipes-bsp/images/npcm8xx-igps/BootBlockAndHeader_EB.xml#L181)
+To enable memory ECC function, please enable [MC_CAPABILITY_ECC_EN] in your customized [BootBlockAndHeader.xml](https://github.com/Nuvoton-Israel/igps-npcm8xx/blob/main/py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_EB.xml#L243)
+
+You have to add a customized BootBlockAndHeader.xml in the npcm8xx-igps-native_%.bbappend of your project layer.
 ```ruby
 <BinField>
-	<!-- MC_CONFIG. 
-		Bit 0: MC_CAPABILITY_ECC_EN (0x01)
-		 -->
-	<name>MC_CONFIG</name>          
-	<config>
-		<offset>0x134</offset>       
-		<size>0x1</size> 
-	</config>
-	<content format='32bit'>0x01</content>  
+<!-- MC_CONFIG. 
+			Bit 0: ECC enable (0x01)
+			Bit 2: Select DRAM type. 
+				0: 1600 DRAM type clk.
+				1: 2133 DRAM type clk.
+			Bit 3: enable 3 seconds delay.
+			Bit 4: enable debug sweeps (in addition to sweep_debug)
+			Bit 5: enable prints during MC training
+			Bit 6: DRAM is DDP device (default is SDP)
+			 -->
+		<name>MC_CONFIG</name>          
+		<config>
+			<offset>0x134</offset>       
+			<size>0x1</size> 
+		</config>
+		<content format='32bit'>0x05</content>  
 </BinField>
 ```
 
+### Change FIU Speed
+
+To change FIU Speed, please modify content value of FIU_CLK_DIVIDER in **BootBlockAndHeader.xml** file. [Reference](https://github.com/Nuvoton-Israel/igps-npcm8xx/blob/main/py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_EB.xml#L566)
+
+You have to add a customized BootBlockAndHeader.xml in the npcm8xx-igps-native_%.bbappend of your project layer.
+
+Change to **25 MHz** then divider value should be filled as **10**.
+
+Change to **50 MHz** then divider value should be filled as **5**.
+
+The other value can be calculated according spec.
+
+Below is example for changing FIU0 speed to 50MHz.
+```ruby
+<BinField>
+	<!-- FIU 0 clk divider. -->
+	<name>FIU0_CLK_DIVIDER</name>
+	<config>
+		<offset>0x14F</offset>
+		<size>0x1</size>
+	</config>
+	<content format='32bit'>5</content>
+</BinField>
+```
 ### Configuration
 
 - If you are using Red EVB board, please enable the [dts patch](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_%25.bbappend#L5)
@@ -165,34 +210,9 @@ DISTRO=arbel-evb-entity bitbake obmc-phosphor-image
 Type          | Description                                                                                                     |
 :-------------|:-------------------------------------------------------------------------------------------------------- |
 image-bmc   |  includes image-u-boot and image-kernel and image-rofs                                                                     |
-image-uboot   |  tipfw + bootlock + u-boot                                                                     |
+image-uboot   |  tipfw + bootlock + optee + atf + u-boot                                                                     |
 image-kernel  |  Fit Image(Linux kernel + dtb+ initramfs)                                                                                     |
 image-rofs    |  OpenBMC Root Filesystem                                                          |
-
-### Change FIU Speed
-
-NPCM845 support to change FIU speed depends on your platform design.
-To change FIU Speed, please modify content value of FIU_CLK_DIVIDER in **BootBlockAndHeader.xml** file. [Reference](https://github.com/Nuvoton-Israel/igps-npcm8xx/blob/main/py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_EB.xml#L560)
-
-For NPCM845, you need to modify **BootBlockAndHeader_A1_EB.xml** that local at below path:
-```ruby
-tmp/work/evb_npcm845-openbmc-linux/obmc-phosphor-image/1.0-r0/recipe-sysroot-native/usr/share/npcm8xx-igps
-```
-Change to **25 MHz** then divider value should be filled as **10**.
-Change to **50 MHz** then divider value should be filled as **5**.
-The other value can be calculated according spec.
-Below is example for changing FIU0 speed to 50MHz.
-```ruby
-<BinField>
-	<!-- FIU 0 clk divider. -->
-	<name>FIU0_CLK_DIVIDER</name>
-	<config>
-		<offset>0x14F</offset>
-		<size>0x1</size>
-	</config>
-	<content format='32bit'>5</content>
-</BinField>
-```
 
 ## Flash Programing Tool
 
