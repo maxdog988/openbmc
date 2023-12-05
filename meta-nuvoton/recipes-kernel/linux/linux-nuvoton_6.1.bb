@@ -1,7 +1,7 @@
 KSRC = "git://github.com/Nuvoton-Israel/linux;protocol=https;branch=${KBRANCH}"
 KBRANCH = "NPCM-6.1-OpenBMC"
 LINUX_VERSION = "6.1.12"
-SRCREV = "ab38ca89232b61b23704593d38472def2ff19e43"
+SRCREV = "0c09ffb71b6e8359d44585a20da5710a6327aad3"
 
 require linux-nuvoton.inc
 
