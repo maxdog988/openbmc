@@ -50,7 +50,6 @@ RDEPENDS_PN_SYSTEM_EXTRAS:fb-withhost = " \
         fb-ipmi-oem \
         phosphor-hostlogger \
         phosphor-sel-logger \
-        ipmitool \
         phosphor-post-code-manager \
         phosphor-host-postd \
         phosphor-state-manager \
@@ -64,5 +63,6 @@ RDEPENDS:${PN}-system = " \
         phosphor-fan-sensor-monitor \
         phosphor-gpio-monitor-monitor \
         tzdata-core \
+        fb-common-functions \
         ${RDEPENDS_PN_SYSTEM_EXTRAS} \
         "
