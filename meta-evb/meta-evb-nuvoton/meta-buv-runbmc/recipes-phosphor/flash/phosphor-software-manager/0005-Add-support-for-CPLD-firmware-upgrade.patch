@@ -1,10 +1,11 @@
-From fe8df94d441d2db1edd003d3d798c75f3d70fd49 Mon Sep 17 00:00:00 2001
+From 5129f4d85bc9722f0bd10fd418e2a6f3f0fb8940 Mon Sep 17 00:00:00 2001
 From: Eason Yang <yhyang2@nuvoton.com>
 Date: Mon, 6 Feb 2023 13:20:02 +0800
-Subject: [PATCH 5/5] Add support for CPLD firmware upgrade
+Subject: [PATCH] Add support for CPLD firmware upgrade
 
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  activation.cpp   | 79 ++++++++++++++++++++++++++++++++++++++++++++++++
  activation.hpp   |  5 +++
@@ -252,7 +253,7 @@ index 0ac964a..0d3a249 100644
      void getRunningSlot();
  };
 diff --git a/meson.build b/meson.build
-index 2db72a5..de6accc 100644
+index 5720213..540b332 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -61,6 +61,8 @@ conf.set_quoted('OS_RELEASE_FILE', '/etc/os-release')
@@ -264,14 +265,14 @@ index 2db72a5..de6accc 100644
  # The dir where activation data is stored in files
  conf.set_quoted('PERSIST_DIR', '/var/lib/phosphor-bmc-code-mgmt/')
  
-@@ -72,6 +74,7 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
- # Configurable features
- conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').enabled())
+@@ -73,6 +75,7 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
+ conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').allowed())
+ conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').allowed())
  conf.set('MCU_UPGRADE', get_option('mcu-upgrade').enabled())
 +conf.set('CPLD_UPGRADE', get_option('cpld-upgrade').enabled())
- conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').enabled())
  
  # Configurable variables
+ conf.set('ACTIVE_BMC_MAX_ALLOWED', get_option('active-bmc-max-allowed'))
 @@ -103,6 +106,10 @@ if get_option('mcu-upgrade').enabled()
      conf.set_quoted('MCU_OBJPATH', get_option('mcu-object-path'))
  endif
@@ -280,8 +281,8 @@ index 2db72a5..de6accc 100644
 +    conf.set_quoted('CPLD_OBJPATH', get_option('cpld-object-path'))
 +endif
 +
- if get_option('bmc-static-dual-image').enabled()
-   conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').enabled())
+ if get_option('bmc-static-dual-image').allowed()
+   conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').allowed())
    conf.set_quoted('ALT_ROFS_DIR', get_option('alt-rofs-dir'))
 diff --git a/meson.options b/meson.options
 index 192c012..e9bf4c7 100644

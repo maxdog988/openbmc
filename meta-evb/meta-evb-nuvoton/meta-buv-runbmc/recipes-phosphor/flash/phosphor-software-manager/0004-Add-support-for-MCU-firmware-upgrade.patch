@@ -1,7 +1,7 @@
-From cfab2f9a92c65b14df4de051587f56edef0a857a Mon Sep 17 00:00:00 2001
+From 9023fa650758e58e597a3add36ce23a8f380a907 Mon Sep 17 00:00:00 2001
 From: Eason Yang <yhyang2@nuvoton.com>
 Date: Mon, 6 Feb 2023 11:49:04 +0800
-Subject: [PATCH 4/5] Add support for MCU firmware upgrade
+Subject: [PATCH] Add support for MCU firmware upgrade
 
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
@@ -277,7 +277,7 @@ index 316113a..0ac964a 100644
      void getRunningSlot();
  };
 diff --git a/meson.build b/meson.build
-index bde7510..2db72a5 100644
+index 5219a62..5720213 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -59,6 +59,8 @@ conf.set_quoted('BMC_ROFS_PREFIX', get_option('media-dir') + '/rofs-')
@@ -289,12 +289,11 @@ index bde7510..2db72a5 100644
  # The dir where activation data is stored in files
  conf.set_quoted('PERSIST_DIR', '/var/lib/phosphor-bmc-code-mgmt/')
  
-@@ -69,12 +71,14 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
- 
+@@ -70,11 +72,13 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
  # Configurable features
- conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').enabled())
+ conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').allowed())
+ conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').allowed())
 +conf.set('MCU_UPGRADE', get_option('mcu-upgrade').enabled())
- conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').enabled())
  
  # Configurable variables
  conf.set('ACTIVE_BMC_MAX_ALLOWED', get_option('active-bmc-max-allowed'))
@@ -304,7 +303,7 @@ index bde7510..2db72a5 100644
  conf.set_quoted('MANIFEST_FILE_NAME', get_option('manifest-file-name'))
  conf.set_quoted('MEDIA_DIR', get_option('media-dir'))
  optional_array = get_option('optional-images')
-@@ -95,6 +99,10 @@ if get_option('host-bios-upgrade').enabled()
+@@ -95,6 +99,10 @@ if get_option('host-bios-upgrade').allowed()
      conf.set_quoted('BIOS_OBJPATH', get_option('bios-object-path'))
  endif
  
@@ -312,8 +311,8 @@ index bde7510..2db72a5 100644
 +    conf.set_quoted('MCU_OBJPATH', get_option('mcu-object-path'))
 +endif
 +
- if get_option('bmc-static-dual-image').enabled()
-   conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').enabled())
+ if get_option('bmc-static-dual-image').allowed()
+   conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').allowed())
    conf.set_quoted('ALT_ROFS_DIR', get_option('alt-rofs-dir'))
 diff --git a/meson.options b/meson.options
 index b088a8d..192c012 100644
