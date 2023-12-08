@@ -1,4 +1,4 @@
-From 319146ad58b3dda16a851b6e46af8873f0b0278f Mon Sep 17 00:00:00 2001
+From 829f31147b52a153dc8c23959f0f66607c4d7cc7 Mon Sep 17 00:00:00 2001
 From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 26 Sep 2023 10:51:53 +0800
 Subject: [PATCH] Add support for PSU firmware upgrade
@@ -251,7 +251,7 @@ index 316113a..42a76e3 100644
      void getRunningSlot();
  };
 diff --git a/meson.build b/meson.build
-index bde7510..df9f62f 100644
+index 5219a62..891de27 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -57,6 +57,8 @@ conf.set_quoted('UPDATEABLE_REV_ASSOCIATION', 'software_version')
@@ -263,25 +263,25 @@ index bde7510..df9f62f 100644
  # The name of the host firmware version file
  conf.set_quoted('HOST_RELEASE_FILE', 'bios-release')
  # The dir where activation data is stored in files
-@@ -69,6 +71,7 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
- 
+@@ -70,6 +72,7 @@ conf.set('MMC_LAYOUT', get_option('bmc-layout').contains('mmc'))
  # Configurable features
- conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').enabled())
+ conf.set('HOST_BIOS_UPGRADE', get_option('host-bios-upgrade').allowed())
+ conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').allowed())
 +conf.set('PSU_UPGRADE', get_option('psu-upgrade').enabled())
- conf.set('WANT_SIGNATURE_VERIFY', get_option('verify-signature').enabled())
  
  # Configurable variables
-@@ -95,6 +98,10 @@ if get_option('host-bios-upgrade').enabled()
-     conf.set_quoted('BIOS_OBJPATH', get_option('bios-object-path'))
+ conf.set('ACTIVE_BMC_MAX_ALLOWED', get_option('active-bmc-max-allowed'))
+@@ -103,6 +106,10 @@ else
+   conf.set_quoted('ALT_RWFS', '/media/alt/var/persist')
  endif
  
 +if get_option('psu-upgrade').enabled()
 +    conf.set_quoted('PSU_OBJPATH', get_option('psu-object-path'))
 +endif
 +
- if get_option('bmc-static-dual-image').enabled()
-   conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').enabled())
-   conf.set_quoted('ALT_ROFS_DIR', get_option('alt-rofs-dir'))
+ configure_file(output: 'config.h', configuration: conf)
+ 
+ sdbusplus_dep = dependency('sdbusplus')
 diff --git a/meson.options b/meson.options
 index b088a8d..787d27f 100644
 --- a/meson.options
