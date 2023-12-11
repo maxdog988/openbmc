@@ -1,16 +1,16 @@
-From c6c445f2e27727f3f5f7b047cedbc164eeb75f55 Mon Sep 17 00:00:00 2001
+From 8a4f355b1ffea8a9ec3eea41393916318c62dcc8 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 17:23:50 +0800
-Subject: [PATCH 03/19] Add sensor type command
+Subject: [PATCH 03/17] Add sensor type command
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
- dbus-sdr/sensorcommands.cpp | 34 ++++++++++++++++++++++++++++++++++
+ dbus-sdr/sensorcommands.cpp | 35 +++++++++++++++++++++++++++++++++++
  sensorhandler.cpp           | 10 +++++-----
- 2 files changed, 39 insertions(+), 5 deletions(-)
+ 2 files changed, 40 insertions(+), 5 deletions(-)
 
 diff --git a/dbus-sdr/sensorcommands.cpp b/dbus-sdr/sensorcommands.cpp
-index 5a62d7b7..e50e6542 100644
+index 55ba6d94..ffacf297 100644
 --- a/dbus-sdr/sensorcommands.cpp
 +++ b/dbus-sdr/sensorcommands.cpp
 @@ -2315,6 +2315,35 @@ static ipmi::RspType<uint8_t, // respcount
@@ -49,10 +49,16 @@ index 5a62d7b7..e50e6542 100644
  /* end sensor commands */
  
  /* storage commands */
-@@ -2670,5 +2699,10 @@ void registerSensorFunctions()
+@@ -2853,10 +2882,16 @@ void registerSensorFunctions()
                                 ipmi::dcmi::cmdGetDcmiSensorInfo,
                                 ipmi::Privilege::Operator,
                                 ipmi::dcmi::getSensorInfo);
++
+     // <Get Temperature Readings>
+     ipmi::registerGroupHandler(ipmi::prioOpenBmcBase, ipmi::groupDCMI,
+                                ipmi::dcmi::cmdGetTemperatureReadings,
+                                ipmi::Privilege::User,
+                                ipmi::dcmi::getTempReadings);
 +
 +    // <Get Sensor Type>
 +    ipmi::registerHandler(ipmi::prioOpenBmcBase, ipmi::netFnSensor,
@@ -61,7 +67,7 @@ index 5a62d7b7..e50e6542 100644
  }
  } // namespace ipmi
 diff --git a/sensorhandler.cpp b/sensorhandler.cpp
-index c46157c1..3fcb75d6 100644
+index ad7286b4..b1c1cdf0 100644
 --- a/sensorhandler.cpp
 +++ b/sensorhandler.cpp
 @@ -1530,6 +1530,11 @@ void register_netfn_sen_functions()
