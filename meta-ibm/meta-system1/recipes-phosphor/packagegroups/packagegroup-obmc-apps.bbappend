@@ -12,7 +12,10 @@ RPROVIDES:${PN}-chassis += "virtual-obmc-chassis-mgmt"
 
 SUMMARY:${PN}-chassis = "OpenPOWER Chassis"
 RDEPENDS:${PN}-chassis = " \
+        obmc-phosphor-buttons-signals \
+        obmc-phosphor-buttons-handler \
         phosphor-power-control \
+        phosphor-power-psu-monitor \
         phosphor-skeleton-control-power \
 "
 
