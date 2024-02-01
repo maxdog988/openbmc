@@ -406,11 +406,14 @@ gzwrite mmc 0 10000000 ${filesize}
 
 * boot Openbmc
 ```ruby
-setenv bootargs earlycon=uart8250,mmio32,0xf0000000 console=ttyS0,115200n8
+setenv bootargs earlycon=uart8250,mmio32,0xf0000000 console=ttyS0,115200n8 
 setenv setmmcargs 'setenv bootargs ${bootargs} rootwait root=PARTLABEL=${rootfs}'
+setenv boota 'setenv bootpart 2; setenv rootfs rofs-a; run setmmcargs; ext4load mmc 0:${bootpart} ${loadaddr} fitImage && bootm; echo Error loading kernel FIT image'
+setenv bootb 'setenv bootpart 3; setenv rootfs rofs-b; run setmmcargs; ext4load mmc 0:${bootpart} ${loadaddr} fitImage && bootm; echo Error loading kernel FIT image'
+setenv mmcboot 'if test "${bootside}" = "b"; then run bootb; run boota; else run boota; run bootb; fi'
+setenv bootside a
 setenv loadaddr 0x10000000
-setenv mmcboot 'setenv bootpart 2; setenv rootfs rofs-a; run setmmcargs; ext4load mmc 0:${bootpart} ${loadaddr} fitImage && bootm ${loadaddr}; echo Error loading kernel FIT image'
-run mmcboot
+setenv bootcmd run mmcboot
 ```
 
 ## Baudrate change
