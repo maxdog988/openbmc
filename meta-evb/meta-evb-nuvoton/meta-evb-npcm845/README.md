@@ -71,6 +71,7 @@ For more product questions, please contact us at:
   * [FLM](#flm)
   * [Watchdog](#watchdog)
   * [Software Reset](#software-reset)
+- [QEMU](#qemu)
 - [Troubleshooting](#troubleshooting)
   * [Failed to probe SPI0 CS0 in u-boot](#failed-to-probe-SPI0-CS0-in-u-boot)
 
@@ -2492,7 +2493,20 @@ Software reset (1 to 3) is generated on assertion of the SWRST1-3 registers.
 ```
 CONFIG_RESET_NPCM=y
 ```
+# QEMU
 
+**Build QEMU**
+```
+$ git clone git@github.com:Nuvoton-Israel/qemu.git
+$ cd qemu
+$ ./configure --target-list=aarch64-softmmu
+$ make -j $(nproc)    // will generate build/qemu-system-aarch64
+```
+**Run QEMU**
+```
+$ cd build
+$ ./qemu-system-aarch64 -machine npcm845-evb -nographic -bios ../pc-bios/npcm8xx_bootrom.bin -mtdblock image-bmc
+```
 # Troubleshooting
 
 ## Failed to probe SPI0 CS0 in u-boot
