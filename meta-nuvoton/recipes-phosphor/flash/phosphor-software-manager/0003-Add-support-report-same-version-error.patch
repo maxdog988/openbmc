@@ -1,15 +1,16 @@
-From 66f0dca90d7733af0e6fb181ae8047f563c7056e Mon Sep 17 00:00:00 2001
+From 1bebe4ee64ce52c186dd645bf123145b3d8c771c Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 17 Feb 2022 08:55:45 +0800
-Subject: [PATCH 3/3] Add support report same version error
+Subject: [PATCH] Add support report same version error
 
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- image_manager.cpp | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ image_manager.cpp | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/image_manager.cpp b/image_manager.cpp
-index 4fc4f8e..c85290a 100644
+index 46f023a..cafd4a2 100644
 --- a/image_manager.cpp
 +++ b/image_manager.cpp
 @@ -15,6 +15,7 @@
@@ -20,22 +21,21 @@ index 4fc4f8e..c85290a 100644
  
  #include <algorithm>
  #include <cstring>
-@@ -34,11 +35,14 @@ namespace manager
+@@ -34,11 +35,13 @@ namespace manager
  PHOSPHOR_LOG2_USING;
  using namespace phosphor::logging;
- using namespace sdbusplus::xyz::openbmc_project::Software::Image::Error;
-+using namespace sdbusplus::xyz::openbmc_project::Software::Version::Error;
-+using ExitFail = xyz::openbmc_project::Software::Version::AlreadyExists;
- namespace Software = phosphor::logging::xyz::openbmc_project::Software;
- using ManifestFail = Software::Image::ManifestFileFailure;
- using UnTarFail = Software::Image::UnTarFailure;
- using InternalFail = Software::Image::InternalFailure;
- using ImageFail = Software::Image::ImageFailure;
-+using ExitFail = Software::Version::AlreadyExists;
+ using namespace sdbusplus::error::xyz::openbmc_project::software::image;
++using namespace sdbusplus::error::xyz::openbmc_project::software::version;
+ namespace Software = phosphor::logging::xyz::openbmc_project::software;
+ using ManifestFail = Software::image::ManifestFileFailure;
+ using UnTarFail = Software::image::UnTarFailure;
+ using InternalFail = Software::image::InternalFailure;
+ using ImageFail = Software::image::ImageFailure;
++using ExitFail = Software::version::AlreadyExists;
  namespace fs = std::filesystem;
  
  struct RemovablePath
-@@ -229,8 +233,10 @@ int Manager::processImage(const std::string& tarFilePath)
+@@ -229,8 +232,10 @@ int Manager::processImage(const std::string& tarFilePath)
      }
      else
      {

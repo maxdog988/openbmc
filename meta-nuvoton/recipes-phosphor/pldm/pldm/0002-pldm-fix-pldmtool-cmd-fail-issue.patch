@@ -1,4 +1,4 @@
-From 10360f5f7fa4d653006b75341e27c83cf2b9f692 Mon Sep 17 00:00:00 2001
+From ca789c3d59dd6498b395214af1efbe5bce2d518f Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
 Subject: [PATCH] pldm: fix pldmtool cmd fail issue
@@ -10,10 +10,10 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  common/transport.cpp         |  7 +++++++
  common/transport.hpp         |  4 ++++
- pldmd/pldmd.cpp              | 33 ++++++++++++++++++++-------------
+ pldmd/pldmd.cpp              | 32 ++++++++++++++++++++------------
  pldmtool/pldm_cmd_helper.cpp |  4 ++++
  pldmtool/pldm_cmd_helper.hpp |  4 +++-
- 5 files changed, 38 insertions(+), 14 deletions(-)
+ 5 files changed, 38 insertions(+), 13 deletions(-)
 
 diff --git a/common/transport.cpp b/common/transport.cpp
 index d9924151f..32ec37efb 100644
@@ -49,7 +49,7 @@ index 060148852..d2bd8c84c 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index a85157f65..2d77b775c 100644
+index f510f75fc..5b9126474 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
 @@ -66,6 +66,7 @@ PHOSPHOR_LOG2_USING;
@@ -60,7 +60,7 @@ index a85157f65..2d77b775c 100644
  
  using namespace pldm;
  using namespace sdeventplus;
-@@ -151,27 +152,33 @@ void optionUsage(void)
+@@ -151,25 +152,32 @@ void optionUsage(void)
      info("Usage: pldmd [options]");
      info("Options:");
      info(" [--verbose] - would enable verbosity");
@@ -72,7 +72,7 @@ index a85157f65..2d77b775c 100644
 +    int argflag;
      bool verbose = false;
      static struct option long_options[] = {{"verbose", no_argument, 0, 'v'},
-+                                           {"netid", required_argument, 0, 'n'},
++                                           {"netid", required_argument, 0, 'x'},
                                             {0, 0, 0, 0}};
  
 -    auto argflag = getopt_long(argc, argv, "v", long_options, nullptr);
@@ -86,13 +86,13 @@ index a85157f65..2d77b775c 100644
 -        default:
 -            optionUsage();
 -            exit(EXIT_FAILURE);
-+    while ((argflag = getopt_long(argc, argv, "n:v", long_options, nullptr)) != -1) {
++    while ((argflag = getopt_long(argc, argv, "x:v", long_options, nullptr)) != -1) {
 +        switch (argflag)
 +        {
 +            case 'v':
 +                verbose = true;
 +                break;
-+            case 'n':
++            case 'x':
 +                netid = (unsigned char)atoi(optarg);
 +                break;
 +            case -1:
@@ -102,11 +102,9 @@ index a85157f65..2d77b775c 100644
 +                exit(EXIT_FAILURE);
 +        }
      }
--
      // Setup PLDM requester transport
      auto hostEID = pldm::utils::readHostEID();
-     /* To maintain current behaviour until we have the infrastructure to find
-@@ -192,7 +199,7 @@ int main(int argc, char** argv)
+@@ -191,7 +199,7 @@ int main(int argc, char** argv)
      Invoker invoker{};
      requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
                                                        instanceIdDb, verbose);

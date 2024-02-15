@@ -1,6 +1,5 @@
 FILESEXTRAPATHS:prepend:buv-runbmc := "${THISDIR}/${PN}:"
 
-SRC_URI:append:buv-runbmc = " file://0003-Add-support-report-same-version-error.patch"
 SRC_URI:append:buv-runbmc = " file://0004-Add-support-for-MCU-firmware-upgrade.patch"
 SRC_URI:append:buv-runbmc = " file://0005-Add-support-for-CPLD-firmware-upgrade.patch"
 
