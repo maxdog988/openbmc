@@ -6,6 +6,8 @@ a variety of guest operating systems"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPL-2.0-only & LGPL-2.1-only"
 
+DEPENDS += "bison-native meson-native ninja-native"
+
 RDEPENDS:${PN}-ptest = "bash"
 
 require qemu-targets.inc
@@ -30,17 +32,16 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-hw-pvrdma-Protect-against-buggy-or-malicious-guest-d.patch \
            file://0002-linux-user-Replace-use-of-lfs64-related-functions-an.patch \
            file://fixedmeson.patch \
-           file://fixmips.patch \
+           file://0001-vfio-Include-libgen.h-for-basename-API.patch \
+           file://no-pip.patch \
+           file://fix_segv.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
 
-SRC_URI[sha256sum] = "541526a764576eb494d2ff5ec46aeb253e62ea29035d1c23c0a8af4e6cd4f087"
-
-SRC_URI:append:class-target = " file://cross.patch"
-SRC_URI:append:class-nativesdk = " file://cross.patch"
+SRC_URI[sha256sum] = "bf00d2fa12010df8b0ade93371def58e632cb32a6bfdc5f5a0ff8e6a1fb1bf32"
 
 CVE_STATUS[CVE-2017-5957] = "cpe-incorrect: Applies against virglrender < 0.6.0 and not qemu itself"
 
@@ -113,8 +114,12 @@ EXTRA_OECONF = " \
     --extra-ldflags='${LDFLAGS}' \
     --disable-download \
     --disable-docs \
+    --host-cc=${BUILD_CC} \
     ${PACKAGECONFIG_CONFARGS} \
     "
+
+EXTRA_OECONF:append:class-target = " --cross-prefix=${HOST_PREFIX}"
+EXTRA_OECONF:append:class-nativesdk = " --cross-prefix=${HOST_PREFIX}"
 
 B = "${WORKDIR}/build"
 
@@ -129,6 +134,7 @@ do_configure:prepend:class-native() {
 }
 
 do_configure() {
+    export PKG_CONFIG=pkg-config
     ${S}/configure ${EXTRA_OECONF}
 }
 do_configure[cleandirs] += "${B}"
@@ -172,7 +178,7 @@ do_install:append() {
 
 # Disable kvm/virgl/mesa on targets that do not support it
 PACKAGECONFIG:remove:darwin = "kvm virglrenderer epoxy gtk+"
-PACKAGECONFIG:remove:mingw32 = "kvm virglrenderer epoxy gtk+"
+PACKAGECONFIG:remove:mingw32 = "kvm virglrenderer epoxy gtk+ pie"
 
 PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl2"
 PACKAGECONFIG[png] = "--enable-png,--disable-png,libpng"
@@ -232,6 +238,8 @@ PACKAGECONFIG[slirp] = "--enable-slirp,--disable-slirp,libslirp"
 PACKAGECONFIG[brlapi] = "--enable-brlapi,--disable-brlapi"
 PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack,"
 PACKAGECONFIG[debuginfo] = "--enable-libdw,--disable-libdw,elfutils"
+PACKAGECONFIG[pipewire] = "--enable-pipewire,--disable-pipewire,pipewire"
+PACKAGECONFIG[sndio] = "--enable-sndio,--disable-sndio,sndio"
 
 INSANE_SKIP:${PN}-common = "arch"
 

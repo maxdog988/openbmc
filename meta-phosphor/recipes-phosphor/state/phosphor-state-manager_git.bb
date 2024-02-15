@@ -234,7 +234,7 @@ START_TMPL_CTRL = "obmc-chassis-poweron@.target"
 START_TGTFMT_CTRL = "obmc-host-startmin@{1}.target"
 START_INSTFMT_CTRL = "obmc-chassis-poweron@{0}.target"
 START_FMT_CTRL = "../${START_TMPL_CTRL}:${START_TGTFMT_CTRL}.requires/${START_INSTFMT_CTRL}"
-SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'START_FMT_CTRL', 'OBMC_POWER_INSTANCES', 'OBMC_CHASSIS_INSTANCES')}"
+SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'START_FMT_CTRL', 'OBMC_CHASSIS_INSTANCES', 'OBMC_CHASSIS_INSTANCES')}"
 
 # Chassis off requires host off
 STOP_TMPL_CTRL = "obmc-host-stop@.target"
@@ -258,6 +258,6 @@ RESET_FMT_CTRL = "../${RESET_TMPL_CTRL}:${SYSD_TGT}.wants/${RESET_INSTFMT_CTRL}"
 SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'RESET_FMT_CTRL', 'OBMC_CHASSIS_INSTANCES')}"
 
 SRC_URI = "git://github.com/openbmc/phosphor-state-manager;branch=master;protocol=https"
-SRCREV = "f0865dee9a54f382c38e1b5a0752907042eecb3f"
+SRCREV = "e9040bb8b2d3be3c9ce968c04e43dcadeb284edd"
 
 S = "${WORKDIR}/git"

@@ -1,12 +1,12 @@
 require ${BPN}.inc
 
 DEPENDS = " \
-    ${BPN}-native intltool-native gperf-native \
+    ${BPN}-native gperf-native \
     glib-2.0 gtk+3 gtk4 libxml2 icu \
     dbus db virtual/libiconv zlib libsoup-3.0 libical nss libsecret \
 "
 
-inherit pkgconfig gsettings gobject-introspection features_check cmake gtk-doc gettext perlnative vala
+inherit pkgconfig gsettings gobject-introspection features_check gtk-doc gettext perlnative vala
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 REQUIRED_DISTRO_FEATURES = "opengl"

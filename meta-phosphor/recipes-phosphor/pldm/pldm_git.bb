@@ -2,7 +2,7 @@ HOMEPAGE = "https://github.com/openbmc/pldm"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 SRC_URI = "git://github.com/openbmc/pldm;branch=master;protocol=https"
-SRCREV = "4cc1f7cf3a05f5055a248d30036548de0ac182ce"
+SRCREV = "b4ef4310bdda97566d20a6b8a04215c8fb4fb308"
 
 SUMMARY = "PLDM Stack"
 DESCRIPTION = "Implementation of the PLDM specifications"
@@ -26,12 +26,12 @@ inherit systemd
 
 PACKAGECONFIG[transport-mctp-demux] = "-Dtransport-implementation=mctp-demux"
 PACKAGECONFIG[transport-af-mctp] = "-Dtransport-implementation=af-mctp"
+PACKAGECONFIG[oem-ibm] = "-Doem-ibm=enabled, -Doem-ibm=disabled, , squashfs-tools"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG:append:df-mctp = " transport-af-mctp"
 
 EXTRA_OEMESON = " \
         -Dtests=disabled \
-        -Doem-ibm=disabled \
         "
 
 pkg_prerm:${PN} () {

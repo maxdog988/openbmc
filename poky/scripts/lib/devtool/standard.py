@@ -147,6 +147,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' -a'
     if args.npm_dev:
         extracmdopts += ' --npm-dev'
+    if args.no_pypi:
+        extracmdopts += ' --no-pypi'
     if args.mirrors:
         extracmdopts += ' --mirrors'
     if args.srcrev:
@@ -770,7 +772,7 @@ def get_staging_kver(srcdir):
 def get_staging_kbranch(srcdir):
     staging_kbranch = ""
     if os.path.exists(srcdir) and os.listdir(srcdir):
-        (branch, _) = bb.process.run('git branch | grep \* | cut -d \' \' -f2', cwd=srcdir)
+        (branch, _) = bb.process.run('git branch | grep \\* | cut -d \' \' -f2', cwd=srcdir)
         staging_kbranch = "".join(branch.split('\n')[0])
     return staging_kbranch
 
@@ -919,7 +921,7 @@ def modify(args, config, basepath, workspace):
                     if line.startswith('*'):
                         (stdout, _) = bb.process.run('git rev-parse devtool-base', cwd=srctree)
                         initial_revs["."] = stdout.rstrip()
-                if not initial_revs["."]:
+                if "." not in initial_revs:
                     # Otherwise, just grab the head revision
                     (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
                     initial_revs["."] = stdout.rstrip()
@@ -954,6 +956,26 @@ def modify(args, config, basepath, workspace):
 
         bb.utils.mkdirhier(os.path.dirname(appendfile))
         with open(appendfile, 'w') as f:
+            # if not present, add type=git-dependency to the secondary sources
+            # (non local files) so they can be extracted correctly when building a recipe after
+            #  doing a devtool modify on it
+            src_uri = rd.getVar('SRC_URI').split()
+            src_uri_append = []
+            src_uri_remove = []
+
+            # Assume first entry is main source extracted in ${S} so skip it
+            src_uri = src_uri[1::]
+
+            #Add "type=git-dependency" to all non local sources
+            for url in src_uri:
+                if not url.startswith('file://') and not 'type=' in url:
+                    src_uri_remove.append(url)
+                    src_uri_append.append('%s;type=git-dependency' % url)
+
+            if src_uri_remove:
+                f.write('SRC_URI:remove = "%s"\n' % ' '.join(src_uri_remove))
+                f.write('SRC_URI:append = "%s"\n\n' % ' '.join(src_uri_append))
+
             f.write('FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n')
             # Local files can be modified/tracked in separate subdir under srctree
             # Mostly useful for packages with S != WORKDIR
@@ -984,14 +1006,15 @@ def modify(args, config, basepath, workspace):
                         '}\n')
             if rd.getVarFlag('do_menuconfig','task'):
                 f.write('\ndo_configure:append() {\n'
-                '    if [ ${@ oe.types.boolean(\'${KCONFIG_CONFIG_ENABLE_MENUCONFIG}\') } = True ]; then\n'
+                '    if [ ${@oe.types.boolean(d.getVar("KCONFIG_CONFIG_ENABLE_MENUCONFIG"))} = True ]; then\n'
                 '        cp ${KCONFIG_CONFIG_ROOTDIR}/.config ${S}/.config.baseline\n'
                 '        ln -sfT ${KCONFIG_CONFIG_ROOTDIR}/.config ${S}/.config.new\n'
                 '    fi\n'
                 '}\n')
             if initial_revs:
                 for name, rev in initial_revs.items():
-                        f.write('\n# initial_rev %s: %s\n' % (name, rev))
+                    f.write('\n# initial_rev %s: %s\n' % (name, rev))
+                    if name in commits:
                         for commit in commits[name]:
                             f.write('# commit %s: %s\n' % (name, commit))
             if branch_patches:
@@ -2328,6 +2351,7 @@ def register_commands(subparsers, context):
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree (deprecated - pass as positional argument instead)', metavar='URI')
     parser_add.add_argument('--npm-dev', help='For npm, also fetch devDependencies', action="store_true")
+    parser_add.add_argument('--no-pypi', help='Do not inherit pypi class', action="store_true")
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
     group = parser_add.add_mutually_exclusive_group()

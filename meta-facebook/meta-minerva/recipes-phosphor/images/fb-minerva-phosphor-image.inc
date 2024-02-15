@@ -9,3 +9,21 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " \
 OBMC_IMAGE_EXTRA_INSTALL:append = " \
     plat-svc \
 "
+
+# For console to the MTIA blade
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    obmc-console \
+"
+
+# Enable for debug card function
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    phosphor-ipmi-ipmb \
+    fb-ipmi-oem \
+    obmc-phosphor-buttons-signals \
+    obmc-phosphor-buttons-handler \
+"
+
+# Enable logger for sensor threshold event monitor
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    phosphor-sel-logger \
+"

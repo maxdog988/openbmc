@@ -22,11 +22,14 @@ PTESTS_FAST_META_PYTHON = "\
     python3-intervals \
     python3-ipy \
     python3-iso3166 \
+    python3-multidict \
     python3-parse-type \
     python3-platformdirs \
     python3-polyline \
     python3-precise-runner \
     python3-prettytable \
+    python3-pydantic \
+    python3-pydantic-core \
     python3-pylint \
     python3-ptyprocess \
     python3-py-cpuinfo \
@@ -54,6 +57,7 @@ PTESTS_FAST_META_PYTHON = "\
 
 PTESTS_SLOW_META_PYTHON = "\
     python3-lz4 \
+    python3-yappi \
 "
 
 PTESTS_PROBLEMS_META_PYTHON ="\
@@ -68,7 +72,6 @@ PTESTS_PROBLEMS_META_PYTHON ="\
     python3-jsmin \
     python3-license-expression \
     python3-msgpack \
-    python3-multidict \
     python3-ordered-set \
     python3-parse \
     python3-pillow \
@@ -82,6 +85,5 @@ PTESTS_PROBLEMS_META_PYTHON ="\
     python3-whoosh \
     python3-ujson \
     python3-xlrd \
-    python3-yappi \
     python3-yarl \
 "
