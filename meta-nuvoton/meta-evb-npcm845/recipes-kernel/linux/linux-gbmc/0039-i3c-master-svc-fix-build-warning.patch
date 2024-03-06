@@ -1,0 +1,25 @@
+From 52d9cfc68dcd240a2dc134994fb15c898aa786a3 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 2 Aug 2023 08:38:16 +0800
+Subject: [PATCH 39/71] i3c: master: svc: fix build warning
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 220437aed2c8..c0dac0a17584 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -432,7 +432,6 @@ svc_i3c_master_dev_from_addr(struct svc_i3c_master *master,
+ static void svc_i3c_master_emit_stop(struct svc_i3c_master *master)
+ {
+ 	u32 mint;
+-	u32 reg;
+ 
+ 	/* Temporarily disable slvstart interrupt to prevent spurious event */
+ 	mint = readl(master->regs + SVC_I3C_MINTSET);
+-- 
+2.34.1
+

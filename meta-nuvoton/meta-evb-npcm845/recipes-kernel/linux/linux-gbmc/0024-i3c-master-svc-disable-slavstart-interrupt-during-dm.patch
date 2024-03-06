@@ -1,0 +1,49 @@
+From af4422b548af707321d20989b274e08c95af6ba1 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 14 Dec 2022 14:20:17 +0800
+Subject: [PATCH 24/71] i3c: master: svc: disable slavstart interrupt during
+ dma transfers
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index e2ad2c99a061..d450e2793a8e 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -242,6 +242,7 @@ struct svc_i3c_master {
+ 	dma_addr_t dma_tx_addr;
+ 	dma_addr_t dma_rx_addr;
+ 	struct npcm_dma_xfer_desc dma_xfer;
++	u32 mint_save;
+ };
+ 
+ /**
+@@ -1079,6 +1080,12 @@ static void svc_i3c_master_stop_dma(struct svc_i3c_master *master)
+ 	writel(0, master->dma_regs + NPCM_GDMA_CTL(DMA_CH_TX));
+ 	writel(0, master->dma_regs + NPCM_GDMA_CTL(DMA_CH_RX));
+ 	writel(0, master->regs + SVC_I3C_MDMACTRL);
++
++	/* Disable COMPLETE interrupt */
++	writel(SVC_I3C_MINT_COMPLETE, master->regs + SVC_I3C_MINTCLR);
++
++	/* Restore the interrupt mask */
++	svc_i3c_master_enable_interrupts(master, master->mint_save);
+ }
+ 
+ static void svc_i3c_master_write_dma_table(const u8 *src, u32 *dst, int len)
+@@ -1116,6 +1123,9 @@ static int svc_i3c_master_start_dma(struct svc_i3c_master *master)
+ 					       (u32 *)master->dma_tx_buf,
+ 					       xfer->len);
+ 
++	/* Disable all other i3c interrupts */
++	master->mint_save = readl(master->regs + SVC_I3C_MINTSET);
++	svc_i3c_master_disable_interrupts(master);
+ 	/* Use I3C Complete interrupt to notify the transaction compeltion */
+ 	svc_i3c_master_enable_interrupts(master, SVC_I3C_MINT_COMPLETE);
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,82 @@
+From f0f7b4008d85f541535178a499002a8ad0f1ca62 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Fri, 7 Oct 2022 15:15:59 +0800
+Subject: [PATCH 12/71] i3c: master: svc: fix IBI issue
+
+Support up to 8 bytes IBI payload
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 90b5eee2f7a5..36117e3dfc55 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -125,6 +125,7 @@
+ 
+ /* This parameter depends on the implementation and may be tuned */
+ #define SVC_I3C_FIFO_SIZE 16
++#define SVC_I3C_MAX_IBI_PAYLOAD_SIZE 8
+ 
+ struct svc_i3c_cmd {
+ 	u8 addr;
+@@ -323,6 +324,7 @@ static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
+ 	struct i3c_ibi_slot *slot;
+ 	unsigned int count;
+ 	u32 mdatactrl;
++	u32 val;
+ 	u8 *buf;
+ 
+ 	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
+@@ -332,13 +334,22 @@ static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
+ 	slot->len = 0;
+ 	buf = slot->data;
+ 
+-	while (SVC_I3C_MSTATUS_RXPEND(readl(master->regs + SVC_I3C_MSTATUS))  &&
+-	       slot->len < SVC_I3C_FIFO_SIZE) {
++	while (slot->len < SVC_I3C_MAX_IBI_PAYLOAD_SIZE) {
++		if (dev->info.bcr & I3C_BCR_IBI_PAYLOAD)
++			readl_relaxed_poll_timeout(master->regs + SVC_I3C_MSTATUS, val,
++						   SVC_I3C_MSTATUS_RXPEND(val), 0, 1000);
++		val = readl(master->regs + SVC_I3C_MSTATUS);
++		if (!SVC_I3C_MSTATUS_RXPEND(val))
++			break;
++
+ 		mdatactrl = readl(master->regs + SVC_I3C_MDATACTRL);
+ 		count = SVC_I3C_MDATACTRL_RXCOUNT(mdatactrl);
+-		readsl(master->regs + SVC_I3C_MRDATAB, buf, count);
++		readsb(master->regs + SVC_I3C_MRDATAB, buf, count);
+ 		slot->len += count;
+ 		buf += count;
++
++		if (SVC_I3C_MSTATUS_COMPLETE(val))
++			break;
+ 	}
+ 
+ 	master->ibi.tbq_slot = slot;
+@@ -386,6 +397,8 @@ static void svc_i3c_master_ibi_work(struct work_struct *work)
+ 					 SVC_I3C_MSTATUS_IBIWON(val), 0, 1000);
+ 	if (ret) {
+ 		dev_err(master->dev, "Timeout when polling for IBIWON\n");
++		svc_i3c_master_emit_stop(master);
++		svc_i3c_master_clear_merrwarn(master);
+ 		goto reenable_ibis;
+ 	}
+ 
+@@ -1377,9 +1390,9 @@ static int svc_i3c_master_request_ibi(struct i3c_dev_desc *dev,
+ 	unsigned long flags;
+ 	unsigned int i;
+ 
+-	if (dev->ibi->max_payload_len > SVC_I3C_FIFO_SIZE) {
++	if (dev->ibi->max_payload_len > SVC_I3C_MAX_IBI_PAYLOAD_SIZE) {
+ 		dev_err(master->dev, "IBI max payload %d should be < %d\n",
+-			dev->ibi->max_payload_len, SVC_I3C_FIFO_SIZE);
++			dev->ibi->max_payload_len, SVC_I3C_MAX_IBI_PAYLOAD_SIZE + 1);
+ 		return -ERANGE;
+ 	}
+ 
+-- 
+2.34.1
+

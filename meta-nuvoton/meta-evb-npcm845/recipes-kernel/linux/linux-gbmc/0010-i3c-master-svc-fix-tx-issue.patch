@@ -1,0 +1,45 @@
+From 62a6e7c1004fc7f64a617d91fc096a036f53728c Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Fri, 7 Oct 2022 13:34:23 +0800
+Subject: [PATCH 10/71] i3c: master: svc: fix tx issue
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index d6e9ed74cdcf..97682b04773b 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -995,6 +995,27 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
+ 	u32 reg;
+ 	int ret;
+ 
++	/*
++	 * There is a chance that first tx data bit is lost when it
++	 * is not ready in FIFO right after address phase.
++	 * Prepare data before starting the transfer to fix this problem.
++	 */
++	if (!rnw && xfer_len) {
++		ret = readl_poll_timeout(master->regs + SVC_I3C_MDATACTRL,
++					 reg,
++					 !(reg & SVC_I3C_MDATACTRL_TXFULL),
++					 0, 1000);
++		if (ret)
++			return ret;
++
++		if (xfer_len == 1)
++			writel(out[0], master->regs + SVC_I3C_MWDATABE);
++		else
++			writel(out[0], master->regs + SVC_I3C_MWDATAB);
++		xfer_len--;
++		out++;
++	}
++
+ 	writel(SVC_I3C_MCTRL_REQUEST_START_ADDR |
+ 	       xfer_type |
+ 	       SVC_I3C_MCTRL_IBIRESP_NACK |
+-- 
+2.34.1
+

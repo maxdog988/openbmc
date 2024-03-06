@@ -1,0 +1,30 @@
+From 5a8c513fade88115873b9169a86d96d4fac051ef Mon Sep 17 00:00:00 2001
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Tue, 9 Aug 2022 15:02:50 +0300
+Subject: [PATCH] reset: npcm: fix NPCM8XX USB PHY reset sequance
+
+Fix NPCM8XX reset USB PHY reset sequence by setting the IPRST2 and
+IPRST4 registers correct reset values.
+
+Fixes: d4bee4457df4 ("reset: npcm: Add NPCM8XX support")
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/reset/reset-npcm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
+index 24c55efa98e5..f2333506b0a6 100644
+--- a/drivers/reset/reset-npcm.c
++++ b/drivers/reset/reset-npcm.c
+@@ -291,7 +291,7 @@ static void npcm_usb_reset_npcm8xx(struct npcm_rc_data *rc)
+ 	iprst2 |= ipsrst2_bits;
+ 	iprst3 |= (ipsrst3_bits | NPCM_IPSRST3_USBPHY1 |
+ 		   NPCM_IPSRST3_USBPHY2);
+-	iprst2 |= ipsrst4_bits;
++	iprst4 |= ipsrst4_bits;
+ 
+ 	writel(iprst1, rc->base + NPCM_IPSRST1);
+ 	writel(iprst2, rc->base + NPCM_IPSRST2);
+-- 
+2.34.1
+

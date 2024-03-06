@@ -1,0 +1,63 @@
+From 188f3c179a2a47f12a37f830ec8cbe21e8635012 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 11 Jan 2024 14:29:35 +0800
+Subject: [PATCH 67/71] i3c: master: svc: fix random hot join failure since
+ timeout error
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+master side report:
+  silvaco-i3c-master 44330000.i3c-master: Error condition: MSTATUS 0x020090c7, MERRWARN 0x00100000
+
+BIT 20: TIMEOUT error
+  The module has stalled too long in a frame. This happens when:
+  - The TX FIFO or RX FIFO is not handled and the bus is stuck in the
+middle of a message,
+  - No STOP was issued and between messages,
+  - IBI manual is used and no decision was made.
+  The maximum stall period is 100 μs.
+
+This can be considered as being just a warning as the system IRQ latency
+can easily be greater than 100us.
+
+Fixes: dd3c52846d59 ("i3c: master: svc: Add Silvaco I3C master driver")
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20231023161658.3890811-7-Frank.Li@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 8084faae0854..27f6f3c037be 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -142,6 +142,7 @@
+ #define SVC_I3C_MINTMASKED   0x098
+ #define SVC_I3C_MERRWARN     0x09C
+ #define   SVC_I3C_MERRWARN_NACK(x) FIELD_GET(BIT(2), (x))
++#define   SVC_I3C_MERRWARN_TIMEOUT BIT(20)
+ #define   SVC_I3C_MERRWARN_HCRC(x) FIELD_GET(BIT(10), (x))
+ #define SVC_I3C_MDMACTRL     0x0A0
+ #define   SVC_I3C_MDMACTRL_DMAFB(x) FIELD_PREP(GENMASK(1, 0), (x))
+@@ -347,6 +348,14 @@ static bool svc_i3c_master_error(struct svc_i3c_master *master)
+ 	if (SVC_I3C_MSTATUS_ERRWARN(mstatus)) {
+ 		merrwarn = readl(master->regs + SVC_I3C_MERRWARN);
+ 		writel(merrwarn, master->regs + SVC_I3C_MERRWARN);
++
++		/* Ignore timeout error */
++		if (merrwarn & SVC_I3C_MERRWARN_TIMEOUT) {
++			dev_dbg(master->dev, "Warning condition: MSTATUS 0x%08x, MERRWARN 0x%08x\n",
++				mstatus, merrwarn);
++			return false;
++		}
++
+ 		dev_err(master->dev,
+ 			"Error condition: MSTATUS 0x%08x, MERRWARN 0x%08x\n",
+ 			mstatus, merrwarn);
+-- 
+2.34.1
+

@@ -1,0 +1,248 @@
+From 7f1e929875665a4d45f0a17ca91184b6d82fd725 Mon Sep 17 00:00:00 2001
+From: Oleksandr Shulzhenko <oleksandr.shulzhenko.viktorovych@intel.com>
+Date: Thu, 28 Apr 2022 10:09:07 +0200
+Subject: [PATCH 29/71] i3c: device: Add SETMWL/GETMWL and SETMRL/GETMRL
+ support
+
+Add the GETMRL/SETMRL and GETMWL/SETMWL CCC commands functions.
+The functions are needed to configure maximum read/write length
+for the specific I3C device.
+
+Signed-off-by: Oleksandr Shulzhenko <oleksandr.shulzhenko.viktorovych@intel.com>
+---
+ drivers/i3c/device.c       | 100 +++++++++++++++++++++++++++++++++++++
+ drivers/i3c/internals.h    |   6 +++
+ drivers/i3c/master.c       |  54 ++++++++++++++++++--
+ include/linux/i3c/device.h |   5 ++
+ 4 files changed, 160 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+index be6669cf0846..c340a19d028d 100644
+--- a/drivers/i3c/device.c
++++ b/drivers/i3c/device.c
+@@ -330,3 +330,103 @@ int i3c_device_getstatus_ccc(struct i3c_device *dev, struct i3c_device_info *inf
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(i3c_device_getstatus_ccc);
++
++/**
++ * i3c_device_setmrl_ccc() - set maximum read length
++ *
++ * @dev: I3C device to set the length for
++ * @info: I3C device info to fill the length in
++ * @read_len: maximum read length value to be set
++ * @ibi_len: maximum ibi payload length to be set
++ *
++ * Set I3C device maximum read length from I3C master device via corresponding CCC command
++ *
++ * Return: 0 in case of success, a negative error code otherwise.
++ */
++int i3c_device_setmrl_ccc(struct i3c_device *dev, struct i3c_device_info *info, __be16 read_len,
++			  u8 ibi_len)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev->desc);
++	int ret = -EINVAL;
++
++	i3c_bus_normaluse_lock(dev->bus);
++	if (master)
++		ret = i3c_master_setmrl_locked(master, info, read_len, ibi_len);
++	i3c_bus_normaluse_unlock(dev->bus);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_device_setmrl_ccc);
++
++/**
++ * i3c_device_setmwl_ccc() - set maximum write length
++ *
++ * @dev: I3C device to set the length for
++ * @info: I3C device info to fill the length in
++ * @write_len: maximum write length value to be set
++ *
++ * Set I3C device maximum write length from I3C master device via corresponding CCC command
++ *
++ * Return: 0 in case of success, a negative error code otherwise.
++ */
++int i3c_device_setmwl_ccc(struct i3c_device *dev, struct i3c_device_info *info, __be16 write_len)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev->desc);
++	int ret = -EINVAL;
++
++	i3c_bus_normaluse_lock(dev->bus);
++	if (master)
++		ret = i3c_master_setmwl_locked(master, info, write_len);
++	i3c_bus_normaluse_unlock(dev->bus);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_device_setmwl_ccc);
++
++/**
++ * i3c_device_getmrl_ccc() - get maximum read length
++ *
++ * @dev: I3C device to get the length for
++ * @info: I3C device info to fill the length in
++ *
++ * Receive I3C device maximum read length from I3C master device via corresponding CCC command
++ *
++ * Return: 0 in case of success, a negative error code otherwise.
++ */
++int i3c_device_getmrl_ccc(struct i3c_device *dev, struct i3c_device_info *info)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev->desc);
++	int ret = -EINVAL;
++
++	i3c_bus_normaluse_lock(dev->bus);
++	if (master)
++		ret = i3c_master_getmrl_locked(master, info);
++	i3c_bus_normaluse_unlock(dev->bus);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_device_getmrl_ccc);
++
++/**
++ * i3c_device_getmwl_ccc() - get maximum write length
++ *
++ * @dev: I3C device to get the length for
++ * @info: I3C device info to fill the length in
++ *
++ * Receive I3C device maximum write length from I3C master device via corresponding CCC command
++ *
++ * Return: 0 in case of success, a negative error code otherwise.
++ */
++int i3c_device_getmwl_ccc(struct i3c_device *dev, struct i3c_device_info *info)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev->desc);
++	int ret = -EINVAL;
++
++	i3c_bus_normaluse_lock(dev->bus);
++	if (master)
++		ret = i3c_master_getmwl_locked(master, info);
++	i3c_bus_normaluse_unlock(dev->bus);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_device_getmwl_ccc);
+diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+index 524ad47fd916..69c311047c5c 100644
+--- a/drivers/i3c/internals.h
++++ b/drivers/i3c/internals.h
+@@ -26,6 +26,12 @@ int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
+ 			       const struct i3c_ibi_setup *req);
+ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev);
+ int i3c_dev_getstatus_locked(struct i3c_dev_desc *dev, struct i3c_device_info *info);
++int i3c_master_getmrl_locked(struct i3c_master_controller *master, struct i3c_device_info *info);
++int i3c_master_getmwl_locked(struct i3c_master_controller *master, struct i3c_device_info *info);
++int i3c_master_setmrl_locked(struct i3c_master_controller *master,
++			     struct i3c_device_info *info, __be16 read_len, u8 ibi_len);
++int i3c_master_setmwl_locked(struct i3c_master_controller *master,
++			     struct i3c_device_info *info, __be16 write_len);
+ int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *));
+ int i3c_dev_generate_ibi_locked(struct i3c_dev_desc *dev, const u8 *data, int len);
+ #endif /* I3C_INTERNAL_H */
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 26cfa0bf1dea..1b8367097e8e 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -1041,8 +1041,7 @@ static int i3c_master_sethid_locked(struct i3c_master_controller *master)
+ 	return ret;
+ }
+ 
+-static int i3c_master_getmrl_locked(struct i3c_master_controller *master,
+-				    struct i3c_device_info *info)
++int i3c_master_getmrl_locked(struct i3c_master_controller *master, struct i3c_device_info *info)
+ {
+ 	struct i3c_ccc_cmd_dest dest;
+ 	struct i3c_ccc_mrl *mrl;
+@@ -1083,8 +1082,7 @@ static int i3c_master_getmrl_locked(struct i3c_master_controller *master,
+ 	return ret;
+ }
+ 
+-static int i3c_master_getmwl_locked(struct i3c_master_controller *master,
+-				    struct i3c_device_info *info)
++int i3c_master_getmwl_locked(struct i3c_master_controller *master, struct i3c_device_info *info)
+ {
+ 	struct i3c_ccc_cmd_dest dest;
+ 	struct i3c_ccc_mwl *mwl;
+@@ -1113,6 +1111,52 @@ static int i3c_master_getmwl_locked(struct i3c_master_controller *master,
+ 	return ret;
+ }
+ 
++int i3c_master_setmrl_locked(struct i3c_master_controller *master,
++			     struct i3c_device_info *info, u16 read_len, u8 ibi_len)
++{
++	struct i3c_ccc_cmd_dest dest;
++	struct i3c_ccc_cmd cmd;
++	struct i3c_ccc_mrl *mrl;
++	int ret;
++
++	mrl = i3c_ccc_cmd_dest_init(&dest, info->dyn_addr, sizeof(*mrl));
++	if (!mrl)
++		return -ENOMEM;
++
++	mrl->read_len = cpu_to_be16(read_len);
++	mrl->ibi_len = ibi_len;
++	info->max_read_len = read_len;
++	info->max_ibi_len = mrl->ibi_len;
++	i3c_ccc_cmd_init(&cmd, false, I3C_CCC_SETMRL(false), &dest, 1);
++
++	ret = i3c_master_send_ccc_cmd_locked(master, &cmd);
++	i3c_ccc_cmd_dest_cleanup(&dest);
++
++	return ret;
++}
++
++int i3c_master_setmwl_locked(struct i3c_master_controller *master,
++			     struct i3c_device_info *info, u16 write_len)
++{
++	struct i3c_ccc_cmd_dest dest;
++	struct i3c_ccc_cmd cmd;
++	struct i3c_ccc_mwl *mwl;
++	int ret;
++
++	mwl = i3c_ccc_cmd_dest_init(&dest, info->dyn_addr, sizeof(*mwl));
++	if (!mwl)
++		return -ENOMEM;
++
++	mwl->len = cpu_to_be16(write_len);
++	info->max_write_len = write_len;
++	i3c_ccc_cmd_init(&cmd, false, I3C_CCC_SETMWL(false), &dest, 1);
++
++	ret = i3c_master_send_ccc_cmd_locked(master, &cmd);
++	i3c_ccc_cmd_dest_cleanup(&dest);
++
++	return ret;
++}
++
+ static int i3c_master_getmxds_locked(struct i3c_master_controller *master,
+ 				     struct i3c_device_info *info)
+ {
+@@ -1278,7 +1322,7 @@ int i3c_dev_getstatus_locked(struct i3c_dev_desc *dev,
+ 	if (ret)
+ 		goto out;
+ 
+-	info->status = getsts->status;
++	info->status = be16_to_cpu(getsts->status);
+ 
+ out:
+ 	i3c_ccc_cmd_dest_cleanup(&dest);
+diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+index e632941575bd..f8228c77a80f 100644
+--- a/include/linux/i3c/device.h
++++ b/include/linux/i3c/device.h
+@@ -337,6 +337,11 @@ int i3c_device_enable_ibi(struct i3c_device *dev);
+ int i3c_device_disable_ibi(struct i3c_device *dev);
+ 
+ int i3c_device_getstatus_ccc(struct i3c_device *dev, struct i3c_device_info *info);
++int i3c_device_setmrl_ccc(struct i3c_device *dev, struct i3c_device_info *info, __be16 read_len,
++			  u8 ibi_len);
++int i3c_device_setmwl_ccc(struct i3c_device *dev, struct i3c_device_info *info, __be16 write_len);
++int i3c_device_getmrl_ccc(struct i3c_device *dev, struct i3c_device_info *info);
++int i3c_device_getmwl_ccc(struct i3c_device *dev, struct i3c_device_info *info);
+ 
+ struct i3c_target_read_setup {
+ 	void (*handler)(struct i3c_device *dev, const u8 *data, size_t len);
+-- 
+2.34.1
+

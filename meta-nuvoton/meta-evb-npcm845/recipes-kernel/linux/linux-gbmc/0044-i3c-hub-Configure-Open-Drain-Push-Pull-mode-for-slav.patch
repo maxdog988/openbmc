@@ -1,0 +1,32 @@
+From 44ce871ba7a05dff7bf2c037a0ecdb6dcb640dc5 Mon Sep 17 00:00:00 2001
+From: Marvin Lin <milkfafa@gmail.com>
+Date: Tue, 22 Aug 2023 10:13:47 +0800
+Subject: [PATCH 44/71] i3c: hub: Configure Open-Drain/Push-Pull mode for slave
+ port
+
+Configure Open-Drain/Push-Pull mode for slave port.
+
+Signed-off-by: Marvin Lin <milkfafa@gmail.com>
+---
+ drivers/i3c/i3c-hub.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/i3c/i3c-hub.c b/drivers/i3c/i3c-hub.c
+index 82a26a5dd441..27b792a962e7 100644
+--- a/drivers/i3c/i3c-hub.c
++++ b/drivers/i3c/i3c-hub.c
+@@ -492,6 +492,11 @@ static int i3c_hub_hw_configure_tp(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Set Open-Drain / Push-Pull compatible for I3C mode */
++	ret = regmap_update_bits(priv->regmap, I3C_HUB_TP_IO_MODE_CONF, i3c_mask, ~i3c_val);
++	if (ret)
++		return ret;
++
+ 	ret = regmap_update_bits(priv->regmap, I3C_HUB_TP_SMBUS_AGNT_EN, smbus_mask, smbus_val);
+ 	if (ret)
+ 		return ret;
+-- 
+2.34.1
+

@@ -1,0 +1,35 @@
+From 5545437f1b00f69a3948265ab917a38f726e7ef8 Mon Sep 17 00:00:00 2001
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+Date: Mon, 26 Sep 2022 18:51:44 +0800
+Subject: [PATCH 70/71] i3c: master: Free the old_dyn_addr when reattach.
+
+This patch is used to free the old_dyn_addr when the caller want to
+reattach the device to the different dynamic address. If the
+old_dyn_addr is 0 the function will treat it as no old_dyn_addr is
+reserved on the bus. Without the patch, when the driver reattach the i3c
+device after setnewda the old_dyn_addr will be permanently occupied.
+
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+Link: https://lore.kernel.org/r/20220926105145.8145-1-billy_tsai@aspeedtech.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/i3c/master.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 2718da9717a9..99945821bebc 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -1536,6 +1536,9 @@ static int i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
+ 		i3c_bus_set_addr_slot_status(&master->bus,
+ 					     dev->info.dyn_addr,
+ 					     I3C_ADDR_SLOT_I3C_DEV);
++		if (old_dyn_addr)
++			i3c_bus_set_addr_slot_status(&master->bus, old_dyn_addr,
++						     I3C_ADDR_SLOT_FREE);
+ 	}
+ 
+ 	if (master->ops->reattach_i3c_dev) {
+-- 
+2.34.1
+

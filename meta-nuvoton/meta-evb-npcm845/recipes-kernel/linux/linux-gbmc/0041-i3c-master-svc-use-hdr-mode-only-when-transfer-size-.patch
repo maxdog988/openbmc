@@ -1,0 +1,29 @@
+From 2ad8468ed5041f853eefd9009cff2c7af966dde8 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 10 Aug 2023 16:35:54 +0800
+Subject: [PATCH 41/71] i3c: master: svc: use hdr mode only when transfer size
+ is even
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index c0dac0a17584..613635413b25 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1287,6 +1287,10 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
+ 	if (rdterm > SVC_I3C_MAX_RDTERM)
+ 		rdterm = SVC_I3C_MAX_RDTERM;
+ 
++	/* Use SDR mode if transfer size is odd */
++	if (xfer_type == SVC_I3C_MCTRL_TYPE_I3C_DDR && (xfer_len % 2))
++		xfer_type = SVC_I3C_MCTRL_TYPE_I3C;
++
+ 	if (xfer_type == SVC_I3C_MCTRL_TYPE_I3C_DDR) {
+ 		/* Write the HDR-DDR cmd to the MWDATAB register to send out to slave */
+ 		writel(HDR_COMMAND, master->regs + SVC_I3C_MWDATAB);
+-- 
+2.34.1
+

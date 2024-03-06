@@ -1,0 +1,41 @@
+From 74747f1e45ec805f67cb9e7715d40761aef500ed Mon Sep 17 00:00:00 2001
+From: Clark Wang <xiaoning.wang@nxp.com>
+Date: Mon, 27 Dec 2021 15:45:22 +0800
+Subject: [PATCH] i3c: master: svc: move module reset behind clk enable
+
+Reset I3C module will R/W its regs, so enable its clocks first.
+
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20211227074529.1660398-2-xiaoning.wang@nxp.com
+---
+ drivers/i3c/master/svc-i3c-master.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 879e5a64acaf..c25a372f6820 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1381,8 +1381,6 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
+ 
+ 	master->dev = dev;
+ 
+-	svc_i3c_master_reset(master);
+-
+ 	ret = clk_prepare_enable(master->pclk);
+ 	if (ret)
+ 		return ret;
+@@ -1419,6 +1417,8 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, master);
+ 
++	svc_i3c_master_reset(master);
++
+ 	/* Register the master */
+ 	ret = i3c_master_register(&master->base, &pdev->dev,
+ 				  &svc_i3c_master_ops, false);
+-- 
+2.34.1
+

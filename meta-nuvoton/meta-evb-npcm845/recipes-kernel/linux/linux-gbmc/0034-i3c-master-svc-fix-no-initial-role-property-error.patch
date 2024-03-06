@@ -1,0 +1,28 @@
+From 024d188eaf0bb8572673dee194d18a380fb247b3 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Mon, 10 Apr 2023 15:51:12 +0800
+Subject: [PATCH 34/71] i3c: master: svc: fix no initial-role property error
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index c335bf0dc32b..64b08a0ee683 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -2214,8 +2214,8 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
+ 
+ 	INIT_WORK(&master->hj_work, svc_i3c_master_hj_work);
+ 	INIT_WORK(&master->ibi_work, svc_i3c_master_ibi_work);
+-	of_property_read_string(pdev->dev.of_node, "initial-role", &role);
+-	if (!strcmp("target", role))
++	ret = of_property_read_string(pdev->dev.of_node, "initial-role", &role);
++	if (!ret && !strcmp("target", role))
+ 		ret = devm_request_irq(dev, master->irq, svc_i3c_slave_irq_handler,
+ 				       IRQF_NO_SUSPEND, "svc-i3c-irq", master);
+ 	else
+-- 
+2.34.1
+

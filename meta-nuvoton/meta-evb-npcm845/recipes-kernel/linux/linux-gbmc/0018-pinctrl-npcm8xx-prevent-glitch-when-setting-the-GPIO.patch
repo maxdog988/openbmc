@@ -1,0 +1,32 @@
+From b78d9fe3c7fb5d46e1d31e21777e69d314bc57cb Mon Sep 17 00:00:00 2001
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 8 May 2023 13:10:34 +0300
+Subject: [PATCH 18/23] pinctrl: npcm8xx: prevent glitch when setting the GPIO
+ to output high
+
+Enable GPIO output after setting the output value to prevent a glitch
+when pinctrl driver sets gpio pin to output high and the pin is in
+the default state (high->low->high).
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index b0b1881a8fde..194fbffc2a9d 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2323,8 +2323,8 @@ static int npcm8xx_config_set_one(struct npcm8xx_pinctrl *npcm,
+ 		bank->direction_input(&bank->gc, pin % bank->gc.ngpio);
+ 		break;
+ 	case PIN_CONFIG_OUTPUT:
+-		iowrite32(gpio, bank->base + NPCM8XX_GP_N_OES);
+ 		bank->direction_output(&bank->gc, pin % bank->gc.ngpio, arg);
++		iowrite32(gpio, bank->base + NPCM8XX_GP_N_OES);
+ 		break;
+ 	case PIN_CONFIG_DRIVE_PUSH_PULL:
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM8XX_GP_N_OTYP, gpio);
+-- 
+2.34.1
+

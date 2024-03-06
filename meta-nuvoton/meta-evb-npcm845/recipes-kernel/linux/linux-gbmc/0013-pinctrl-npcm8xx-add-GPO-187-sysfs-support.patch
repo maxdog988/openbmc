@@ -1,0 +1,38 @@
+From cc3c8d3076ffa7236e99488542f6981add0f4bbe Mon Sep 17 00:00:00 2001
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Thu, 10 Nov 2022 21:37:04 +0200
+Subject: [PATCH 13/23] pinctrl: npcm8xx: add GPO 187 sysfs support
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 8da811e47820..9bf340dda8a4 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2074,6 +2074,8 @@ static int npcm8xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 				       unsigned int offset)
+ {
+ 	struct npcm8xx_pinctrl *npcm = pinctrl_dev_get_drvdata(pctldev);
++	const unsigned int *pin = &offset;
++	int mode = fn_gpio;
+ 
+ 	if (!range) {
+ 		dev_err(npcm->dev, "invalid range\n");
+@@ -2084,7 +2086,10 @@ static int npcm8xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 	}
+ 
+-	npcm8xx_setfunc(npcm->gcr_regmap, &offset, 1, fn_gpio);
++	if (pin[0] == 187)
++		mode = pincfg[pin[0]].fn0;
++
++	npcm8xx_setfunc(npcm->gcr_regmap, &offset, 1, mode);
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
+

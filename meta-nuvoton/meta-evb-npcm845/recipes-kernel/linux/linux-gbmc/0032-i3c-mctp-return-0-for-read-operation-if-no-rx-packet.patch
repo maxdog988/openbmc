@@ -1,0 +1,40 @@
+From 238a50beeba8c9c0e742b6ea4de444a2ef7d3c79 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 6 Apr 2023 17:13:14 +0800
+Subject: [PATCH 32/71] i3c: mctp: return 0 for read operation if no rx packet
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/mctp/i3c-mctp.c        | 2 +-
+ drivers/i3c/mctp/i3c-target-mctp.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/mctp/i3c-mctp.c b/drivers/i3c/mctp/i3c-mctp.c
+index 3b5c3ab71b49..33e8bd1cde31 100644
+--- a/drivers/i3c/mctp/i3c-mctp.c
++++ b/drivers/i3c/mctp/i3c-mctp.c
+@@ -245,7 +245,7 @@ static ssize_t i3c_mctp_read(struct file *file, char __user *buf, size_t count,
+ 
+ 	rx_packet = ptr_ring_consume(&client->rx_queue);
+ 	if (!rx_packet)
+-		return -EAGAIN;
++		return 0;
+ 
+ 	if (count > rx_packet->size)
+ 		count = rx_packet->size;
+diff --git a/drivers/i3c/mctp/i3c-target-mctp.c b/drivers/i3c/mctp/i3c-target-mctp.c
+index d8c767f967fe..448b4bf8d376 100644
+--- a/drivers/i3c/mctp/i3c-target-mctp.c
++++ b/drivers/i3c/mctp/i3c-target-mctp.c
+@@ -202,7 +202,7 @@ static ssize_t i3c_target_mctp_read(struct file *file, char __user *buf,
+ 
+ 	rx_packet = ptr_ring_consume_irq(&client->rx_queue);
+ 	if (!rx_packet)
+-		return -EAGAIN;
++		return 0;
+ 
+ 	if (count < rx_packet->count) {
+ 		count = -EINVAL;
+-- 
+2.34.1
+

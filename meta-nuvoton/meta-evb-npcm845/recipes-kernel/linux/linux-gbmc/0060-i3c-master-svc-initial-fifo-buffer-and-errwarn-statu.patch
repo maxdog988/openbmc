@@ -1,0 +1,30 @@
+From 51ea3ba22446ea50524a329b91e24250f77f30f7 Mon Sep 17 00:00:00 2001
+From: cpchiang <cpchiang1@nuvoton.com>
+Date: Tue, 5 Dec 2023 13:39:25 +0800
+Subject: [PATCH 60/71] i3c: master: svc: initial fifo buffer and errwarn
+ status
+
+initial fifo buffer and errwarn status.
+
+Signed-off-by: cpchiang <cpchiang1@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index b816a96306e6..18163b945cdf 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -2452,6 +2452,9 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
+ 	if (!of_property_read_u32(dev->of_node, "i3c-od-scl-lo-period-ns", &val))
+ 		master->scl_timing.i3c_od_lo = val;
+ 
++	svc_i3c_master_clear_merrwarn(master);
++	svc_i3c_master_flush_fifo(master);
++
+ 	svc_i3c_setup_dma(pdev, master);
+ 	svc_i3c_init_debugfs(pdev, master);
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,45 @@
+From afb1afe109a7e243e96ec33c2cba350d1ff07031 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Fri, 30 Jun 2023 14:02:07 +0800
+Subject: [PATCH 37/71] i3c: master: svc: fix spurious slave event
+
+Temporarily disable slvstart interrupt to prevent spurious slave event
+during emitting stop signal.
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 605e3f09f15c..f7858d05b8ff 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -422,7 +422,13 @@ svc_i3c_master_dev_from_addr(struct svc_i3c_master *master,
+ 
+ static void svc_i3c_master_emit_stop(struct svc_i3c_master *master)
+ {
+-	local_irq_disable();
++	u32 mint;
++
++	/* Temporarily disable slvstart interrupt to prevent spurious event */
++	mint = readl(master->regs + SVC_I3C_MINTSET);
++	if (mint & SVC_I3C_MINT_SLVSTART)
++		writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MINTCLR);
++
+ 	writel(SVC_I3C_MCTRL_REQUEST_STOP, master->regs + SVC_I3C_MCTRL);
+ 
+ 	/*
+@@ -438,7 +444,8 @@ static void svc_i3c_master_emit_stop(struct svc_i3c_master *master)
+ 	 * bad signals condition.
+ 	 */
+ 	writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MSTATUS);
+-	local_irq_enable();
++	if (mint & SVC_I3C_MINT_SLVSTART)
++		writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MINTSET);
+ }
+ 
+ static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
+-- 
+2.34.1
+

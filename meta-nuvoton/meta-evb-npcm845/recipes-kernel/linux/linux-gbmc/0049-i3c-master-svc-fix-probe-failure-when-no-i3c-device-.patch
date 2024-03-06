@@ -1,0 +1,60 @@
+From 1a8c99584ea88d1fe162989d24e2165785cd7072 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 20 Sep 2023 11:03:03 +0800
+Subject: [PATCH 49/71] i3c: master: svc: fix probe failure when no i3c device
+ exist
+
+sync upstream commit:
+commit 6e13d6528be2f7e801af63c8153b87293f25d736
+Author: Frank Li <Frank.Li@nxp.com>
+Date:   Thu Aug 31 10:13:24 2023 -0400
+
+    i3c: master: svc: fix probe failure when no i3c device exist
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index fb81fba0363b..7305c0eb04a6 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -982,6 +982,10 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
+ 				 */
+ 				break;
+ 			} else if (SVC_I3C_MSTATUS_NACKED(reg)) {
++				/* No I3C devices attached */
++				if (dev_nb == 0)
++					break;
++
+ 				/*
+ 				 * A slave device nacked the address, this is
+ 				 * allowed only once, DAA will be stopped and
+@@ -1438,10 +1442,6 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
+ 	return 0;
+ 
+ emit_stop:
+-	reg = readl(master->regs + SVC_I3C_MERRWARN);
+-	if (SVC_I3C_MERRWARN_NACK(reg))
+-		ret = I3C_ERROR_M2;
+-
+ 	if (use_dma)
+ 		svc_i3c_master_stop_dma(master);
+ 	else
+@@ -1663,9 +1663,11 @@ static int svc_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
+ 	else
+ 		ret = svc_i3c_master_send_direct_ccc_cmd(master, cmd);
+ 
+-	if (ret)
++	if (ret) {
+ 		dev_dbg(master->dev, "send ccc 0x%02x %s, ret = %d\n",
+ 				cmd->id, broadcast ? "(broadcast)" : "", ret);
++		cmd->err = I3C_ERROR_M2;
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.34.1
+

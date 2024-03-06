@@ -1,0 +1,29 @@
+From 9281a5f4cd2aea3bd40de836c3e78d5f41f145b4 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 15 Nov 2023 11:28:46 +0800
+Subject: [PATCH 51/71] i3c: svc: Flush fifo before DAA process
+
+Flush the fifo before DAA in case there are old data in the TX fifo.
+This will cause master sending wrong dynamic address to slave.
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 4b3544b3c382..4c13ce9e6347 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -933,6 +933,8 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
+ 	u32 reg;
+ 	int ret, i;
+ 
++	svc_i3c_master_flush_fifo(master);
++
+ 	while (true) {
+ 		/* Enter/proceed with DAA */
+ 		writel(SVC_I3C_MCTRL_REQUEST_PROC_DAA |
+-- 
+2.34.1
+

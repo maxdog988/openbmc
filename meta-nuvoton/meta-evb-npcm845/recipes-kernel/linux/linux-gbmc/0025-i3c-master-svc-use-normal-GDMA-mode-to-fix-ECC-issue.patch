@@ -1,0 +1,31 @@
+From 6f0dca680136432296a34c2032d363d57b8377d1 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 5 Jan 2023 16:44:32 +0800
+Subject: [PATCH 25/71] i3c: master: svc: use normal GDMA mode to fix ECC issue
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index d450e2793a8e..1cc3bfe20895 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1140,12 +1140,11 @@ static int svc_i3c_master_start_dma(struct svc_i3c_master *master)
+ 
+ 	/*
+ 	 * Enable DMA
+-	 * Use Demand mode
+ 	 * Source Address Fixed for RX
+ 	 * Destination Address Fixed for TX
+ 	 * Use 32-bit transfer width for TX (queal to MWDATAB register width)
+ 	 */
+-	val = NPCM_GDMA_CTL_GDMAEN | NPCM_GDMA_CTL_DM;
++	val = NPCM_GDMA_CTL_GDMAEN;
+ 	if (xfer->rnw)
+ 		val |= NPCM_GDMA_CTL_SAFIX | NPCM_GDMA_CTL_GDMAMS(2);
+ 	else
+-- 
+2.34.1
+

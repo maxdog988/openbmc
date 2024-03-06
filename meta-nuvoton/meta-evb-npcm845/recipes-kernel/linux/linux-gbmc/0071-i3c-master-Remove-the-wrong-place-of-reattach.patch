@@ -1,0 +1,36 @@
+From 06400852e4a7208be7b51f3c6e9090be255aa53f Mon Sep 17 00:00:00 2001
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+Date: Mon, 26 Sep 2022 18:51:45 +0800
+Subject: [PATCH 71/71] i3c: master: Remove the wrong place of reattach.
+
+The reattach should be used when an I3C device has its address changed.
+But the modified place in this patch doesn't have the address changed of
+the newdev. This wrong reattach will reserve the same address slot twice
+and return unexpected -EBUSY when the bus find the duplicate device with
+diffent dynamic address.
+
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+Link: https://lore.kernel.org/r/20220926105145.8145-2-billy_tsai@aspeedtech.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/i3c/master.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 99945821bebc..31c7fb9036c3 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -2118,10 +2118,6 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+ 		i3c_master_free_i3c_dev(olddev);
+ 	}
+ 
+-	ret = i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
+-	if (ret)
+-		goto err_detach_dev;
+-
+ 	/*
+ 	 * Depending on our previous state, the expected dynamic address might
+ 	 * differ:
+-- 
+2.34.1
+

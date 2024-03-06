@@ -1,0 +1,86 @@
+From 40c89ec3dd2c564b30898bac3aef9dde77613257 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 11 Jan 2024 13:34:34 +0800
+Subject: [PATCH 64/71] i3c: master: svc: fix i3c suspend/resume issue
+
+When system suspends, if i3c module is powered down, register
+value will lose.
+Need to save the key registers before system suspend.
+So save these registers value in runtime pm suspend, and restore them
+if these register's value is different with the saved values
+when runtime pm resume.
+
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20230517033030.3068085-1-xiaoning.wang@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 2192658a5b79..60531a2a4035 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -230,6 +230,11 @@ struct svc_i3c_xfer {
+ 	struct svc_i3c_cmd cmds[];
+ };
+ 
++struct svc_i3c_regs_save {
++	u32 mconfig;
++	u32 mdynaddr;
++};
++
+ struct npcm_dma_xfer_desc {
+ 	const u8 *out;
+ 	u8 *in;
+@@ -265,6 +270,7 @@ struct svc_i3c_master {
+ 	struct i3c_master_controller base;
+ 	struct device *dev;
+ 	void __iomem *regs;
++	struct svc_i3c_regs_save saved_regs;
+ 	u32 free_slots;
+ 	u8 addrs[SVC_I3C_MAX_DEVS];
+ 	struct i3c_dev_desc *descs[SVC_I3C_MAX_DEVS];
+@@ -2656,10 +2662,28 @@ static int svc_i3c_master_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void svc_i3c_save_regs(struct svc_i3c_master *master)
++{
++	master->saved_regs.mconfig = readl(master->regs + SVC_I3C_MCONFIG);
++	master->saved_regs.mdynaddr = readl(master->regs + SVC_I3C_MDYNADDR);
++}
++
++static void svc_i3c_restore_regs(struct svc_i3c_master *master)
++{
++	if (readl(master->regs + SVC_I3C_MDYNADDR) !=
++	    master->saved_regs.mdynaddr) {
++		writel(master->saved_regs.mconfig,
++		       master->regs + SVC_I3C_MCONFIG);
++		writel(master->saved_regs.mdynaddr,
++		       master->regs + SVC_I3C_MDYNADDR);
++	}
++}
++
+ static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
+ {
+ 	struct svc_i3c_master *master = dev_get_drvdata(dev);
+ 
++	svc_i3c_save_regs(master);
+ 	svc_i3c_master_unprepare_clks(master);
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
+@@ -2673,6 +2697,8 @@ static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
+ 	pinctrl_pm_select_default_state(dev);
+ 	svc_i3c_master_prepare_clks(master);
+ 
++	svc_i3c_restore_regs(master);
++
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,49 @@
+From 96586a399e307563ffcb97670144e40b5f30bb86 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 23 Nov 2022 16:59:34 +0800
+Subject: [PATCH 21/71] i3c: i3cdev: update the transfer len for read
+
+The actual read length may be shorter than request,
+update the transfer len after completion.
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/i3cdev.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i3c/i3cdev.c b/drivers/i3c/i3cdev.c
+index fd8f2695d775..d8e0b9de6e59 100644
+--- a/drivers/i3c/i3cdev.c
++++ b/drivers/i3c/i3cdev.c
+@@ -192,6 +192,7 @@ i3cdev_do_priv_xfer(struct i3c_device *dev, struct i3c_ioc_priv_xfer *xfers,
+ 			if (copy_to_user((void __user *)(uintptr_t)xfers[i].data,
+ 					 data_ptrs[i], xfers[i].len))
+ 				ret = -EFAULT;
++			xfers[i].len = k_xfers[i].len;
+ 		}
+ 	}
+ 
+@@ -226,7 +227,7 @@ i3cdev_ioc_priv_xfer(struct i3c_device *i3c, unsigned int cmd,
+ {
+ 	struct i3c_ioc_priv_xfer *k_xfers;
+ 	unsigned int nxfers;
+-	int ret;
++	int ret, i;
+ 
+ 	k_xfers = i3cdev_get_ioc_priv_xfer(cmd, u_xfers, &nxfers);
+ 	if (IS_ERR_OR_NULL(k_xfers))
+@@ -234,6 +235,11 @@ i3cdev_ioc_priv_xfer(struct i3c_device *i3c, unsigned int cmd,
+ 
+ 	ret = i3cdev_do_priv_xfer(i3c, k_xfers, nxfers);
+ 
++	for (i = 0; i < nxfers; i++) {
++		if (k_xfers[i].rnw)
++			put_user(k_xfers[i].len, &u_xfers[i].len);
++	}
++
+ 	kfree(k_xfers);
+ 
+ 	return ret;
+-- 
+2.34.1
+

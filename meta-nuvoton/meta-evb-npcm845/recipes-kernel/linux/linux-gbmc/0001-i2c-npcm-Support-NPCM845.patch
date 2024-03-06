@@ -1,0 +1,56 @@
+From efc2ce6fc8192e4d3d0ad8558970009303080ab3 Mon Sep 17 00:00:00 2001
+From: Tyrone Ting <kfting@nuvoton.com>
+Date: Wed, 25 May 2022 11:23:40 +0800
+Subject: [PATCH] i2c: npcm: Support NPCM845
+
+Add NPCM8XX I2C support.
+The NPCM8XX uses a similar i2c module as NPCM7XX.
+The internal HW FIFO is larger in NPCM8XX.
+
+Signed-off-by: Tyrone Ting <kfting@nuvoton.com>
+Acked-by: Tomer Maimon <tmaimon77@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+---
+ drivers/i2c/busses/Kconfig  | 8 ++++----
+ drivers/i2c/busses/Makefile | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 782f78a1c926..3847bc3fe55a 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -825,13 +825,13 @@ config I2C_NOMADIK
+ 	  I2C interface from ST-Ericsson's Nomadik and Ux500 architectures,
+ 	  as well as the STA2X11 PCIe I/O HUB.
+ 
+-config I2C_NPCM7XX
++config I2C_NPCM
+ 	tristate "Nuvoton I2C Controller"
+-	depends on ARCH_NPCM7XX || COMPILE_TEST
++	depends on ARCH_NPCM || COMPILE_TEST
+ 	help
+ 	  If you say yes to this option, support will be included for the
+-	  Nuvoton I2C controller, which is available on the NPCM7xx BMC
+-	  controller.
++	  Nuvoton I2C controller, which is available on the NPCM BMC
++	  controllers.
+ 	  Driver can also support slave mode (select I2C_SLAVE).
+ 
+ config I2C_OCORES
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 05619cbefc23..77833590a397 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -81,7 +81,7 @@ obj-$(CONFIG_I2C_MT7621)	+= i2c-mt7621.o
+ obj-$(CONFIG_I2C_MV64XXX)	+= i2c-mv64xxx.o
+ obj-$(CONFIG_I2C_MXS)		+= i2c-mxs.o
+ obj-$(CONFIG_I2C_NOMADIK)	+= i2c-nomadik.o
+-obj-$(CONFIG_I2C_NPCM7XX)	+= i2c-npcm7xx.o
++obj-$(CONFIG_I2C_NPCM)		+= i2c-npcm7xx.o
+ obj-$(CONFIG_I2C_OCORES)	+= i2c-ocores.o
+ obj-$(CONFIG_I2C_OMAP)		+= i2c-omap.o
+ obj-$(CONFIG_I2C_OWL)		+= i2c-owl.o
+-- 
+2.34.1
+

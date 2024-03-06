@@ -1,0 +1,33 @@
+From 4de4e2dda23cab1ad3d7badb5d2320994ed0b625 Mon Sep 17 00:00:00 2001
+From: Clark Wang <xiaoning.wang@nxp.com>
+Date: Mon, 27 Dec 2021 15:45:28 +0800
+Subject: [PATCH 06/71] i3c: master: svc: add the missing module device table
+
+The missing MODULE_DEVICE_TABLE() will cause the svc-i3c-master cannot
+be auto probed when it is built in moudle.
+So add it.
+
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20211227074529.1660398-8-xiaoning.wang@nxp.com
+---
+ drivers/i3c/master/svc-i3c-master.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 884f5349fb76..3bc81ef95334 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1614,6 +1614,7 @@ static const struct of_device_id svc_i3c_master_of_match_tbl[] = {
+ 	{ .compatible = "silvaco,i3c-master" },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, svc_i3c_master_of_match_tbl);
+ 
+ static struct platform_driver svc_i3c_master = {
+ 	.probe = svc_i3c_master_probe,
+-- 
+2.34.1
+

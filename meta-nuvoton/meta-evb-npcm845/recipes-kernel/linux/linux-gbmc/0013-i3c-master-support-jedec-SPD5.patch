@@ -1,0 +1,209 @@
+From 6061ddfa098a9dc6a15e067b7d94dbf31bd42387 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 12 Oct 2022 08:40:30 +0800
+Subject: [PATCH 13/71] i3c: master: support jedec SPD5
+
+example dts:
+&i3c0 {
+        status = "okay";
+        jedec,jesd403;
+        spd@0x57 {
+                reg = <0x57 0x4CC 0x51180000>;
+        };
+};
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master.c       | 90 ++++++++++++++++++++++++++++++++++++++
+ include/linux/i3c/ccc.h    | 11 +++++
+ include/linux/i3c/master.h |  2 +
+ 3 files changed, 103 insertions(+)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index c29c39ef23b1..2002fa667542 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -775,6 +775,20 @@ static int i3c_master_rstdaa_locked(struct i3c_master_controller *master,
+ 	return ret;
+ }
+ 
++static int i3c_master_setaasa_locked(struct i3c_master_controller *master)
++{
++	struct i3c_ccc_cmd_dest dest;
++	struct i3c_ccc_cmd cmd;
++	int ret;
++
++	i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR, 0);
++	i3c_ccc_cmd_init(&cmd, false, I3C_CCC_SETAASA, &dest, 1);
++	ret = i3c_master_send_ccc_cmd_locked(master, &cmd);
++	i3c_ccc_cmd_dest_cleanup(&dest);
++
++	return ret;
++}
++
+ /**
+  * i3c_master_entdaa_locked() - start a DAA (Dynamic Address Assignment)
+  *				procedure
+@@ -1001,6 +1015,26 @@ static int i3c_master_setnewda_locked(struct i3c_master_controller *master,
+ 	return i3c_master_setda_locked(master, oldaddr, newaddr, false);
+ }
+ 
++static int i3c_master_sethid_locked(struct i3c_master_controller *master)
++{
++	struct i3c_ccc_cmd_dest dest;
++	struct i3c_ccc_cmd cmd;
++	struct i3c_ccc_sethid *sethid;
++	int ret;
++
++	sethid = i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR, 1);
++	if (!sethid)
++		return -ENOMEM;
++
++	sethid->hid = 0;
++	i3c_ccc_cmd_init(&cmd, false, I3C_CCC_SETHID, &dest, 1);
++
++	ret = i3c_master_send_ccc_cmd_locked(master, &cmd);
++	i3c_ccc_cmd_dest_cleanup(&dest);
++
++	return ret;
++}
++
+ static int i3c_master_getmrl_locked(struct i3c_master_controller *master,
+ 				    struct i3c_device_info *info)
+ {
+@@ -1431,6 +1465,36 @@ static void i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
+ 		master->ops->detach_i2c_dev(dev);
+ }
+ 
++static int i3c_master_add_static_i3c_dev(struct i3c_master_controller *master,
++					  struct i3c_dev_boardinfo *boardinfo)
++{
++	struct i3c_device_info info = {
++		.static_addr = boardinfo->static_addr,
++	};
++	struct i3c_dev_desc *i3cdev;
++	int ret;
++
++	i3cdev = i3c_master_alloc_i3c_dev(master, &info);
++	if (IS_ERR(i3cdev))
++		return -ENOMEM;
++
++	i3cdev->boardinfo = boardinfo;
++	i3cdev->info.static_addr = boardinfo->static_addr;
++	i3cdev->info.pid = boardinfo->pid;
++	i3cdev->info.dyn_addr = boardinfo->static_addr;
++
++	ret = i3c_master_attach_i3c_dev(master, i3cdev);
++	if (ret)
++		goto err_free_dev;
++
++	return 0;
++
++err_free_dev:
++	i3c_master_free_i3c_dev(i3cdev);
++
++	return ret;
++}
++
+ static int i3c_master_early_i3c_dev_add(struct i3c_master_controller *master,
+ 					  struct i3c_dev_boardinfo *boardinfo)
+ {
+@@ -1745,6 +1809,19 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+ 	 */
+ 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+ 
++		if (!i3cboardinfo->init_dyn_addr && master->bus.jesd403) {
++			/* JESD403 devices only support setaasa */
++			ret = i3c_bus_get_addr_slot_status(&master->bus,
++					i3cboardinfo->static_addr);
++			if (ret != I3C_ADDR_SLOT_FREE) {
++				ret = -EBUSY;
++				goto err_rstdaa;
++			}
++			i3cboardinfo->init_dyn_addr = i3cboardinfo->static_addr;
++			i3c_master_add_static_i3c_dev(master, i3cboardinfo);
++			continue;
++		}
++
+ 		/*
+ 		 * We don't reserve a dynamic address for devices that
+ 		 * don't explicitly request one.
+@@ -1775,6 +1852,16 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+ 			i3c_master_early_i3c_dev_add(master, i3cboardinfo);
+ 	}
+ 
++	if (master->bus.jesd403) {
++		i3c_master_sethid_locked(master);
++		i3c_master_setaasa_locked(master);
++
++		i3c_bus_normaluse_lock(&master->bus);
++		i3c_master_register_new_i3c_devs(master);
++		i3c_bus_normaluse_unlock(&master->bus);
++		return 0;
++	}
++
+ 	ret = i3c_master_do_daa(master);
+ 	if (ret)
+ 		goto err_rstdaa;
+@@ -2126,6 +2213,9 @@ static int of_populate_i3c_bus(struct i3c_master_controller *master)
+ 	if (!of_property_read_u32(i3cbus_np, "i3c-scl-hz", &val))
+ 		master->bus.scl_rate.i3c = val;
+ 
++	if (of_property_read_bool(i3cbus_np, "jedec,jesd403"))
++		master->bus.jesd403 = true;
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/i3c/ccc.h b/include/linux/i3c/ccc.h
+index 73b0982cc519..c531bae59380 100644
+--- a/include/linux/i3c/ccc.h
++++ b/include/linux/i3c/ccc.h
+@@ -32,6 +32,8 @@
+ #define I3C_CCC_DEFSLVS			I3C_CCC_ID(0x8, true)
+ #define I3C_CCC_ENTTM			I3C_CCC_ID(0xb, true)
+ #define I3C_CCC_ENTHDR(x)		I3C_CCC_ID(0x20 + (x), true)
++#define I3C_CCC_SETAASA			I3C_CCC_ID(0x29, true)
++#define I3C_CCC_SETHID			I3C_CCC_ID(0x61, true)
+ 
+ /* Unicast-only commands */
+ #define I3C_CCC_SETDASA			I3C_CCC_ID(0x7, false)
+@@ -243,6 +245,15 @@ struct i3c_ccc_setbrgtgt {
+ 	struct i3c_ccc_bridged_slave_desc bslaves[0];
+ } __packed;
+ 
++
++/**
++ * struct i3c_ccc_sethid - payload passed to SETHID CCC
++ *
++ * @hid: 3-bit HID
++ */
++struct i3c_ccc_sethid {
++	u8 hid;
++};
+ /**
+  * enum i3c_sdr_max_data_rate - max data rate values for private SDR transfers
+  */
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index 9cb39d901cd5..d335dea3798c 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -323,6 +323,7 @@ enum i3c_addr_slot_status {
+  *	  the same master in parallel. This is the responsibility of the
+  *	  master to guarantee that frames are actually sent sequentially and
+  *	  not interlaced
++ * @jesd403: true if the bus is JESD403 compliant.
+  *
+  * The I3C bus is represented with its own object and not implicitly described
+  * by the I3C master to cope with the multi-master functionality, where one bus
+@@ -343,6 +344,7 @@ struct i3c_bus {
+ 		struct list_head i2c;
+ 	} devs;
+ 	struct rw_semaphore lock;
++	bool jesd403;
+ };
+ 
+ /**
+-- 
+2.34.1
+

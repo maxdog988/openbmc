@@ -1,0 +1,60 @@
+From 1e476213c08522b6d475db645f2b4bd5a53ac541 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Fri, 9 Dec 2022 14:29:56 +0800
+Subject: [PATCH 22/71] i3c: master: svc: update driver
+
+1. fix SLVSTART interrupt lost when using dma
+2. use "use-dma" dts property to decide if use dma or not
+3. enable i3c0(use dma) & i3c1 on arbel evb dts
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 99b1b4505180..69e417f3c35a 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -536,20 +536,24 @@ static irqreturn_t svc_i3c_master_irq_handler(int irq, void *dev_id)
+ 	struct svc_i3c_master *master = (struct svc_i3c_master *)dev_id;
+ 	u32 active = readl(master->regs + SVC_I3C_MINTMASKED);
+ 
+-	if (SVC_I3C_MSTATUS_COMPLETE(active))
++	if (SVC_I3C_MSTATUS_COMPLETE(active)) {
++		/* Disable COMPLETE interrupt */
++		writel(SVC_I3C_MINT_COMPLETE, master->regs + SVC_I3C_MINTCLR);
++
+ 		complete(&master->xfer_comp);
++	}
+ 
+ 	if (SVC_I3C_MSTATUS_SLVSTART(active)) {
+ 		/* Clear the interrupt status */
+ 		writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MSTATUS);
+ 
++		/* Disable SLVSTART interrupt */
++		writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MINTCLR);
++
+ 		/* Handle the interrupt in a non atomic context */
+ 		queue_work(master->base.wq, &master->ibi_work);
+ 	}
+ 
+-
+-	svc_i3c_master_disable_interrupts(master);
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -1755,6 +1759,9 @@ static int svc_i3c_setup_dma(struct platform_device *pdev, struct svc_i3c_master
+ 	u32 dma_conn, reg_base;
+ 	int ret;
+ 
++	if (!of_property_read_bool(dev->of_node, "use-dma"))
++		return 0;
++
+ 	ret = of_property_read_u32(dev->of_node, "dma-mux", &dma_conn);
+ 	if (ret) {
+ 		dev_dbg(dev, "no DMA channel mux configured\n");
+-- 
+2.34.1
+

@@ -1,0 +1,56 @@
+From bb576d6ef9c012aa9c0892ed106c4bf70b5addc1 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Thu, 13 Apr 2023 15:55:32 +0800
+Subject: [PATCH 35/71] i3c: fix driver remove error
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 2 +-
+ drivers/i3c/mctp/i3c-mctp.c         | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 64b08a0ee683..6c4f80f49a2f 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -2284,7 +2284,7 @@ static int svc_i3c_master_remove(struct platform_device *pdev)
+ 
+ 	debugfs_remove_recursive(master->debugfs);
+ 
+-	ret = i3c_master_unregister(&master->base);
++	ret = i3c_unregister(&master->base);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/i3c/mctp/i3c-mctp.c b/drivers/i3c/mctp/i3c-mctp.c
+index 33e8bd1cde31..46cc210377c0 100644
+--- a/drivers/i3c/mctp/i3c-mctp.c
++++ b/drivers/i3c/mctp/i3c-mctp.c
+@@ -50,6 +50,7 @@ struct i3c_mctp {
+ 	struct i3c_mctp_client *peci_client;
+ 	u16 max_read_len;
+ 	u16 max_write_len;
++	bool poll_mode;
+ };
+ 
+ struct i3c_mctp_client {
+@@ -556,6 +557,7 @@ static int i3c_mctp_probe(struct i3c_device *i3cdev)
+ 		INIT_DELAYED_WORK(&priv->polling_work, i3c_mctp_polling_work);
+ 		schedule_delayed_work(&priv->polling_work, msecs_to_jiffies(POLLING_TIMEOUT_MS));
+ 		ibi_payload_size = 0;
++		priv->poll_mode = true;
+ 	}
+ 
+ 	i3c_device_get_info(i3cdev, &info);
+@@ -596,6 +598,8 @@ static void i3c_mctp_remove(struct i3c_device *i3cdev)
+ {
+ 	struct i3c_mctp *priv = dev_get_drvdata(i3cdev_to_dev(i3cdev));
+ 
++	if (priv->poll_mode)
++		cancel_delayed_work_sync(&priv->polling_work);
+ 	i3c_device_disable_ibi(i3cdev);
+ 	i3c_device_free_ibi(i3cdev);
+ 	i3c_mctp_client_free(priv->default_client);
+-- 
+2.34.1
+

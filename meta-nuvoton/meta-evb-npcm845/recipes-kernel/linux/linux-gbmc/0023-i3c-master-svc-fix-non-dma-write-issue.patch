@@ -1,0 +1,66 @@
+From 54b316669d500bfe30877a23b5d852a6190a643b Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Wed, 14 Dec 2022 11:30:02 +0800
+Subject: [PATCH 23/71] i3c: master: svc: fix non-dma write issue
+
+In the non-dma write transfer, if the data byte is not written
+to fifo on time, the first data bit sent might be wrong.
+Disable the local irq to prevent fifo operation from delay by
+interrupt.
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 69e417f3c35a..e2ad2c99a061 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -976,6 +976,7 @@ static int svc_i3c_master_do_daa(struct i3c_master_controller *m)
+ 	}
+ 
+ 	mutex_lock(&master->xferqueue.lock);
++	local_irq_disable();
+ 	/*
+ 	 * Fix SCL/SDA timing issue during DAA.
+ 	 * Set SKEW bit to 1 before initiating a DAA, set SKEW bit to 0
+@@ -984,6 +985,7 @@ static int svc_i3c_master_do_daa(struct i3c_master_controller *m)
+ 	svc_i3c_master_set_sda_skew(master, 1);
+ 	ret = svc_i3c_master_do_daa_locked(master, addrs, &dev_nb);
+ 	svc_i3c_master_set_sda_skew(master, 0);
++	local_irq_enable();
+ 	mutex_unlock(&master->xferqueue.lock);
+ 	if (ret) {
+ 		svc_i3c_master_emit_stop(master);
+@@ -1220,6 +1222,10 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
+ 		svc_i3c_master_start_dma(master);
+ 	}
+ 
++	/* Prevent fifo operation from delay by interrupt */
++	if (!use_dma)
++		local_irq_disable();
++
+ 	writel(SVC_I3C_MCTRL_REQUEST_START_ADDR |
+ 	       xfer_type |
+ 	       SVC_I3C_MCTRL_IBIRESP_NACK |
+@@ -1266,12 +1272,16 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
+ 		readl_poll_timeout(master->regs + SVC_I3C_MSTATUS, reg,
+ 				   SVC_I3C_MSTATUS_STATE_IDLE(reg), 0, 1000);
+ 	}
++	if (!use_dma)
++		local_irq_enable();
+ 
+ 	return 0;
+ 
+ emit_stop:
+ 	if (use_dma)
+ 		svc_i3c_master_stop_dma(master);
++	else
++		local_irq_enable();
+ 	svc_i3c_master_emit_stop(master);
+ 	svc_i3c_master_clear_merrwarn(master);
+ 
+-- 
+2.34.1
+

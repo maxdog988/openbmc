@@ -1,0 +1,119 @@
+From 16d8e4654022fee4ac29517db5dc2e3fa0e11dd6 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Fri, 11 Aug 2023 15:20:16 +0800
+Subject: [PATCH 42/71] i3c: export send CCC command API
+
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+---
+ drivers/i3c/device.c       | 14 ++++++++++++++
+ drivers/i3c/internals.h    |  1 +
+ drivers/i3c/master.c       | 28 +++++++++++++++++++++++++++-
+ include/linux/i3c/device.h |  2 ++
+ 4 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+index c340a19d028d..675816b1c073 100644
+--- a/drivers/i3c/device.c
++++ b/drivers/i3c/device.c
+@@ -199,6 +199,20 @@ void i3c_device_free_ibi(struct i3c_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(i3c_device_free_ibi);
+ 
++int i3c_device_send_ccc_cmd(struct i3c_device *dev, u8 ccc_id)
++{
++	int ret;
++
++	if (dev->desc) {
++		i3c_bus_normaluse_lock(dev->bus);
++		ret = i3c_dev_send_ccc_cmd_locked(dev->desc, ccc_id);
++		i3c_bus_normaluse_unlock(dev->bus);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_device_send_ccc_cmd);
++
+ /**
+  * i3cdev_to_dev() - Returns the device embedded in @i3cdev
+  * @i3cdev: I3C device
+diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+index 69c311047c5c..b34c4460c0b6 100644
+--- a/drivers/i3c/internals.h
++++ b/drivers/i3c/internals.h
+@@ -25,6 +25,7 @@ int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
+ int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
+ 			       const struct i3c_ibi_setup *req);
+ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev);
++int i3c_dev_send_ccc_cmd_locked(struct i3c_dev_desc *dev, u8 ccc_id);
+ int i3c_dev_getstatus_locked(struct i3c_dev_desc *dev, struct i3c_device_info *info);
+ int i3c_master_getmrl_locked(struct i3c_master_controller *master, struct i3c_device_info *info);
+ int i3c_master_getmwl_locked(struct i3c_master_controller *master, struct i3c_device_info *info);
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 1b8367097e8e..dd8afbe3dff3 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -1884,7 +1884,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+ 	 * i3c_master_add_i3c_dev_locked().
+ 	 */
+ 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+-
+ 		if (!i3cboardinfo->init_dyn_addr && master->bus.jesd403) {
+ 			/* JESD403 devices only support setaasa */
+ 			ret = i3c_bus_get_addr_slot_status(&master->bus,
+@@ -3094,6 +3093,33 @@ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev)
+ 	dev->ibi = NULL;
+ }
+ 
++int i3c_dev_send_ccc_cmd_locked(struct i3c_dev_desc *dev, u8 ccc_id)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev);
++	int ret;
++
++	switch (ccc_id) {
++	case I3C_CCC_SETAASA:
++		ret = i3c_master_setaasa_locked(master);
++		break;
++	case I3C_CCC_SETHID:
++		ret = i3c_master_sethid_locked(master);
++		break;
++	case I3C_CCC_RSTDAA(false):
++		ret = i3c_master_rstdaa_locked(master, dev->info.dyn_addr);
++		break;
++	case I3C_CCC_RSTDAA(true):
++		ret = i3c_master_rstdaa_locked(master, I3C_BROADCAST_ADDR);
++		break;
++	default:
++		dev_err(&master->dev, "Unpermitted ccc: %x\n", ccc_id);
++		return -ENOTSUPP;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(i3c_dev_send_ccc_cmd_locked);
++
+ int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *))
+ {
+ 	int res;
+diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+index f8228c77a80f..3e6ee6817d81 100644
+--- a/include/linux/i3c/device.h
++++ b/include/linux/i3c/device.h
+@@ -74,6 +74,7 @@ struct i3c_priv_xfer {
+  */
+ enum i3c_dcr {
+ 	I3C_DCR_GENERIC_DEVICE = 0,
++	I3C_DCR_HUB = 0xC2,
+ };
+ 
+ #define I3C_PID_MANUF_ID(pid)		(((pid) & GENMASK_ULL(47, 33)) >> 33)
+@@ -335,6 +336,7 @@ int i3c_device_request_ibi(struct i3c_device *dev,
+ void i3c_device_free_ibi(struct i3c_device *dev);
+ int i3c_device_enable_ibi(struct i3c_device *dev);
+ int i3c_device_disable_ibi(struct i3c_device *dev);
++int i3c_device_send_ccc_cmd(struct i3c_device *dev, u8 ccc_id);
+ 
+ int i3c_device_getstatus_ccc(struct i3c_device *dev, struct i3c_device_info *info);
+ int i3c_device_setmrl_ccc(struct i3c_device *dev, struct i3c_device_info *info, __be16 read_len,
+-- 
+2.34.1
+

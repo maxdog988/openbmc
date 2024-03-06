@@ -1,0 +1,39 @@
+From 96cb6d493410c7ac10951e7bf6f3a73737ed03eb Mon Sep 17 00:00:00 2001
+From: Guo Zhengkui <guozhengkui@vivo.com>
+Date: Thu, 5 May 2022 00:49:01 +0800
+Subject: [PATCH 08/71] i3c: master: svc: fix returnvar.cocci warning
+
+Fix the following coccicheck warning:
+
+drivers/i3c/master/svc-i3c-master.c:1600:5-8:
+Unneeded variable: "ret". Return "0" on line 1605.
+
+Signed-off-by: Guo Zhengkui <guozhengkui@vivo.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20220504164901.9622-1-guozhengkui@vivo.com
+---
+ drivers/i3c/master/svc-i3c-master.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 7550dad64ecf..d6e9ed74cdcf 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1597,12 +1597,11 @@ static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
+ static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
+ {
+ 	struct svc_i3c_master *master = dev_get_drvdata(dev);
+-	int ret = 0;
+ 
+ 	pinctrl_pm_select_default_state(dev);
+ 	svc_i3c_master_prepare_clks(master);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct dev_pm_ops svc_i3c_pm_ops = {
+-- 
+2.34.1
+

@@ -1,0 +1,33 @@
+From 63e1c8a6884fec290b192c01775355a8d184044b Mon Sep 17 00:00:00 2001
+From: cpchiang <cpchiang1@nuvoton.com>
+Date: Tue, 5 Dec 2023 11:32:58 +0800
+Subject: [PATCH 56/71] i3c: master: svc: add check ibi request capable bit
+ when update ibirules
+
+add check ibi request capable bit when update ibirules.
+
+Signed-off-by: cpchiang <cpchiang1@nuvoton.com>
+---
+ drivers/i3c/master/svc-i3c-master.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 50650f08e183..c35720fc191e 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1060,8 +1060,10 @@ static int svc_i3c_update_ibirules(struct svc_i3c_master *master)
+ 
+ 	/* Create the IBIRULES register for both cases */
+ 	i3c_bus_for_each_i3cdev(&master->base.bus, dev) {
+-		if (I3C_BCR_DEVICE_ROLE(dev->info.bcr) == I3C_BCR_I3C_MASTER)
+-			continue;
++		if (I3C_BCR_DEVICE_ROLE(dev->info.bcr) == I3C_BCR_I3C_MASTER) {
++			if (!(dev->info.bcr & I3C_BCR_IBI_REQ_CAP))
++				continue;
++		}
+ 
+ 		if (dev->info.bcr & I3C_BCR_IBI_PAYLOAD) {
+ 			reg_mbyte |= SVC_I3C_IBIRULES_ADDR(mbyte_addr_ok,
+-- 
+2.34.1
+

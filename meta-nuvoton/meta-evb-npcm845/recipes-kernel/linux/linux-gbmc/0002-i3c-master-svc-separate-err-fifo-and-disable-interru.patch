@@ -1,0 +1,106 @@
+From 1907b62006c1ee7a33de0205dc16c2694d35aed0 Mon Sep 17 00:00:00 2001
+From: Clark Wang <xiaoning.wang@nxp.com>
+Date: Mon, 27 Dec 2021 15:45:24 +0800
+Subject: [PATCH 02/71] i3c: master: svc: separate err, fifo and disable
+ interrupt of reset function
+
+Sometimes only need to reset err and fifo regs, so split the origin
+reset function to three functions.
+Put them at the top of the file, to let more functions can call them.
+
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20211227074529.1660398-4-xiaoning.wang@nxp.com
+---
+ drivers/i3c/master/svc-i3c-master.c | 59 +++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 47c02a60cf62..4e69c691253d 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -236,6 +236,40 @@ static void svc_i3c_master_disable_interrupts(struct svc_i3c_master *master)
+ 	writel(mask, master->regs + SVC_I3C_MINTCLR);
+ }
+ 
++static void svc_i3c_master_clear_merrwarn(struct svc_i3c_master *master)
++{
++	/* Clear pending warnings */
++	writel(readl(master->regs + SVC_I3C_MERRWARN),
++	       master->regs + SVC_I3C_MERRWARN);
++}
++
++static void svc_i3c_master_flush_fifo(struct svc_i3c_master *master)
++{
++	/* Flush FIFOs */
++	writel(SVC_I3C_MDATACTRL_FLUSHTB | SVC_I3C_MDATACTRL_FLUSHRB,
++	       master->regs + SVC_I3C_MDATACTRL);
++}
++
++static void svc_i3c_master_reset_fifo_trigger(struct svc_i3c_master *master)
++{
++	u32 reg;
++
++	/* Set RX and TX tigger levels, flush FIFOs */
++	reg = SVC_I3C_MDATACTRL_FLUSHTB |
++	      SVC_I3C_MDATACTRL_FLUSHRB |
++	      SVC_I3C_MDATACTRL_UNLOCK_TRIG |
++	      SVC_I3C_MDATACTRL_TXTRIG_FIFO_NOT_FULL |
++	      SVC_I3C_MDATACTRL_RXTRIG_FIFO_NOT_EMPTY;
++	writel(reg, master->regs + SVC_I3C_MDATACTRL);
++}
++
++static void svc_i3c_master_reset(struct svc_i3c_master *master)
++{
++	svc_i3c_master_clear_merrwarn(master);
++	svc_i3c_master_reset_fifo_trigger(master);
++	svc_i3c_master_disable_interrupts(master);
++}
++
+ static inline struct svc_i3c_master *
+ to_svc_i3c_master(struct i3c_master_controller *master)
+ {
+@@ -279,12 +313,6 @@ static void svc_i3c_master_emit_stop(struct svc_i3c_master *master)
+ 	udelay(1);
+ }
+ 
+-static void svc_i3c_master_clear_merrwarn(struct svc_i3c_master *master)
+-{
+-	writel(readl(master->regs + SVC_I3C_MERRWARN),
+-	       master->regs + SVC_I3C_MERRWARN);
+-}
+-
+ static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
+ 				     struct i3c_dev_desc *dev)
+ {
+@@ -1334,25 +1362,6 @@ static const struct i3c_master_controller_ops svc_i3c_master_ops = {
+ 	.disable_ibi = svc_i3c_master_disable_ibi,
+ };
+ 
+-static void svc_i3c_master_reset(struct svc_i3c_master *master)
+-{
+-	u32 reg;
+-
+-	/* Clear pending warnings */
+-	writel(readl(master->regs + SVC_I3C_MERRWARN),
+-	       master->regs + SVC_I3C_MERRWARN);
+-
+-	/* Set RX and TX tigger levels, flush FIFOs */
+-	reg = SVC_I3C_MDATACTRL_FLUSHTB |
+-	      SVC_I3C_MDATACTRL_FLUSHRB |
+-	      SVC_I3C_MDATACTRL_UNLOCK_TRIG |
+-	      SVC_I3C_MDATACTRL_TXTRIG_FIFO_NOT_FULL |
+-	      SVC_I3C_MDATACTRL_RXTRIG_FIFO_NOT_EMPTY;
+-	writel(reg, master->regs + SVC_I3C_MDATACTRL);
+-
+-	svc_i3c_master_disable_interrupts(master);
+-}
+-
+ static int svc_i3c_master_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-- 
+2.34.1
+
