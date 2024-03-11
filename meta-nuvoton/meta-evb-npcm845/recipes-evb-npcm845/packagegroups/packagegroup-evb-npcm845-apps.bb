@@ -62,6 +62,7 @@ RDEPENDS:${PN}-system = " \
         phosphor-ipmi-blobs \
         phosphor-image-signing \
         program-vbios \
+        program-edid \
         dhrystone \
         phosphor-ecc \
         phosphor-ipmi-blobs \
