@@ -21,7 +21,7 @@ For more product questions, please contact us at:
 # Table of Contents
 
 - [Dependencies](#dependencies)
-- [Contacts for Patches](#contacts-for-patches)
+- [Contact](#contact)
 - [Getting Started](#getting-started)
   * [Setting up EVB](#setting-up-evb)
   * [Building your OpenBMC project](#building-your-openbmc-project)
@@ -33,7 +33,7 @@ For more product questions, please contact us at:
     + [Configuration](#configuration)
     + [Build](#build)
     + [Output Images](#output-images)
-  * [Flash Programing Tool](#flash-programing-tool)
+  * [Flash Programming Tool](#flash-programming-tool)
     + [IGPS](#igps)
     + [ISP](#ISP)
     + [U-BOOT](#u-boot)
@@ -91,7 +91,7 @@ For more product questions, please contact us at:
 
 * Connect a Mini-USB cable to J_USB_TO_UART
 * You will get 4 serial port options from your terminal settings.
-* Please select second serial port and set baud rate to 115200.
+* Please select the second serial port and set the baud rate to 115200.
 * After EVB is powered on, you will get BMC logs from the terminal.
 
 ### 4) Secure boot status
@@ -109,7 +109,7 @@ TipROM 0x104 ** Secure boot is enabled
 
 ### Enable Secure Image
 
-To enable Secure Image function, please set below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L58)
+To enable the Secure Image function, please set the below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L58)
 ```ruby
 SECURED_IMAGE = "True"
 ```
@@ -118,16 +118,16 @@ SECURED_IMAGE = "True"
 
 The TIP FW currently is a pre-signed binary release, it is required a nuvoton key.
 
-We enable the tipfw build by defaule. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
+We enable the tipfw build by default. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
 ```ruby
 TIP_IMAGE = "True"
 ```
 
 ### Enable NO TIP FW
 
-Please make sure that your BMC is non-tip version first.
+Please make sure that your BMC is a non-tip version first.
 
-To enable NO TIP FW OpenBMC release, please set below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
+To enable the NO TIP FW OpenBMC release, please set the below variable in your platform include file. [Reference](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/conf/machine/include/npcm8xx.inc#L60)
 ```ruby
 TIP_IMAGE = "False"
 ```
@@ -160,17 +160,17 @@ You have to add a customized BootBlockAndHeader.xml in the npcm8xx-igps-native_%
 
 ### Change FIU Speed
 
-To change FIU Speed, please modify content value of FIU_CLK_DIVIDER in **BootBlockAndHeader.xml** file. [Reference](https://github.com/Nuvoton-Israel/igps-npcm8xx/blob/main/py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_EB.xml#L566)
+To change FIU Speed, please modify the content value of FIU_CLK_DIVIDER in **BootBlockAndHeader.xml** file. [Reference](https://github.com/Nuvoton-Israel/igps-npcm8xx/blob/main/py_scripts/ImageGeneration/references/BootBlockAndHeader_A1_EB.xml#L566)
 
 You have to add a customized BootBlockAndHeader.xml in the npcm8xx-igps-native_%.bbappend of your project layer.
 
-Change to **25 MHz** then divider value should be filled as **10**.
+Change to **25 MHz** then the divider value should be filled as **10**.
 
-Change to **50 MHz** then divider value should be filled as **5**.
+Change to **50 MHz** then the divider value should be filled as **5**.
 
-The other value can be calculated according spec.
+The other value can be calculated according to spec.
 
-Below is example for changing FIU0 speed to 50MHz.
+Below is an example of changing the FIU0 speed to 50MHz.
 ```ruby
 <BinField>
 	<!-- FIU 0 clk divider. -->
@@ -184,7 +184,7 @@ Below is example for changing FIU0 speed to 50MHz.
 ```
 ### Configuration
 
-- If you are using Red EVB board, please enable the [dts patch](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_%25.bbappend#L5)
+- If you are using the Red EVB board, please enable the [dts patch](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_%25.bbappend#L5)
 
 ### Build
 1. Target EVB NPCM845
@@ -215,13 +215,13 @@ image-uboot   |  tipfw + bootlock + optee + atf + u-boot                        
 image-kernel  |  Fit Image(Linux kernel + dtb+ initramfs)                                                                                     |
 image-rofs    |  OpenBMC Root Filesystem                                                          |
 
-## Flash Programing Tool
+## Flash Programming Tool
 
 ### IGPS
 
 #### Image Generation before flashing through IGPS
-Currently, Arbel support A1/Z1 devices and EB/SVB boards. Default configuration is using A1 device and EB board.<br/>
-You need to make sure which one is your device and board. Then execute correct batch file as below to generate image.
+Currently, Arbel supports A1/Z1 devices and EB/SVB boards. The default configuration is using the A1 device and EB board.<br/>
+You need to make sure which one is your device and board. Then execute the correct batch file as below to generate the image.
 
 * UpdateInputsBinaries_A1_EB.bat
 * UpdateInputsBinaries_A1_SVB.bat
@@ -229,7 +229,7 @@ You need to make sure which one is your device and board. Then execute correct b
 * UpdateInputsBinaries_Z1_SVB.bat
 
 Note: UpdateInputBinaries*.bat resets all the images and xml files inside **py_scripts/ImageGeneration/inputs**<br/>
-After that users can override the existing files in inputs folder, or use as is.
+After that users can override the existing files in the inputs folder, or use as is.
 
 In OpenBMC, there is one variable for configure Arbel A1/Z1 device in file [evb-npcm845.conf](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/conf/machine/evb-npcm845.conf )<br/>
 If you are using Z1 device, please modify variable **DEVICE_GEN = "Z1"**, before bitbake obmc-phosphor-image.<br/>
@@ -237,7 +237,7 @@ If you are using Z1 device, please modify variable **DEVICE_GEN = "Z1"**, before
 
 #### Flashing through IGPS
 Python 2.7 is required.<br/>
-Note: FUP is means using internal UART of the Arbel. This feature is only supported in Z1. For A1 device, please use ISP.<br/>
+Note: FUP means using the internal UART of the Arbel. This feature is only supported in Z1. For A1 device, please use ISP.<br/>
 
 1. BMC enter to FUP Mode :
 * Connect a Mini-USB cable to J_USB_TO_UART 
@@ -261,7 +261,7 @@ python ./ProgramAll_Secure.py
 
 #### In-system-programing using FTDI
 
-1. BMC enter to tri-state
+1. BMC enters to tri-state
 * Connect a Mini-USB cable to J_USB_TO_UART 
 * STRAP7 on(BMC pins are at Hi-Z) and STRAP5 on (Rout BSP signals via Host SI2 pins).
 * Quit terminal app 
@@ -283,7 +283,7 @@ Arbel_EVB_FlashProg.exe -open-desc "NPCM8mnx_Evaluation_Board B" -verify-on -pro
 
 * User can program images by u-boot command.
 * If you are using Red EVB board:
-  - The flash 0 size is 4MB, you should program openbmc image to flash 1.
+  - The flash 0 size is 4MB, you should program the openbmc image to flash 1.
 * If you are using Blue/Green EVB board:
   - The flash 0 size is 128MB, you can leave all images at flash 0.
 
@@ -385,7 +385,7 @@ evb-npcm845 login:
 ## Boot from eMMC
 Openbmc system can be loaded from the onboard eMMC storage.
 
-* build eMMC image, the image contains fitimage and rofs.
+* build eMMC image, the image contains fit image and rofs.
 ```
 DISTRO=arbel-evb-emmc bitbake obmc-phosphor-image
 ```
@@ -424,9 +424,9 @@ If need to change it you should modify igps xml and uboot.
 * IGPS
 ```
 Download IGPS 03.09.02 or newer.
-Base on your platform modify the BootBlockAndHeader_*.xml
+Based on your platform modify the BootBlockAndHeader_*.xml
 If you use npcm845 evb you need to modify BootBlockAndHeader_A1_EB.xml
-The xml file will show baud rate options and default is 115200.
+The XML file will show baud rate options and the default is 115200.
 	<BinField>
 		<!-- baud rate options:
 		9600,14400,19200,38400,57600,115200,230400,380400,460800,921600
@@ -440,7 +440,7 @@ The xml file will show baud rate options and default is 115200.
 		<content format='32bit'>115200</content>
 	</BinField>
 
-If you build openbmc, you can find this xml in
+If you build openbmc, you can find this XML in
 tmp/work/evb_npcm845-openbmc-linux/obmc-phosphor-image/1.0-r0/recipe-sysroot-native/usr/share/npcm8xx-igps
 ```
 
@@ -449,7 +449,7 @@ tmp/work/evb_npcm845-openbmc-linux/obmc-phosphor-image/1.0-r0/recipe-sysroot-nat
 Please add a config
 CONFIG_SYS_SKIP_UART_INIT=y
 
-This config will skip uart init and followed BB xml setting.
+This config will skip uart init and follow BB xml setting.
 ```
 
 
@@ -458,7 +458,7 @@ This config will skip uart init and followed BB xml setting.
 
 ## GPIO
 
-The NPCM8XX has eight GPIO modules with total 256 pins (each GPIO module contains a port of 32 GPIO pins).
+The NPCM8XX has eight GPIO modules with 256 pins (each GPIO module contains a port of 32 GPIO pins).
 Most of them are multiplexed with other system functions.
 You can program MFSEL registers to configure a pin as GPIO.
 
@@ -548,7 +548,7 @@ cat /sys/class/gpio/gpio1/value
 ```
 - Example for verifying GPIO status via GPIO Registers
 ```
-First, you need to check spec for GPIO Port Registers.
+First, you have to check the datasheet for GPIO Port Registers.
 
 Example: Get GPIO0 pin direction and value.
 GPIO0:   GPIO0_BA = 0xf0010000
@@ -559,17 +559,17 @@ GPnDIN:  offset   = 0x04
 Get GPIO0 pin direction by GPnOE register:
 devmem 0xf0010010 32
 0x30009101
-(Bit 0 represents for pin GPIO0, and the value 1 means pin direction is Output)
+(Bit 0 represents pin GPIO0, and the value 1 means pin direction is Output)
 
 Get GPIO0 Output pin value by GPnDOUT register:
 devmem 0xf001000c 32
 0x30008101
-(Bit 0 represents for pin GPIO0, and the value 1 means pin value is 1)
+(Bit 0 represents pin GPIO0, and the value 1 means the pin value is 1)
 
 Get GPIO1 Input pin value by GPnDIN register:
 devmem 0xf0010004 32
 0x00006002
-(Bit 1 represents for pin GPIO1, and the value 1 means pin value is 1)
+(Bit 1 represents pin GPIO1, and the value 1 means the pin value is 1)
 ```
 
 ### U-boot test
@@ -664,7 +664,7 @@ CONFIG_CMD_GPIO=y
 CONFIG_NPCM_GPIO=y
 ```
 
-- Use gpio command to operate GPIOs.
+- Use the gpio command to operate GPIOs.
 ```
 U-Boot>gpio set 0
 gpio: pin 0 (gpio 0) value is 1
@@ -683,7 +683,7 @@ The EVB has FTDI J_USB_TO_UART and J_SI2_BU0 UART headers, the user can select t
 1. Strap Settings
 
     - Strap 5 of the SW_STRAP1_8 DIP switch
-      * Turn on strap 5 to connect BMC debug port to SI2 interface.
+      * Turn on strap 5 to connect the BMC debug port to the SI2 interface.
 
     - Strap 7 of the SW1 DIP switch
       * Turn on strap 7 to isolate USB FTDI so that J_SI2_BU0 UART headers can be used.
@@ -691,12 +691,12 @@ The EVB has FTDI J_USB_TO_UART and J_SI2_BU0 UART headers, the user can select t
 2. FTDI J_USB_TO_UART
 
     - Connects a Mini-USB cable to J_USB_TO_UART
-      * You will get 4 serial port options from your terminal settings, select the second one and set baud rate to 115200.
+      * You will get 4 serial port options from your terminal settings, select the second one and set the baud rate to 115200.
 
 3. J_SI2_BU0 UART Headers
 
     - Connect a USB FTDI cable to J_SI2_BU0
-      * Turn on strap 7 of the SW1 DIP switch and set baud rate to 115200.
+      * Turn on strap 7 of the SW1 DIP switch and set the baud rate to 115200.
 
 ## FIU
 
@@ -713,7 +713,7 @@ The Arbel EVB has mounted 4 NOR Flash:
 - In nuvoton-npcm845-evb.dts, we have enabled FIU3 and defined the partition.
 ```ruby
 # kernel message
-spi-nor spi3.0: w25q256 (32768 Kbytes)
+spi-nor spi3.0: w25q256 (32768 kbytes)
 1 fixed-partitions partitions found on MTD device spi3.0
 Creating 1 MTD partitions on "spi3.0":
 0x000000000000-0x000002000000 : "spi3-system1
@@ -806,7 +806,7 @@ The EVB has 3 RJ45 headers and 1 NCSI header
 # make sure the link is up
 stmmaceth f0802000.eth eth0: Link is Up - 1Gbps/Full - flow control off
 ```
-2.  Configure static IP or get from DHCP server
+2.  Configure static IP or get from the DHCP server
 ```ruby
 eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq qlen 1000
     link/ether 00:00:f7:a0:00:fc brd ff:ff:ff:ff:ff:ff
@@ -945,7 +945,7 @@ CONFIG_I3C=y
 CONFIG_I3CDEV=y
 CONFIG_SVC_I3C_MASTER=y
 ```
-- There are one I3C device node on Bus 0.
+- There is one I3C device node on Bus 0.
 ```
 # ls /dev/i3c-0-*
 /dev/i3c-0-4cc51180000
@@ -969,7 +969,7 @@ Success on message 0
   * Wire GND between EVB and Hub
 
 - Edit nuvoton-npcm845-evb.dts. (The static address of Hub/SPD depends on the design).
-  The example configures the hub slave port IO voltage to 1.0V and assign dynamic address 0x10 to the hub.
+  The example configures the hub slave port IO voltage to 1.0V and assigns dynamic address 0x10 to the hub.
 ```
     i3c0: i3c@fff10000 {
         status = "okay";
@@ -1039,7 +1039,7 @@ root@evb-npcm845:~# ls /dev/i3c-mctp*
 root@evb-npcm845:~# mctp-npcmi3c-daemon -p /dev/i3c-mctp-target-0 -e 32&
 ```
 
-- Run the mctp test application, it will send message to mctp daemon and receive the response. If the received message is same as the sent message, the execution result will show "test complete"
+- Run the mctp test application, it will send a message to the mctp daemon and receive the response. If the received message is the same as the sent message, the execution result will show "test complete"
 ```
 root@evb-npcm845:~# test_npcmi3c -p /dev/i3c-mctp-0 -e 8 -d 32
 mctp_npcmi3c_daemon test
@@ -1048,7 +1048,7 @@ mctp_npcmi3c_daemon test complete
 
 ## JTAG Master
 
-The EVB has JTAG Master 1 interface on the J_JTAGM header.
+The EVB has a JTAG Master 1 interface on the J_JTAGM header.
 
 ### Linux Test
 
@@ -1085,11 +1085,11 @@ There is a TMP100 sensor (0x48) connected to SMB module 6.
 ### Linux test
 
 **TMP100 sensor**
-- The following example in EVB debug console is to detect TMP100.
+- The following example in the EVB debug console is to detect TMP100.
 ```
 i2cdetect -y -q 6
 ```
-- Or one can use the linux dts and driver configurations below.  
+- Or one can use the Linux dts and driver configurations below.  
 > _Edit nuvoton-npcm845-evb.dts_  
 ```
   &i2c6 {
@@ -1121,7 +1121,7 @@ CONFIG_SENSORS_LM75=y
 The SMB module's slave functionality could be tested by the following
 procedure.
 
-Wire the SMB0 module and SMB1 module. The SMB1 module acts as a slave eeprom.
+Wire the SMB0 module and SMB1 module. The SMB1 module acts as a slave EEPROM.
 
 - Enable kernel configuration
 ```
@@ -1158,7 +1158,7 @@ EVB debug console.
 i2cdetect -y -q 0
 ```
 - The following commands could be used to validate the access to the emulated
-eeprom.
+EEPROM.
 ```
 i2ctransfer -f -y 0 w2@0x64 0 0 r2
 i2ctransfer -f -y 0 w4@0x64 0 0 1 3 r0
@@ -1218,7 +1218,7 @@ The EVB has the J_eSPI header to support ESPI transactions.
 
 ## VWGPIO
 
-The EVB has sixteen Slave-to-Master and sixteen Master-to-Slave, each of them has 4 wires, total 128 GPIO pins can use.
+The EVB has sixteen Slave-to-Master and sixteen Master-to-Slave, each of them has 4 wires, and a total of 128 GPIO pins can be used.
 
 ### Linux test
 - example of DTS setting in nuvoton-npcm845-evb.dts
@@ -1300,10 +1300,10 @@ event: RISING EDGE offset: 127 timestamp: [   648.730730100]
 
 ## SIOX
 
-The EVB has two SIOX modules connecting to CPLD. You could control LED_CPLD_7 and do loopback test.
+The EVB has two SIOX modules connecting to CPLD. You could control LED_CPLD_7 and do a loopback test.
 
 ### Linux test
-- Please follow JTAG Master section to program CPLD first
+- Please follow the JTAG Master section to program CPLD first
 - The current nuvoton-npcm845-evb.dts is defined to support 64 input and 64 output of the second siox module, and the ninth output pin is for green LED
 ```
 sgpio2: sgpio@102000 {
@@ -1483,16 +1483,16 @@ event: FALLING EDGE offset: 64 timestamp: [   83884.267443984]
 ```
 
 ### Interrupt Stress Test
-- Monitor pin 64 ~ 79 with gpiomon
+- Monitor pins 64 ~ 79 with gpiomon
 ```
 root@evb-npcm845:~# gpiomon 8 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 &
 ```
-- Prepare a script to toggle pin 0 ~ 15 which are loopback to 64 ~ 79 repeatedly
+- Prepare a script to toggle pins 0 ~ 15 which are loopback to 64 ~ 79 repeatedly
 ```
 root@evb-npcm845:~# gpioset 8 0=1 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1
 root@evb-npcm845:~# gpioset 8 0=0 1=0 2=0 3=0 4=0 5=0 6=0 7=0 8=0 9=0 10=0 11=0 12=0 13=0 14=0 15=0
 ```
-- Monitor pin 96 ~ 103 from another console (login via SSH) 
+- Monitor pins 96 ~ 103 from another console (login via SSH) 
 ```
 root@evb-npcm845:~# gpiomon 8 96 97 98 99 100 101 102 103
 ```
@@ -1511,17 +1511,17 @@ J_CPLD.12 (pin 103)
 <img align="right" width="15%" src="https://raw.githubusercontent.com/NTC-CCBG/snapshots/master/openbmc/ARBEL_EVB_SIOX_INT_TEST.png">
 
 ```
-From the left consloe, you could see interrupt 64 ~ 79 repeatedly.
-From the right consloe, you could see gpiomon did get every interrupt from 96 to 103.
+From the left console, you could see interrupts 64 ~ 79 repeatedly.
+From the right console, you could see gpiomon did get every interrupt from 96 to 103.
 ```
 
 ## SPIX
 
 The EVB has one SPIX module connecting to CPLD.
-You could controll LED_CPLD_5, LED_CPLD_6 and LED_CPLD_8 to do loopback test.
+You could control LED_CPLD_5, LED_CPLD_6, and LED_CPLD_8 to do a loopback test.
 
 ### U-boot test
-1. Please follow JTAG Master section to program CPLD first.
+1. Please follow the JTAG Master section to program CPLD first.
 2. SPIX Configuration:
 ```
 mw.l 0xF080026C 0x19a08002
@@ -1575,17 +1575,17 @@ The EVB has a VGA output port.
 **How to use**
 1. Install Arbel EVB on a host PC via PCIE socket
 2. Power on Arbel EVB
-3. Waiting for arbel left bootblock
+3. Waiting for Arbel left bootblock
 4. Power on PC host
-5. Once PC run into OS, you should get OS screen from EVB's VGA port.
-6. If you didn't see the OS screen, please contact the developer.
+5. Once the PC runs into OS, you should get the OS screen from EVB's VGA port.
+6. If you didn't see the OS screen, please contact us.
 
 ### Linux test
 - KVM
 1. Prepare a motherboard and connect Arbel EVB through PCI-E.
-2. Connect a USB cable from motherboard to J_USB1_DEV header of EVB.
+2. Connect a USB cable from the motherboard to the J_USB1_DEV header of EVB.
 3. Make sure your workstation and EVB are in the same network.
-4. Launch a browser in your workstation and enter below URL, you will see the OpenBMC home page.
+4. Launch a browser in your workstation and enter the URL below, and then you will see the OpenBMC home page.
     ```
     https://<Arbel_EVB_IP>
     ```
@@ -1627,15 +1627,15 @@ The EVB has 2 x USB device ports and 1 x USB host port.
 
 **UDC Connectivity**
 - The UDC0~7 are used for USB port 1,
-- The UDC8 is used for USB port 3 if USB device mode
-- The UDC9 is used for USB port 2 if USB device mode
+- The UDC8 is used for USB port 3 if the USB device mode
+- The UDC9 is used for USB port 2 if the USB device mode
 
 ### Linux test
 **Virtual Media test in OpenBMC**
-1. Connects J_USB1_DEV and host PC with a USB cable
+1. Connect J_USB1_DEV and host PC with a USB cable
 
 2. Clone a physical USB drive to an image file
-    * For Linux - use tool like **dd**
+    * For Linux - use a tool like **dd**
       ```
       dd if=/dev/sda of=usb.img bs=1M count=100
       ```
@@ -1643,13 +1643,13 @@ The EVB has 2 x USB device ports and 1 x USB host port.
       >
       > _For example, if the size of your USB drive is 1GB, then you could set "bs=1M" and "count=1024"_
 
-    * For Windows - use tool like **Win32DiskImager.exe**
+    * For Windows - use a tool like **Win32DiskImager.exe**
 
       > _NOTICE : A simple *.iso file cannot work for this._
 
 2. Enable Virtual Media
 
-    1. Login and navigate to webpage of VM on your browser
+    1. Login and navigate to a webpage of the VM on your browser
         ```
         https://<Arbel_EVB_IP>/#/control/virtual-media
         ```
@@ -2318,7 +2318,7 @@ The client address under test is 0x30.
 
 Arbel SOC provides four SPI flash monitoring(FLM).
 
-- The FLM is connected in parallel to a flash interface, with only the chip-select in series connection. The flash controller is connected to the flash device via six signals and supports up to quad data bus.
+- The FLM is connected in parallel to a flash interface, with only the chip-select in series connection. The flash controller is connected to the flash device via six signals and supports up to the quad data bus.
 
 - Arbel evb can enable FLM mode and test.
   ```
@@ -2460,7 +2460,7 @@ CONFIG_CMD_WDT=y
 ```
 # u-boot message
 WDT:   Started without servicing (60s timeout)
-//After 60 seconds, watchdog0 would issue power on reset
+//After 60 seconds, watchdog0 would issue power-on reset
 ```
 - Disable watchdog
 ```
@@ -2470,7 +2470,7 @@ U-Boot>wdt dev watchdog@801c
 U-Boot>wdt stop
 ```
 ## Software Reset
-Software reset (1 to 3) is generated on assertion of the SWRST1-3 registers.
+Software reset (1 to 3) is generated on the assertion of the SWRST1-3 registers.
 ### Linux test
 - DTS
 ```
@@ -2524,7 +2524,7 @@ Failed to initialize SPI flash at 0:0 (error -22)
 Find a image-u-boot in build/evb-npcm845/tmp/deploy/images/
 
 ### Use [IGPS](#igps) tool
-1. BMC enter to FUP mode
+1. BMC enters to FUP mode
 2. Rename image-u-boot to Kmt_TipFw_BootBlock_uboot.bin.
 3. Copy to igps/py_scripts\ImageGeneration\output_binaries\Secure
 4. Run ProgramAll_Secure.bat
@@ -2571,7 +2571,7 @@ RNG: NPCM RNG module bind OK
 AES: NPCM AES module bind OK
 SHA: NPCM SHA module bind OK
 SGMII PCS PHY reset wait 
-SGMII PCS PHY reset done and clear Auto Negotiation 
+SGMII PCS PHY reset done and clear Auto-Negotiation 
 NPCM845 EVB PCB version ID 0x2 -> version X01 
 MMC:   
 Loading Environment from SPIFlash... SF: Detected mx66l1g45g with page size 256 Bytes, erase size 4 KiB, total 128 MiB
@@ -2587,7 +2587,7 @@ Hit any key to stop autoboot:  2  0
 U-Boot>
 ```
 
-3. Programmming image-u-boot
+3. Programming image-u-boot
 ```
 U-Boot>setenv gatewayip            192.168.0.254
 U-Boot>setenv serverip             192.168.0.128
