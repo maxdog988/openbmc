@@ -630,8 +630,12 @@ class QemuRunner:
             # so it's possible that the file has been created but the content is empty
             pidfile_timeout = time.time() + 3
             while time.time() < pidfile_timeout:
-                with open(self.qemu_pidfile, 'r') as f:
-                    qemu_pid = f.read().strip()
+                try:
+                    with open(self.qemu_pidfile, 'r') as f:
+                        qemu_pid = f.read().strip()
+                except FileNotFoundError:
+                    # Can be used to detect shutdown so the pid file can disappear
+                    return False
                 # file created but not yet written contents
                 if not qemu_pid:
                     time.sleep(0.5)
@@ -646,9 +650,9 @@ class QemuRunner:
         if hasattr(self, 'qmp') and self.qmp:
             self.qmp.settimeout(timeout)
             if args is not None:
-                return self.qmp.cmd(command, args)
+                return self.qmp.cmd_raw(command, args)
             else:
-                return self.qmp.cmd(command)
+                return self.qmp.cmd_raw(command)
 
     def run_serial(self, command, raw=False, timeout=60):
         # Returns (status, output) where status is 1 on success and 0 on error

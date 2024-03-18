@@ -10,7 +10,7 @@ dot-matrix, inkjet and laser models. \
 HOMEPAGE = "http://www.ghostscript.com"
 SECTION = "console/utils"
 
-LICENSE = "GPL-3.0-only"
+LICENSE = "AGPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f98ffa763e50cded76f49bce73aade16"
 
 DEPENDS = "tiff jpeg fontconfig cups libpng freetype zlib"
@@ -73,3 +73,4 @@ COMPATIBLE_HOST = "^(?!arc).*"
 CVE_PRODUCT = "ghostscript gpl_ghostscript"
 
 CVE_STATUS[CVE-2023-38560] = "not-applicable-config: PCL isn't part of the Ghostscript release"
+CVE_STATUS[CVE-2023-38559] = "cpe-incorrect: Issue only appears in versions before 10.02.0"

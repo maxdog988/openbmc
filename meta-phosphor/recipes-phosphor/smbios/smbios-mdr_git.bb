@@ -10,11 +10,12 @@ DEPENDS += " \
     phosphor-dbus-interfaces \
     phosphor-logging \
     "
-SRCREV = "c6d87a5cccbb13b9c7b01e90be6e61c5397c5917"
+SRCREV = "abdccd3af908c96a90b3e890a422a0022f471991"
 PACKAGECONFIG ?= "cpuinfo"
 PACKAGECONFIG[smbios-no-dimm] = "-Ddimm-dbus=disabled,-Ddimm-dbus=enabled"
 PACKAGECONFIG[cpuinfo] = "-Dcpuinfo=enabled,-Dcpuinfo=disabled,libpeci i2c-tools"
 PACKAGECONFIG[smbios-ipmi-blob] = "-Dsmbios-ipmi-blob=enabled,-Dsmbios-ipmi-blob=disabled,phosphor-ipmi-blobs"
+PACKAGECONFIG[assoc-trim-path] = "-Dassoc-trim-path=enabled,-Dassoc-trim-path=disabled"
 PV = "1.0+git${SRCPV}"
 PR = "r1"
 

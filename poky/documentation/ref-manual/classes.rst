@@ -693,7 +693,7 @@ information about using :ref:`ref-classes-devshell`.
 The :ref:`ref-classes-devupstream` class uses
 :term:`BBCLASSEXTEND` to add a variant of the
 recipe that fetches from an alternative URI (e.g. Git) instead of a
-tarball. Following is an example::
+tarball. Here is an example::
 
    BBCLASSEXTEND = "devupstream:target"
    SRC_URI:class-devupstream = "git://git.example.com/example;branch=main"
@@ -1246,8 +1246,8 @@ Please keep in mind that the QA checks
 are meant to detect real or potential problems in the packaged
 output. So exercise caution when disabling these checks.
 
-Here are the tests you can list with the :term:`WARN_QA` and
-:term:`ERROR_QA` variables:
+The tests you can list with the :term:`WARN_QA` and
+:term:`ERROR_QA` variables are:
 
 -  ``already-stripped:`` Checks that produced binaries have not
    already been stripped prior to the build system extracting debug
@@ -1296,6 +1296,11 @@ Here are the tests you can list with the :term:`WARN_QA` and
    :ref:`ref-tasks-compile` log for indications that
    paths to locations on the build host were used. Using such paths
    might result in host contamination of the build output.
+
+-  ``cve_status_not_in_db:`` Checks for each component if CVEs that are ignored
+   via :term:`CVE_STATUS`, that those are (still) reported for this component
+   in the NIST database. If not, a warning is printed. This check is disabled
+   by default.
 
 -  ``debug-deps:`` Checks that all packages except ``-dbg`` packages
    do not depend on ``-dbg`` packages, which would cause a packaging
@@ -3246,7 +3251,7 @@ information.
 The :ref:`ref-classes-uboot-sign` class provides support for U-Boot verified boot.
 It is intended to be inherited from U-Boot recipes.
 
-Here are variables used by this class:
+The variables used by this class are:
 
 -  :term:`SPL_MKIMAGE_DTCOPTS`: DTC options for U-Boot ``mkimage`` when
    building the FIT image.

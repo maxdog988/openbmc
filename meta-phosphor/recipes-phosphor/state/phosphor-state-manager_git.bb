@@ -42,6 +42,9 @@ PACKAGECONFIG ??= "no-warm-reboot \
 # Disable warm reboots of host
 PACKAGECONFIG[no-warm-reboot] = "-Dwarm-reboot=disabled,-Dwarm-reboot=enabled"
 
+# Disable forced warm reboots of host
+PACKAGECONFIG[no-force-warm-reboot] = "-Dforce-warm-reboot=disabled,-Dforce-warm-reboot=enabled"
+
 # Only run auto power restore logic if system had ac loss
 PACKAGECONFIG[only-run-apr-on-power-loss] = "-Donly-run-apr-on-power-loss=true,-Donly-run-apr-on-power-loss=false"
 
@@ -241,7 +244,7 @@ STOP_TMPL_CTRL = "obmc-host-stop@.target"
 STOP_TGTFMT_CTRL = "obmc-chassis-poweroff@{0}.target"
 STOP_INSTFMT_CTRL = "obmc-host-stop@{1}.target"
 STOP_FMT_CTRL = "../${STOP_TMPL_CTRL}:${STOP_TGTFMT_CTRL}.requires/${STOP_INSTFMT_CTRL}"
-SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'STOP_FMT_CTRL', 'OBMC_CHASSIS_INSTANCES', 'OBMC_HOST_INSTANCES')}"
+SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'STOP_FMT_CTRL', 'OBMC_HOST_INSTANCES', 'OBMC_HOST_INSTANCES')}"
 
 # Hard power off requires chassis off
 HARD_OFF_TMPL_CTRL = "obmc-chassis-poweroff@.target"
@@ -256,8 +259,9 @@ SYSD_TGT = "multi-user.target"
 RESET_INSTFMT_CTRL = "obmc-chassis-powerreset@{0}.target"
 RESET_FMT_CTRL = "../${RESET_TMPL_CTRL}:${SYSD_TGT}.wants/${RESET_INSTFMT_CTRL}"
 SYSTEMD_LINK:${PN}-obmc-targets += "${@compose_list_zip(d, 'RESET_FMT_CTRL', 'OBMC_CHASSIS_INSTANCES')}"
+SYSTEMD_LINK[vardeps] += "OBMC_CHASSIS_INSTANCES OBMC_HOST_INSTANCES"
 
 SRC_URI = "git://github.com/openbmc/phosphor-state-manager;branch=master;protocol=https"
-SRCREV = "e9040bb8b2d3be3c9ce968c04e43dcadeb284edd"
+SRCREV = "8be7ec4510d7932dd9a8942cfa67cc05fe10866f"
 
 S = "${WORKDIR}/git"
