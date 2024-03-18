@@ -1,4 +1,4 @@
-From d94a9a53f72c08d39a1c44beba0ef040f6f47c92 Mon Sep 17 00:00:00 2001
+From f0e87b0585667f2e499e25d440eeb4739e3011ac Mon Sep 17 00:00:00 2001
 From: jhkang <jhkang@nuvoton.com>
 Date: Wed, 29 Jun 2022 02:30:36 -0700
 Subject: [PATCH] Add Nuvoton CPLD firmware support
@@ -13,10 +13,10 @@ Signed-off-by: Allen Kang <jhkang@nuvoton.com>
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsCpld.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index 7fb797a9..5ac107ee 100644
+index af7793d6..3683d672 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
-@@ -331,6 +331,7 @@
+@@ -333,6 +333,7 @@
          "sectionTitleBmcCardsCombined": "BMC and server",
          "sectionTitleHostCards": "Host",
  	"sectionTitleMcuCards": "MCU",
@@ -25,7 +25,7 @@ index 7fb797a9..5ac107ee 100644
          "alert": {
              "operationInProgress": "Server power operation in progress.",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index 660223d6..abd67745 100644
+index 08280340..8c4ef55b 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -7,6 +7,7 @@ const FirmwareStore = {
@@ -43,7 +43,7 @@ index 660223d6..abd67745 100644
 +    cpldFirmware: (state) => state.cpldFirmware,
      backupBmcFirmware: (state) => {
        return state.bmcFirmware.find(
-         (firmware) => firmware.id !== state.bmcActiveFirmwareId
+         (firmware) => firmware.id !== state.bmcActiveFirmwareId,
 @@ -44,6 +46,7 @@ const FirmwareStore = {
      setBmcFirmware: (state, firmware) => (state.bmcFirmware = firmware),
      setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
@@ -64,10 +64,10 @@ index 660223d6..abd67745 100644
                .split('/')
                .pop();
 diff --git a/src/views/Operations/Firmware/Firmware.vue b/src/views/Operations/Firmware/Firmware.vue
-index bfb9b785..dce1becc 100644
+index 3686b63b..b11c5e36 100644
 --- a/src/views/Operations/Firmware/Firmware.vue
 +++ b/src/views/Operations/Firmware/Firmware.vue
-@@ -17,6 +17,9 @@
+@@ -20,6 +20,9 @@
  
          <!-- MCU Firmware -->
          <mcu-cards />
@@ -77,7 +77,7 @@ index bfb9b785..dce1becc 100644
        </b-col>
      </b-row>
  
-@@ -43,6 +46,7 @@ import BmcCards from './FirmwareCardsBmc';
+@@ -46,6 +49,7 @@ import BmcCards from './FirmwareCardsBmc';
  import FormUpdate from './FirmwareFormUpdate';
  import HostCards from './FirmwareCardsHost';
  import McuCards from './FirmwareCardsMcu';
@@ -85,7 +85,7 @@ index bfb9b785..dce1becc 100644
  import PageSection from '@/components/Global/PageSection';
  import PageTitle from '@/components/Global/PageTitle';
  
-@@ -56,6 +60,7 @@ export default {
+@@ -59,6 +63,7 @@ export default {
      FormUpdate,
      HostCards,
      McuCards,

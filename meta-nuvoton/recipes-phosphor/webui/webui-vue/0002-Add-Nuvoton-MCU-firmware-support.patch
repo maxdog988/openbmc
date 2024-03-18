@@ -1,4 +1,4 @@
-From 8099bcbeb568287028729d51f22ce7918d0687d7 Mon Sep 17 00:00:00 2001
+From 022cf5ec47f1b63b7b8d7f5aae453ed2a97cb011 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Tue, 29 Jun 2021 10:34:23 +0800
 Subject: [PATCH] Add Nuvoton MCU firmware support
@@ -14,10 +14,10 @@ Signed-off-by: Allen Kang <jhkang@nuvoton.com>
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsMcu.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index d3319935..7fb797a9 100644
+index ab630757..af7793d6 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
-@@ -330,7 +330,8 @@
+@@ -332,7 +332,8 @@
          "sectionTitleBmcCards": "BMC",
          "sectionTitleBmcCardsCombined": "BMC and server",
          "sectionTitleHostCards": "Host",
@@ -28,7 +28,7 @@ index d3319935..7fb797a9 100644
              "operationInProgress": "Server power operation in progress.",
              "serverMustBePoweredOffTo": "Server must be powered off to:",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index afc12e92..660223d6 100644
+index 43a8e079..08280340 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -6,6 +6,7 @@ const FirmwareStore = {
@@ -40,13 +40,13 @@ index afc12e92..660223d6 100644
      hostActiveFirmwareId: null,
      applyTime: null,
 @@ -25,6 +26,7 @@ const FirmwareStore = {
-         (firmware) => firmware.id === state.hostActiveFirmwareId
+         (firmware) => firmware.id === state.hostActiveFirmwareId,
        );
      },
 +    mcuFirmware: (state) => state.mcuFirmware,
      backupBmcFirmware: (state) => {
        return state.bmcFirmware.find(
-         (firmware) => firmware.id !== state.bmcActiveFirmwareId
+         (firmware) => firmware.id !== state.bmcActiveFirmwareId,
 @@ -41,6 +43,7 @@ const FirmwareStore = {
      setActiveHostFirmwareId: (state, id) => (state.hostActiveFirmwareId = id),
      setBmcFirmware: (state, firmware) => (state.bmcFirmware = firmware),
@@ -69,10 +69,10 @@ index afc12e92..660223d6 100644
                .split('/')
                .pop();
 diff --git a/src/views/Operations/Firmware/Firmware.vue b/src/views/Operations/Firmware/Firmware.vue
-index a2acb9b0..bfb9b785 100644
+index 44a721ae..3686b63b 100644
 --- a/src/views/Operations/Firmware/Firmware.vue
 +++ b/src/views/Operations/Firmware/Firmware.vue
-@@ -14,6 +14,9 @@
+@@ -17,6 +17,9 @@
  
          <!-- Host Firmware -->
          <host-cards v-if="!isSingleFileUploadEnabled" />
@@ -82,7 +82,7 @@ index a2acb9b0..bfb9b785 100644
        </b-col>
      </b-row>
  
-@@ -39,6 +42,7 @@ import AlertsServerPower from './FirmwareAlertServerPower';
+@@ -42,6 +45,7 @@ import AlertsServerPower from './FirmwareAlertServerPower';
  import BmcCards from './FirmwareCardsBmc';
  import FormUpdate from './FirmwareFormUpdate';
  import HostCards from './FirmwareCardsHost';
@@ -90,7 +90,7 @@ index a2acb9b0..bfb9b785 100644
  import PageSection from '@/components/Global/PageSection';
  import PageTitle from '@/components/Global/PageTitle';
  
-@@ -51,6 +55,7 @@ export default {
+@@ -54,6 +58,7 @@ export default {
      BmcCards,
      FormUpdate,
      HostCards,

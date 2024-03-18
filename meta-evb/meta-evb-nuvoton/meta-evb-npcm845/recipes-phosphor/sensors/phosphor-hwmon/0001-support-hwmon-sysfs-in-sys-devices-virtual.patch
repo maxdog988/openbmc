@@ -92,7 +92,7 @@ index f5b12bc..6f94e79 100644
 +    }
 +    catch (const std::exception& e)
 +    {
-+       fmt::print(stderr,
++       stdplus::print(stderr,
 +                   "Unable to find Virtual hwmon directory from the dev path: {}\n",
 +                   devPath.c_str());
 +    }

@@ -1,9 +1,7 @@
 FILESEXTRAPATHS:prepend:evb-npcm845 := "${THISDIR}/${PN}:"
 
-SRC_URI:append:evb-npcm845 = " \
-  file://start_hwmon.sh \
-  file://0001-support-hwmon-sysfs-in-sys-devices-virtual.patch \
-  "
+SRC_URI:append:evb-npcm845 = " file://start_hwmon.sh"
+SRC_URI:append:evb-npcm845 = " file://0001-support-hwmon-sysfs-in-sys-devices-virtual.patch"
 
 NAMES = " \
         i2c@86000/tmp100@48 \
