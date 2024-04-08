@@ -1,4 +1,4 @@
-From d538be2985f8f334d27bdc988a1ff56c3e74707b Mon Sep 17 00:00:00 2001
+From 60a965f0dc838537a23e733c357cf78526e85fa5 Mon Sep 17 00:00:00 2001
 From: Eason Yang <yhyang2@nuvoton.com>
 Date: Wed, 8 Feb 2023 14:32:27 +0800
 Subject: [PATCH] main: add feature for updating BootProgress and
@@ -64,7 +64,7 @@ index 9d11ac3..02b91a6 100644
  using ServerObject = typename sdbusplus::server::object_t<T...>;
  using PostInterface = sdbusplus::xyz::openbmc_project::State::Boot::server::Raw;
 diff --git a/main.cpp b/main.cpp
-index 2c9c7c2..37749d7 100644
+index d84a5aa..8371813 100644
 --- a/main.cpp
 +++ b/main.cpp
 @@ -14,6 +14,9 @@
@@ -77,9 +77,9 @@ index 2c9c7c2..37749d7 100644
  #ifdef ENABLE_IPMI_SNOOP
  #include "ipmisnoop/ipmisnoop.hpp"
  #endif
-@@ -45,6 +48,90 @@
- static size_t codeSize = 1; /* Size of each POST code in bytes */
+@@ -46,6 +49,90 @@ static size_t codeSize = 1; /* Size of each POST code in bytes */
  static bool verbose = false;
+ static std::function<bool(uint64_t&, ssize_t)> procPostCode;
  
 +static constexpr auto biosDefs = "/etc/default/obmc/bios/bios_defs.json";
 +uint64_t OS_START, MEM_INIT, PCI_INIT, BOARD_INIT = 0;
@@ -168,7 +168,7 @@ index 2c9c7c2..37749d7 100644
  static void usage(const char* name)
  {
      fprintf(stderr,
-@@ -129,6 +216,7 @@ bool rateLimit(PostReporter& reporter, sdeventplus::source::IO& ioSource)
+@@ -198,6 +285,7 @@ bool aspeedPCC(uint64_t& code, ssize_t readb)
  void PostCodeEventHandler(PostReporter* reporter, sdeventplus::source::IO& s,
                            int postFd, uint32_t)
  {
@@ -176,7 +176,7 @@ index 2c9c7c2..37749d7 100644
      uint64_t code = 0;
      ssize_t readb;
  
-@@ -145,6 +233,46 @@ void PostCodeEventHandler(PostReporter* reporter, sdeventplus::source::IO& s,
+@@ -219,6 +307,46 @@ void PostCodeEventHandler(PostReporter* reporter, sdeventplus::source::IO& s,
          reporter->value(std::make_tuple(~code, secondary_post_code_t{}), true);
          reporter->value(std::make_tuple(code, secondary_post_code_t{}));
  
@@ -223,10 +223,10 @@ index 2c9c7c2..37749d7 100644
          // read depends on old data being cleared since it doens't always read
          // the full code size
          code = 0;
-@@ -244,6 +372,11 @@ int main(int argc, char* argv[])
-                 break;
-             }
-             case 'd':
+@@ -322,6 +450,11 @@ int main(int argc, char* argv[])
+                 {
+                     procPostCode = aspeedPCC;
+                 }
 +                // Get POST CODE from JSON configure file.
 +                OS_START = getPostCodeNum(POST_CODE_OS_START);
 +                MEM_INIT = getPostCodeNum(POST_CODE_MEM_INIT);
