@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Licenses/README;md5=2ca5f2c35c8cc335f0a19756634782f1"
 
 UBRANCH = "npcm-v2023.10"
 SRC_URI = "git://github.com/Nuvoton-Israel/u-boot.git;branch=${UBRANCH};protocol=https"
-SRCREV = "a7c671fddbfeabea45eccbec4c49ea2bcb67b172"
+SRCREV = "27e0724ff076ef07ce3c8ea37f7c7376a22fe002"
 
 # to enable U-Boot v2023.10, set UBOOT_MACHINE = "arbel_evb_defconfig" in machine conf
 
