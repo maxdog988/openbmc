@@ -5,6 +5,7 @@ SRCREV = "5bf9d72ff853e6b9ad933c38a8b8691c4f3751cf"
 
 require linux-nuvoton.inc
 
+SRC_URI:append:nuvoton = " file://enable-usb-legacy.cfg"
 SRC_URI:append:nuvoton = " file://0017-drivers-i2c-workaround-for-i2c-slave-behavior.patch"
 SRC_URI:append:nuvoton = " file://0001-gcc-plugins-Reorganize-gimple-includes-for-GCC-13.patch"
 
