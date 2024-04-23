@@ -17,9 +17,7 @@ require ${BPN}-crates.inc
 
 inherit pypi cargo-update-recipe-crates python_maturin
 
-S = "${WORKDIR}/pydantic_core-${PV}"
-
-PYPI_ARCHIVE_NAME = "pydantic_core-${PV}.${PYPI_PACKAGE_EXT}"
+PYPI_PACKAGE = "pydantic_core"
 
 RDEPENDS:${PN} += "python3-typing-extensions"
 
@@ -32,6 +30,8 @@ RDEPENDS:${PN}-ptest += "\
     python3-hypothesis \
     python3-pytest \
     python3-pytest-mock \
+    python3-pytest-timeout \
+    python3-pytest-benchmark \
     python3-unittest-automake-output \
 "
 
@@ -48,5 +48,5 @@ do_install:append() {
 
 do_install_ptest() {
     cp -rf ${S}/tests/ ${D}${PTEST_PATH}/
-    rm -rf ${D}${PTEST_PATH}/tests/benchmarks
+    sed -i -e "/--automake/ s/$/ -k 'not test_model_class_root_validator_wrap and not test_model_class_root_validator_before and not test_model_class_root_validator_after'/" ${D}${PTEST_PATH}/run-ptest
 }

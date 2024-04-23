@@ -421,7 +421,7 @@ and BusyBox. It could have been called "kconfig" too.
 ``compress_doc``
 ================
 
-Enables compression for man pages and info pages. This class is intended
+Enables compression for manual and info pages. This class is intended
 to be inherited globally. The default compression mechanism is gz (gzip)
 but you can select an alternative mechanism by setting the
 :term:`DOC_COMPRESS` variable.
@@ -564,6 +564,13 @@ The ``Patched`` state of a CVE issue is detected from patch files with the forma
 ``CVE-ID.patch``, e.g. ``CVE-2019-20633.patch``, in the :term:`SRC_URI` and using
 CVE metadata of format ``CVE: CVE-ID`` in the commit message of the patch file.
 
+.. note::
+
+   Commit message metadata (``CVE: CVE-ID`` in a patch header) will not be scanned
+   in any patches that are remote, i.e. that are anything other than local files
+   referenced via ``file://`` in SRC_URI. However, a ``CVE-ID`` in a remote patch
+   file name itself will be registered.
+
 If the recipe adds ``CVE-ID`` as flag of the :term:`CVE_STATUS` variable with status
 mapped to ``Ignored``, then the CVE state is reported as ``Ignored``::
 
@@ -665,7 +672,7 @@ The padding size can be modified by setting :term:`DT_PADDING_SIZE`
 to the desired size, in bytes.
 
 See :oe_git:`devicetree.bbclass sources
-</openembedded-core/tree/meta/classes-recipe/devicetree.bbclass>` 
+</openembedded-core/tree/meta/classes-recipe/devicetree.bbclass>`
 for further variables controlling this class.
 
 Here is an excerpt of an example ``recipes-kernel/linux/devicetree-acme.bb``
@@ -939,6 +946,20 @@ The :ref:`ref-classes-go-mod` class allows to use Go modules, and inherits the
 
 See the associated :term:`GO_WORKDIR` variable.
 
+.. _ref-classes-go-vendor:
+
+``go-vendor``
+=============
+
+The :ref:`ref-classes-go-vendor` class implements support for offline builds,
+also known as Go vendoring. In such a scenario, the module dependencias are
+downloaded during the :ref:`ref-tasks-fetch` task rather than when modules are
+imported, thus being coherent with Yocto's concept of fetching every source
+beforehand.
+
+The dependencies are unpacked into the modules' ``vendor`` directory, where a
+manifest file is generated.
+
 .. _ref-classes-gobject-introspection:
 
 ``gobject-introspection``
@@ -1184,13 +1205,17 @@ enables the :ref:`ref-classes-image_types` class. The :ref:`ref-classes-image` c
 ``IMGCLASSES`` variable as follows::
 
    IMGCLASSES = "rootfs_${IMAGE_PKGTYPE} image_types ${IMAGE_CLASSES}"
-   IMGCLASSES += "${@['populate_sdk_base', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS")]}"
+   # Only Linux SDKs support populate_sdk_ext, fall back to populate_sdk_base
+   # in the non-Linux SDK_OS case, such as mingw32
+   inherit populate_sdk_base
+   IMGCLASSES += "${@['', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS")]}"
    IMGCLASSES += "${@bb.utils.contains_any('IMAGE_FSTYPES', 'live iso hddimg', 'image-live', '', d)}"
    IMGCLASSES += "${@bb.utils.contains('IMAGE_FSTYPES', 'container', 'image-container', '', d)}"
    IMGCLASSES += "image_types_wic"
    IMGCLASSES += "rootfs-postcommands"
    IMGCLASSES += "image-postinst-intercepts"
-   inherit ${IMGCLASSES}
+   IMGCLASSES += "overlayfs-etc"
+   inherit_defer ${IMGCLASSES}
 
 The :ref:`ref-classes-image_types` class also handles conversion and compression of images.
 
@@ -1563,6 +1588,12 @@ The tests you can list with the :term:`WARN_QA` and
 
       This is only relevant when you are using runtime package management
       on your target system.
+
+-  ``virtual-slash:`` Checks to see if ``virtual/`` is being used in
+   :term:`RDEPENDS` or :term:`RPROVIDES`, which is not good practice ---
+   ``virtual/`` is a convention intended for use in the build context
+   (i.e. :term:`PROVIDES` and :term:`DEPENDS`) rather than the runtime
+   context.
 
 -  ``xorg-driver-abi:`` Checks that all packages containing Xorg
    drivers have ABI dependencies. The ``xserver-xorg`` recipe provides
@@ -2353,6 +2384,24 @@ section of ``pyproject.toml`` (See `PEP-518 <https://www.python.org/dev/peps/pep
 
 Python modules built with ``flit_core.buildapi`` are pure Python (no
 ``C`` or ``Rust`` extensions).
+
+Internally this uses the :ref:`ref-classes-python_pep517` class.
+
+.. _ref-classes-python_maturin:
+
+``python_maturin``
+==================
+
+The :ref:`ref-classes-python_maturin` class provides support for python-maturin, a replacement
+for setuptools_rust and another "backend" for building Python Wheels.
+
+.. _ref-classes-python_mesonpy:
+
+``python_mesonpy``
+==================
+
+The :ref:`ref-classes-python_mesonpy` class enables building Python modules which use the
+meson-python build system.
 
 Internally this uses the :ref:`ref-classes-python_pep517` class.
 
@@ -3266,7 +3315,7 @@ The variables used by this class are:
 -  :term:`UBOOT_FIT_KEY_REQ_ARGS`: ``openssl req`` arguments.
 -  :term:`UBOOT_FIT_SIGN_ALG`: signature algorithm for the FIT image.
 -  :term:`UBOOT_FIT_SIGN_NUMBITS`: size of the private key for FIT image
-   signing.                                                  
+   signing.
 -  :term:`UBOOT_FIT_KEY_SIGN_PKCS`: algorithm for the public key certificate
    for FIT image signing.
 -  :term:`UBOOT_FITIMAGE_ENABLE`: enable the generation of a U-Boot FIT image.

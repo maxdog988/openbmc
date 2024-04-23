@@ -58,6 +58,8 @@ SRC_URI:append = " \
     file://0040-fix-runtime-capsule-update-flags-checks.patch		  \
     file://0041-scatter-gather-flag-workaround.patch			  \
     file://0042-corstone1000-enable-virtio-net-support.patch		  \
+    file://0043-firmware-psci-Fix-bind_smccc_features-psci-check.patch		  \
+    file://0044-corstone1000-set-unique-GUID-for-fvp-and-mps3.patch		  \
     "
 
 do_configure:append() {

@@ -3,12 +3,12 @@ require conf/machine/include/arm/armv8a/tune-cortexa35.inc
 MACHINEOVERRIDES =. "corstone1000:"
 
 # TF-M
-PREFERRED_VERSION_trusted-firmware-m ?= "1.8.%"
+PREFERRED_VERSION_trusted-firmware-m ?= "2.0.%"
 
 # TF-A
 TFA_PLATFORM = "corstone1000"
-PREFERRED_VERSION_trusted-firmware-a ?= "2.9.%"
-PREFERRED_VERSION_tf-a-tests ?= "2.8.%"
+PREFERRED_VERSION_trusted-firmware-a ?= "2.10.%"
+PREFERRED_VERSION_tf-a-tests ?= "2.10.%"
 
 TFA_BL2_BINARY = "bl2-corstone1000.bin"
 TFA_FIP_BINARY = "fip-corstone1000.bin"

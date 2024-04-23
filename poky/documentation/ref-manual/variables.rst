@@ -561,6 +561,10 @@ system and gives an overview of their function and contents.
    :term:`BB_INVALIDCONF`
       See :term:`bitbake:BB_INVALIDCONF` in the BitBake manual.
 
+   :term:`BB_LOADFACTOR_MAX`
+      The system load threshold above which BitBake will stop runnig extra
+      tasks.
+
    :term:`BB_LOGCONFIG`
       See :term:`bitbake:BB_LOGCONFIG` in the BitBake manual.
 
@@ -1688,6 +1692,11 @@ system and gives an overview of their function and contents.
       The list of package names (:term:`PN`) for which
       CVEs (Common Vulnerabilities and Exposures) are ignored.
 
+   :term:`CVE_DB_INCR_UPDATE_AGE_THRES`
+      Specifies the maximum age of the CVE database in seconds for an
+      incremental update (instead of a full-download). Use "0" to force a
+      full-download.
+
    :term:`CVE_DB_UPDATE_INTERVAL`
       Specifies the CVE database update interval in seconds, as used by
       ``cve-update-db-native``. The default value is "86400" i.e. once a day
@@ -2292,7 +2301,7 @@ system and gives an overview of their function and contents.
    :term:`DOC_COMPRESS`
       When inheriting the :ref:`ref-classes-compress_doc`
       class, this variable sets the compression policy used when the
-      OpenEmbedded build system compresses man pages and info pages. By
+      OpenEmbedded build system compresses manual and info pages. By
       default, the compression method used is gz (gzip). Other policies
       available are xz and bz2.
 
@@ -2329,6 +2338,12 @@ system and gives an overview of their function and contents.
 
       See the :ref:`ref-classes-systemd-boot` and :ref:`ref-classes-image-live`
       classes for more information.
+
+   :term:`EFI_UKI_DIR`
+      The primary place for the UKI image inside the EFI System Partition.
+
+   :term:`EFI_UKI_PATH`
+      The path for the UKI image inside the root filesystem.
 
    :term:`ENABLE_BINARY_LOCALE_GENERATION`
       Variable that controls which locales for ``glibc`` are generated
@@ -2983,18 +2998,18 @@ system and gives an overview of their function and contents.
 
    :term:`FIT_ADDRESS_CELLS`
       Specifies the value of the ``#address-cells`` value for the
-      description of the FIT image.  
+      description of the FIT image.
 
       The default value is set to "1" by the :ref:`ref-classes-kernel-fitimage`
-      class, which corresponds to 32 bit addresses. 
+      class, which corresponds to 32 bit addresses.
 
       For platforms that need to set 64 bit addresses, for example in
       :term:`UBOOT_LOADADDRESS` and :term:`UBOOT_ENTRYPOINT`, you need to
-      set this value to "2", as two 32 bit values (cells) will be needed 
+      set this value to "2", as two 32 bit values (cells) will be needed
       to represent such addresses.
 
       Here is an example setting "0x400000000" as a load address::
-    
+
          FIT_ADDRESS_CELLS = "2"
          UBOOT_LOADADDRESS= "0x04 0x00000000"
 
@@ -3971,15 +3986,15 @@ system and gives an overview of their function and contents.
       Specifies a space-separated list of license names (as they would
       appear in :term:`LICENSE`) that should be excluded
       from the build (if set globally), or from an image (if set locally
-      in an image recipe). 
+      in an image recipe).
 
       When the variable is set globally, recipes that provide no alternatives to listed
       incompatible licenses are not built. Packages that are individually
-      licensed with the specified incompatible licenses will be deleted. 
+      licensed with the specified incompatible licenses will be deleted.
       Most of the time this does not allow a feasible build (because it becomes impossible
       to satisfy build time dependencies), so the recommended way to
       implement license restrictions is to set the variable in specific
-      image recipes where the restrictions must apply. That way there 
+      image recipes where the restrictions must apply. That way there
       are no build time restrictions, but the license check is still
       performed when the image's filesystem is assembled from packages.
 
@@ -4033,7 +4048,7 @@ system and gives an overview of their function and contents.
       The default value of the variable is set as follows in the
       ``meta/conf/distro/defaultsetup.conf`` file::
 
-         INHERIT_DISTRO ?= "debian devshell sstate license"
+         INHERIT_DISTRO ?= "debian devshell sstate license remove-libtool create-spdx"
 
    :term:`INHIBIT_DEFAULT_DEPS`
       Prevents the default dependencies, namely the C compiler and standard
@@ -4495,12 +4510,12 @@ system and gives an overview of their function and contents.
       When kernel configuration fragments are missing for some
       :term:`KERNEL_FEATURES` specified by layers or BSPs,
       building and configuring the kernel stops with an error.
-    
+
       You can turn these errors into warnings by setting the
       following in ``conf/local.conf``::
 
          KERNEL_DANGLING_FEATURES_WARN_ONLY = "1"
-    
+
       You will still be warned that runtime issues may occur,
       but at least the kernel configuration and build process will
       be allowed to continue.
@@ -5665,6 +5680,9 @@ system and gives an overview of their function and contents.
       ``meta/conf/bitbake.conf`` configuration file. You can override this
       default by setting the variable in a custom distribution
       configuration file.
+
+   :term:`OPKG_MAKE_INDEX_EXTRA_PARAMS`
+      Specifies extra parameters for the ``opkg-make-index`` command.
 
    :term:`OVERLAYFS_ETC_DEVICE`
       When the :ref:`ref-classes-overlayfs-etc` class is
@@ -7147,6 +7165,9 @@ system and gives an overview of their function and contents.
       :term:`IMAGE_ROOTFS` variable for more
       information.
 
+   :term:`RPMBUILD_EXTRA_PARAMS`
+      Specifies extra user-defined parameters for the ``rpmbuild`` command.
+
    :term:`RPROVIDES`
       A list of package name aliases that a package also provides. These
       aliases are useful for satisfying runtime dependencies of other
@@ -7868,7 +7889,7 @@ system and gives an overview of their function and contents.
       This option allows to associate `SPDX annotations
       <https://spdx.github.io/spdx-spec/v2.3/annotations/>`__ to a recipe,
       using the values of variables in the recipe::
-        
+
          ANNOTATION1 = "First annotation for recipe"
          ANNOTATION2 = "Second annotation for recipe"
          SPDX_CUSTOM_ANNOTATION_VARS = "ANNOTATION1 ANNOTATION2"
@@ -7910,6 +7931,11 @@ system and gives an overview of their function and contents.
       ``tmp/deploy/images/MACHINE`` by a factor of 130 (+15 MiB for this
       image), compared to just using the :ref:`ref-classes-create-spdx` class
       with no option.
+
+   :term:`SPDX_NAMESPACE_PREFIX`
+      This option could be used in order to change the prefix of ``spdxDocument``
+      and the prefix of ``documentNamespace``. It is set by default to
+      ``http://spdx.org/spdxdoc``.
 
    :term:`SPDX_PRETTY`
       This option makes the SPDX output more human-readable, using
@@ -7986,7 +8012,7 @@ system and gives an overview of their function and contents.
       The name of keys used by the :ref:`ref-classes-kernel-fitimage` class
       for signing U-Boot FIT image stored in the :term:`SPL_SIGN_KEYDIR`
       directory. If we have for example a ``dev.key`` key and a ``dev.crt``
-      certificate stored in the :term:`SPL_SIGN_KEYDIR` directory, you will 
+      certificate stored in the :term:`SPL_SIGN_KEYDIR` directory, you will
       have to set :term:`SPL_SIGN_KEYNAME` to ``dev``.
 
    :term:`SPLASH`
@@ -8023,7 +8049,7 @@ system and gives an overview of their function and contents.
 
           EXTRA_OECONF += "--disable-startup-msg --enable-img-fullscreen"
 
-      For information on append files, see the                                                                            
+      For information on append files, see the
       ":ref:`dev-manual/layers:appending other layers metadata with your layer`"
       section.
 
@@ -8787,6 +8813,10 @@ system and gives an overview of their function and contents.
       value so that executables built using the SDK also have the flags
       applied.
 
+   :term:`TARGET_DBGSRC_DIR`
+      Specifies the target path to debug source files. The default is
+      ``/usr/src/debug/${PN}/${PV}``.
+
    :term:`TARGET_FPU`
       Specifies the method for handling FPU code. For FPU-less targets,
       which include most ARM CPUs, the variable must be set to "soft". If
@@ -9437,10 +9467,10 @@ system and gives an overview of their function and contents.
 
    :term:`UBOOT_FIT_ADDRESS_CELLS`
       Specifies the value of the ``#address-cells`` value for the
-      description of the U-Boot FIT image.  
+      description of the U-Boot FIT image.
 
       The default value is set to "1" by the :ref:`ref-classes-uboot-sign`
-      class, which corresponds to 32 bit addresses. 
+      class, which corresponds to 32 bit addresses.
 
       For platforms that need to set 64 bit addresses in
       :term:`UBOOT_LOADADDRESS` and :term:`UBOOT_ENTRYPOINT`, you need to
@@ -9448,7 +9478,7 @@ system and gives an overview of their function and contents.
       to represent such addresses.
 
       Here is an example setting "0x400000000" as a load address::
-    
+
          UBOOT_FIT_ADDRESS_CELLS = "2"
          UBOOT_LOADADDRESS= "0x04 0x00000000"
 
@@ -9511,7 +9541,7 @@ system and gives an overview of their function and contents.
          UBOOT_FITIMAGE_ENABLE = "1"
 
       See the :ref:`ref-classes-uboot-sign` class for details.
-      
+
    :term:`UBOOT_LOADADDRESS`
       Specifies the load address for the U-Boot image. During U-Boot image
       creation, the :term:`UBOOT_LOADADDRESS` variable is passed as a
