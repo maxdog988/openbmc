@@ -9,8 +9,6 @@ UBRANCH = "npcm-v2023.10"
 SRC_URI = "git://github.com/Nuvoton-Israel/u-boot.git;branch=${UBRANCH};protocol=https"
 SRCREV = "51264abe9348bb2eb39ace0db87cc38d9fcd7f72"
 
-# to enable U-Boot v2023.10, set UBOOT_MACHINE = "arbel_evb_defconfig" in machine conf
-
 S = "${WORKDIR}/git"
 
 PV = "v2023.10+git${SRCPV}"
