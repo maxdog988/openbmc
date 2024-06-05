@@ -1,7 +1,7 @@
 KSRC = "git://github.com/Nuvoton-Israel/linux;protocol=https;branch=${KBRANCH}"
 KBRANCH = "NPCM-5.10-OpenBMC"
 LINUX_VERSION = "5.10.161"
-SRCREV = "df901c2b0112b148c0f46951e15e681cf5c028ee"
+SRCREV = "353833b117f00cb09db91f065571a56b63e11642"
 
 require linux-nuvoton.inc
 SRC_URI:append:nuvoton = " file://enable_emmc_510.cfg"
