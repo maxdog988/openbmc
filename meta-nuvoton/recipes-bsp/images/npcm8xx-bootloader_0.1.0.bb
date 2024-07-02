@@ -12,7 +12,7 @@ IGPS_BRANCH ?= "main"
 SRC_URI = " \
     git://github.com/Nuvoton-Israel/igps-npcm8xx;branch=${IGPS_BRANCH};protocol=https \
 "
-SRCREV = "ae5ddb6c8ff350835d411b9e3bfb4443db596067"
+SRCREV = "518d3f58f4f157373a5b1aaebaf22f80bb13d0d9"
 
 S = "${WORKDIR}/git"
 
@@ -25,78 +25,67 @@ inherit python3native deploy
 FILE_FMT = "file://{}"
 
 # Sign keys, replace them for production
-KEYS = ""
+IGPS_KEYS = ""
 # Configuration files, clean them if no need
-CSVS = ""
-SETTINGS = "settings.json"
-CONFS = "${KEYS} ${CSVS} ${SETTINGS}"
-SRC_URI += "${@compose_list(d, 'FILE_FMT', 'CONFS')}"
+IGPS_CSVS = ""
+IGPS_SETTINGS = "settings.json"
+IGPS_CONFS = "${IGPS_KEYS} ${IGPS_CSVS} ${IGPS_SETTINGS}"
+SRC_URI += "${@compose_list(d, 'FILE_FMT', 'IGPS_CONFS')}"
 
-IGPS_DIR = "${S}"
-IGPS_SCRIPT_BASE = "${IGPS_DIR}/py_scripts/ImageGeneration"
-INPUT_FOLDER = "${IGPS_SCRIPT_BASE}/inputs"
-KEY_FOLDER = "${IGPS_SCRIPT_BASE}/keys/openssl"
-CSV_FOLDER = "${INPUT_FOLDER}/registers"
-
-# combo 1 images
+IGPS_SCRIPT_BASE = "${S}/py_scripts/ImageGeneration"
 BB_BIN = "arbel_a35_bootblock"
 BB_BIN .= "${@'_no_tip.bin' if d.getVar("TIP_IMAGE") != 'True' else '.bin'}"
-BL31_BIN  = "bl31.bin"
-OPTEE_BIN = "tee.bin"
-UBOOT_BIN = "u-boot.bin"
-# outout binary
-TIP_OUT_BIN = "Kmt_TipFwL0_Skmt_TipFwL1_BootBlock_BL31_Tee_uboot.bin"
-NO_TIP_OUT_BIN = "image_no_tip.bin"
-SA_NO_TIP_OUT_BIN = "image_no_tip_SA.bin"
-BOOTLOADER = "u-boot.bin.merged"
 
 do_configure[dirs] = "${WORKDIR}"
 do_configure() {
+    KEY_FOLDER=${IGPS_SCRIPT_BASE}/keys/openssl
+    CSV_FOLDER=${IGPS_SCRIPT_BASE}/inputs/registers
     # keys
     install -d ${KEY_FOLDER}
-    if [ -n "${KEYS}" ];then
-        cp -v ${KEYS} ${KEY_FOLDER}
+    if [ -n "${IGPS_KEYS}" ];then
+        cp -v ${IGPS_KEYS} ${KEY_FOLDER}
     fi
 
     # csv files
     install -d ${CSV_FOLDER}
-    if [ -n "${CSVS}" ];then
-        cp -v ${CSVS} ${CSV_FOLDER}
+    if [ -n "${IGPS_CSVS}" ];then
+        cp -v ${IGPS_CSVS} ${CSV_FOLDER}
     fi
 
-    # copy Openbmc built images
-    cd ${DEPLOY_DIR_IMAGE}
-    cp -v ${BB_BIN} ${BL31_BIN} ${OPTEE_BIN} ${UBOOT_BIN} ${INPUT_FOLDER}
-
     # change customized settings for XML and key setting
-    if [ -n "${SETTINGS}" ];then
-        cd ${IGPS_DIR}
-        python3 ${IGPS_SCRIPT_BASE}/config_replacer.py ${WORKDIR}/${SETTINGS}
+    if [ -n "${IGPS_SETTINGS}" ];then
+        cd ${S}
+        python3 ${IGPS_SCRIPT_BASE}/config_replacer.py ${WORKDIR}/${IGPS_SETTINGS}
     fi
 }
 
 do_compile() {
+    # copy Openbmc built images
+    cd ${DEPLOY_DIR_IMAGE}
+    cp -v ${BB_BIN} bl31.bin tee.bin u-boot.bin ${IGPS_SCRIPT_BASE}/inputs
+
     cd ${IGPS_SCRIPT_BASE}
     install -d output_binaries/tmp
     install -d inputs/key_input
     if [ "${TIP_IMAGE}" = "True" ] || [ "${SA_TIP_IMAGE}" = "True" ];then
       # Do not sign combo0 image again
-      python3 ${IGPS_DIR}/py_scripts/GenerateAll.py openssl ${DEPLOY_DIR_IMAGE}
+      python3 ${S}/py_scripts/GenerateAll.py openssl ${DEPLOY_DIR_IMAGE}
     else
       # for No TIP, we can run IGPS script directly
-      python3 ${IGPS_DIR}/py_scripts/GenerateAll.py openssl
+      python3 ${S}/py_scripts/GenerateAll.py openssl
     fi
 }
 
 do_deploy() {
-    OUT="${IGPS_SCRIPT_BASE}/output_binaries"
+    OUT=${IGPS_SCRIPT_BASE}/output_binaries
+    BOOTLOADER=u-boot.bin.merged
     install -d ${DEPLOYDIR}
     if [ "${SA_TIP_IMAGE}" = "True" ];then
-        install -m 644 ${OUT}/Secure/${SA_NO_TIP_OUT_BIN} ${DEPLOYDIR}/${BOOTLOADER}
+        install -m 644 ${OUT}/Secure/image_no_tip_SA.bin ${DEPLOYDIR}/${BOOTLOADER}
     elif [ "${TIP_IMAGE}" = "True" ];then
-        install -m 644 ${OUT}/Secure/${TIP_OUT_BIN} ${DEPLOYDIR}/${BOOTLOADER}
+        install -m 644 ${OUT}/Secure/Kmt_TipFwL0_Skmt_TipFwL1_BootBlock_BL31_Tee_uboot.bin ${DEPLOYDIR}/${BOOTLOADER}
     else
-        install -m 644 ${OUT}/Basic/${NO_TIP_OUT_BIN} ${DEPLOYDIR}/${BOOTLOADER}
+        install -m 644 ${OUT}/Basic/image_no_tip.bin ${DEPLOYDIR}/${BOOTLOADER}
     fi
 }
 addtask deploy before do_build after do_compile
