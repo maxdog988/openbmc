@@ -1,4 +1,4 @@
-From 9023fa650758e58e597a3add36ce23a8f380a907 Mon Sep 17 00:00:00 2001
+From 4578a28c06cb408109ed37644db4b17d40ccd60a Mon Sep 17 00:00:00 2001
 From: Eason Yang <yhyang2@nuvoton.com>
 Date: Mon, 6 Feb 2023 11:49:04 +0800
 Subject: [PATCH] Add support for MCU firmware upgrade
@@ -15,7 +15,7 @@ Signed-off-by: Allen Kang <jhkang@nuvoton.com>
  6 files changed, 203 insertions(+), 2 deletions(-)
 
 diff --git a/activation.cpp b/activation.cpp
-index b5fe199..442d20e 100644
+index cd44cc0..4a6f0b3 100644
 --- a/activation.cpp
 +++ b/activation.cpp
 @@ -126,8 +126,8 @@ auto Activation::activation(Activations value) -> Activations
@@ -153,11 +153,11 @@ index b5fe199..442d20e 100644
  {
      auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
 diff --git a/activation.hpp b/activation.hpp
-index 04562ea..34f13b2 100644
+index 22e0445..cfe3a8b 100644
 --- a/activation.hpp
 +++ b/activation.hpp
-@@ -247,6 +247,14 @@ class Activation : public ActivationInherit, public Flash
-     void onStateChangesBios(sdbusplus::message_t&);
+@@ -254,6 +254,14 @@ class Activation : public ActivationInherit, public Flash
+     void onStateChangesBios(sdbusplus::message_t& /*msg*/);
  #endif
  
 +#ifdef MCU_UPGRADE
@@ -169,10 +169,10 @@ index 04562ea..34f13b2 100644
 +#endif
 +
      /** @brief Overloaded function that acts on service file state changes */
-     void onStateChanges(sdbusplus::message_t&) override;
+     void onStateChanges(sdbusplus::message_t& /*msg*/) override;
  
 diff --git a/item_updater.cpp b/item_updater.cpp
-index 9d18cfd..62f7486 100644
+index 634951d..e1880f1 100644
 --- a/item_updater.cpp
 +++ b/item_updater.cpp
 @@ -71,6 +71,9 @@ void ItemUpdater::createActivation(sdbusplus::message_t& msg)
@@ -185,7 +185,7 @@ index 9d18cfd..62f7486 100644
  #endif
                          value == VersionPurpose::System)
                      {
-@@ -901,6 +904,62 @@ void ItemUpdater::createBIOSObject()
+@@ -912,6 +915,62 @@ void ItemUpdater::createBIOSObject()
  }
  #endif
  
@@ -249,10 +249,10 @@ index 9d18cfd..62f7486 100644
  {
      // Check /run/media/slot to get the slot number
 diff --git a/item_updater.hpp b/item_updater.hpp
-index 316113a..0ac964a 100644
+index f850492..7813908 100644
 --- a/item_updater.hpp
 +++ b/item_updater.hpp
-@@ -280,6 +280,23 @@ class ItemUpdater : public ItemUpdaterInherit
+@@ -305,6 +305,23 @@ class ItemUpdater : public ItemUpdaterInherit
      std::unique_ptr<VersionClass> biosVersion;
  #endif
  
@@ -277,7 +277,7 @@ index 316113a..0ac964a 100644
      void getRunningSlot();
  };
 diff --git a/meson.build b/meson.build
-index 5219a62..5720213 100644
+index 2ae8c66..c4a3b85 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -59,6 +59,8 @@ conf.set_quoted('BMC_ROFS_PREFIX', get_option('media-dir') + '/rofs-')
@@ -315,7 +315,7 @@ index 5219a62..5720213 100644
    conf.set('BMC_STATIC_DUAL_IMAGE', get_option('bmc-static-dual-image').allowed())
    conf.set_quoted('ALT_ROFS_DIR', get_option('alt-rofs-dir'))
 diff --git a/meson.options b/meson.options
-index b088a8d..192c012 100644
+index 605786d..774dce7 100644
 --- a/meson.options
 +++ b/meson.options
 @@ -12,6 +12,9 @@ option('bmc-layout', type: 'combo',
@@ -328,7 +328,7 @@ index b088a8d..192c012 100644
  option('sync-bmc-files', type: 'feature', value: 'enabled',
      description: 'Enable sync of filesystem files.')
  
-@@ -49,6 +52,13 @@ option(
+@@ -53,6 +56,13 @@ option(
      description: 'Directory where downloaded software images are placed.',
  )
  
@@ -342,7 +342,7 @@ index b088a8d..192c012 100644
  option(
      'manifest-file-name', type: 'string',
      value: 'MANIFEST',
-@@ -115,6 +125,12 @@ option(
+@@ -119,6 +129,12 @@ option(
      description: 'The BIOS DBus object path.',
  )
  
