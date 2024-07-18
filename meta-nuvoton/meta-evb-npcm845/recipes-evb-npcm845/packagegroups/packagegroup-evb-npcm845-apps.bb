@@ -76,4 +76,5 @@ RDEPENDS:${PN}-system = " \
         pldm \
         mctp \
         usb-tty \
+        persistent-net-name \
         "
