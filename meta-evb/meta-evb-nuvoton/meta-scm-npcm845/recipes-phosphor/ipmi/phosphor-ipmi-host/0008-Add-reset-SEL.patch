@@ -1,89 +1,15 @@
-From c2049d92cf7a805917a616df58d2ef1d4cf8b889 Mon Sep 17 00:00:00 2001
+From 149d55fb9a11be9d794a350945f89ee62eed6b9f Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:00:00 +0800
 Subject: [PATCH 08/18] Add reset SEL
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
- dbus-sdr/sdrutils.cpp         |  4 ++++
- globalhandler.cpp             | 37 +++++++++++++++++++++++++++++++++++
- include/dbus-sdr/sdrutils.hpp |  9 +++++++--
- 3 files changed, 48 insertions(+), 2 deletions(-)
+ include/dbus-sdr/sdrutils.hpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/dbus-sdr/sdrutils.cpp b/dbus-sdr/sdrutils.cpp
-index 3e7b966d..21cf0283 100644
---- a/dbus-sdr/sdrutils.cpp
-+++ b/dbus-sdr/sdrutils.cpp
-@@ -264,6 +264,10 @@ uint16_t getSensorNumberFromPath(const std::string& path)
-     {
-         return invalidSensorNumber;
-     }
-+    if (path.find("oem_health") != std::string::npos)
-+    {
-+        return 0x00EF;
-+    }
- 
-     try
-     {
-diff --git a/globalhandler.cpp b/globalhandler.cpp
-index 974b0746..ced801f2 100644
---- a/globalhandler.cpp
-+++ b/globalhandler.cpp
-@@ -29,8 +29,44 @@ constexpr auto SYSTEMD_OBJ_PATH = "/org/freedesktop/systemd1";
- constexpr auto SYSTEMD_INTERFACE = "org.freedesktop.systemd1.Manager";
- constexpr auto SYSTEMD_WARM_RESET_TARGET = "phosphor-ipmi-warm-reset.target";
- 
-+static constexpr char const* ipmiSELObject = "xyz.openbmc_project.Logging.IPMI";
-+static constexpr char const* ipmiSELPath = "/xyz/openbmc_project/Logging/IPMI";
-+static constexpr char const* ipmiSELAddInterface =
-+    "xyz.openbmc_project.Logging.IPMI";
-+static constexpr char const* oemHealthSensor =
-+    "/xyz/openbmc_project/sensors/oem_health/bmc_reset";
-+
-+enum reset_type
-+{
-+    COLD_RESET = 0x1,
-+    WARM_RESET = 0x2,
-+};
-+
-+ipmi::RspType<> resetSEL(uint8_t resetType)
-+{
-+    // MS spec 18.2.5 BMC health status, BMC reset SEL
-+    static const std::string ipmiSELAddMessage = "BMC reset SEL";
-+    static const std::vector<uint8_t> eventData = {0xA8, resetType, 0};
-+    uint16_t genId = 0x2000; // byte 1 0x20 BMC
-+    sdbusplus::bus::bus bus{ipmid_get_sd_bus_connection()};
-+    sdbusplus::message::message writeSEL = bus.new_method_call(
-+        ipmiSELObject, ipmiSELPath, ipmiSELAddInterface, "IpmiSelAdd");
-+    writeSEL.append(ipmiSELAddMessage, oemHealthSensor, eventData, true, genId);
-+    try
-+    {
-+        bus.call(writeSEL);
-+    }
-+    catch (sdbusplus::exception_t& e)
-+    {
-+        phosphor::logging::log<phosphor::logging::level::ERR>(e.what());
-+        return ipmi::responseUnspecifiedError();
-+    }
-+    return ipmi::responseSuccess();
-+}
-+
- void resetBMC()
- {
-+    resetSEL(COLD_RESET);
-     sdbusplus::bus_t bus{ipmid_get_sd_bus_connection()};
- 
-     auto bmcStateObj = ipmi::getDbusObject(bus, bmcStateIntf, bmcStateRoot,
-@@ -45,6 +81,7 @@ void resetBMC()
- 
- void warmResetBMC()
- {
-+    resetSEL(WARM_RESET);
-     try
-     {
-         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 diff --git a/include/dbus-sdr/sdrutils.hpp b/include/dbus-sdr/sdrutils.hpp
-index 7a001a6f..1c3d84ec 100644
+index a38673e6..2797b77c 100644
 --- a/include/dbus-sdr/sdrutils.hpp
 +++ b/include/dbus-sdr/sdrutils.hpp
 @@ -317,13 +317,15 @@ enum class SensorTypeCodes : uint8_t
@@ -103,18 +29,15 @@ index 7a001a6f..1c3d84ec 100644
  };
  
  const static boost::container::flat_map<
-@@ -354,7 +356,10 @@ const static boost::container::flat_map<
-          {"watchdog", std::make_pair(SensorTypeCodes::watchdog2,
+@@ -355,6 +357,8 @@ const static boost::container::flat_map<
                                       SensorEventTypeCodes::sensorSpecified)},
           {"entity", std::make_pair(SensorTypeCodes::entity,
--                                   SensorEventTypeCodes::sensorSpecified)}}};
-+                                   SensorEventTypeCodes::sensorSpecified)},
+                                    SensorEventTypeCodes::sensorSpecified)},
 +         {"oem_health", std::make_pair(SensorTypeCodes::subsystem_health,
-+                                       SensorEventTypeCodes::oem)}}};
-+
++                                       SensorEventTypeCodes::oem)},
+          {"energy", std::make_pair(SensorTypeCodes::other,
+                                    SensorEventTypeCodes::threshold)}}};
  std::string getSensorTypeStringFromPath(const std::string& path);
- 
- uint8_t getSensorTypeFromPath(const std::string& path);
 -- 
 2.34.1
 

@@ -1,4 +1,4 @@
-From 2568488afbd7e71596ecba3907209d6a5dd09735 Mon Sep 17 00:00:00 2001
+From 20768478eb9ae522a54e943c9caefad04731127f Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:50:31 +0800
 Subject: [PATCH 16/18] save no supported boot options
@@ -9,10 +9,10 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 73 insertions(+), 2 deletions(-)
 
 diff --git a/chassishandler.cpp b/chassishandler.cpp
-index e1db986f..4a5aa55b 100644
+index 25efca24..7e14b716 100644
 --- a/chassishandler.cpp
 +++ b/chassishandler.cpp
-@@ -121,6 +121,8 @@ static constexpr const char* resetButtonPath =
+@@ -120,6 +120,8 @@ static constexpr const char* resetButtonPath =
      "/xyz/openbmc_project/chassis/buttons/reset";
  static constexpr const char* interruptButtonPath =
      "/xyz/openbmc_project/chassis/buttons/nmi";
@@ -21,7 +21,7 @@ index e1db986f..4a5aa55b 100644
  // Phosphor Host State manager
  namespace State = sdbusplus::server::xyz::openbmc_project::state;
  namespace fs = std::filesystem;
-@@ -1940,6 +1942,64 @@ static ipmi::Cc setBootOneTime(ipmi::Context::ptr& ctx, const bool& onetime)
+@@ -1919,6 +1921,64 @@ static ipmi::Cc setBootOneTime(ipmi::Context::ptr& ctx, const bool& onetime)
      return ipmi::ccUnspecifiedError;
  }
  
@@ -86,7 +86,7 @@ index e1db986f..4a5aa55b 100644
  static constexpr uint8_t setComplete = 0x0;
  static constexpr uint8_t setInProgress = 0x1;
  static uint8_t transferStatus = setComplete;
-@@ -2071,12 +2131,17 @@ ipmi::RspType<ipmi::message::Payload>
+@@ -2050,12 +2110,17 @@ ipmi::RspType<ipmi::message::Payload>
              }
  
              uint1_t validFlag = valid ? 1 : 0;
@@ -106,7 +106,7 @@ index e1db986f..4a5aa55b 100644
              return ipmi::responseSuccess(std::move(response));
          }
          catch (const InternalFailure& e)
-@@ -2274,6 +2339,12 @@ ipmi::RspType<> ipmiChassisSetSysBootOptions(ipmi::Context::ptr ctx,
+@@ -2253,6 +2318,12 @@ ipmi::RspType<> ipmiChassisSetSysBootOptions(ipmi::Context::ptr ctx,
                      "ipmiChassisSetSysBootOptions: Boot option not supported");
                  return ipmi::responseInvalidFieldRequest();
              }

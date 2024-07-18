@@ -1,4 +1,4 @@
-From 7e1ca53004ad06ce9c9d56bb012e49a352b5829e Mon Sep 17 00:00:00 2001
+From e7b1d2bcfc7711ed41c53e4fec0f4bde432650ea Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Mon, 22 Aug 2022 13:50:48 +0800
 Subject: [PATCH 18/18] Use BMC state is POR to get ACfail status
@@ -8,10 +8,10 @@ Subject: [PATCH 18/18] Use BMC state is POR to get ACfail status
  1 file changed, 27 insertions(+)
 
 diff --git a/chassishandler.cpp b/chassishandler.cpp
-index 4a5aa55b..552a6c63 100644
+index 7e14b716..cd13e52b 100644
 --- a/chassishandler.cpp
 +++ b/chassishandler.cpp
-@@ -1032,6 +1032,7 @@ std::optional<bool> getPowerStatus()
+@@ -1020,6 +1020,7 @@ std::optional<bool> getPowerStatus()
   */
  bool getACFailStatus()
  {
@@ -19,8 +19,8 @@ index 4a5aa55b..552a6c63 100644
      constexpr const char* acBootObj =
          "/xyz/openbmc_project/control/host0/ac_boot";
      constexpr const char* acBootIntf = "xyz.openbmc_project.Common.ACBoot";
-@@ -1052,6 +1053,32 @@ bool getACFailStatus()
-             entry("PATH=%s", acBootObj), entry("INTERFACE=%s", acBootIntf));
+@@ -1040,6 +1041,32 @@ bool getACFailStatus()
+             "PATH", acBootObj, "INTERFACE", acBootIntf, "ERROR", e);
      }
      return acFail == "True";
 +    */
