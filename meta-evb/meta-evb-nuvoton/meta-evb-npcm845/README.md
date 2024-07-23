@@ -2481,12 +2481,15 @@ CONFIG_RESET_NPCM=y
 ```
 # QEMU
 
+**Build a BMC image**
+Since Qemu does not support NPCM SHA HW module, please enable the [config](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-bsp/u-boot/u-boot-nuvoton_%25.bbappend#L8) to disable the SHA HW feature in the uboot recipe and rebuild the bmc image
+
 **Build QEMU**
 ```
 $ git clone git@github.com:Nuvoton-Israel/qemu.git
 $ cd qemu
 $ ./configure --target-list=aarch64-softmmu
-$ make -j $(nproc)    // will generate build/qemu-system-aarch64
+$ make -j $(nproc)    // will generate a qemu-system-aarch64 binary file in the build floder
 ```
 **Run QEMU**
 ```
