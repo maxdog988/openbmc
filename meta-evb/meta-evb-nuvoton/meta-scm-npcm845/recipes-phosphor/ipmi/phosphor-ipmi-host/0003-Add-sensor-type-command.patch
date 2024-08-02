@@ -1,4 +1,4 @@
-From 9e1211aca6d03146539bb3aeb65138deb64035c4 Mon Sep 17 00:00:00 2001
+From eec73264484d0f64f23253efb825aa7f1a9ed000 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 17:23:50 +0800
 Subject: [PATCH 03/18] Add sensor type command
@@ -10,10 +10,10 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  2 files changed, 38 insertions(+), 5 deletions(-)
 
 diff --git a/dbus-sdr/sensorcommands.cpp b/dbus-sdr/sensorcommands.cpp
-index f3cd385e..945960a0 100644
+index 6517fddb..ba24c9bf 100644
 --- a/dbus-sdr/sensorcommands.cpp
 +++ b/dbus-sdr/sensorcommands.cpp
-@@ -2424,6 +2424,35 @@ static ipmi::RspType<uint8_t, // respcount
+@@ -2421,6 +2421,35 @@ static ipmi::RspType<uint8_t, // respcount
                                   sdrLastAdd);
  }
  
@@ -49,7 +49,7 @@ index f3cd385e..945960a0 100644
  /* end sensor commands */
  
  /* storage commands */
-@@ -2947,6 +2976,10 @@ void registerSensorFunctions()
+@@ -2935,6 +2964,10 @@ void registerSensorFunctions()
                                 ipmi::dcmi::cmdGetDcmiSensorInfo,
                                 ipmi::Privilege::Operator,
                                 ipmi::dcmi::getSensorInfo);
@@ -61,10 +61,10 @@ index f3cd385e..945960a0 100644
      ipmi::registerGroupHandler(ipmi::prioOpenBmcBase, ipmi::groupDCMI,
                                 ipmi::dcmi::cmdGetTemperatureReadings,
 diff --git a/sensorhandler.cpp b/sensorhandler.cpp
-index 5c5af4e8..130dfbf0 100644
+index 7cbd2f85..0043bf3a 100644
 --- a/sensorhandler.cpp
 +++ b/sensorhandler.cpp
-@@ -1525,6 +1525,11 @@ void register_netfn_sen_functions()
+@@ -1526,6 +1526,11 @@ void register_netfn_sen_functions()
      ipmi_register_callback(NETFUN_SENSOR, IPMI_CMD_GET_DEVICE_SDR, nullptr,
                             ipmi_sen_get_sdr, PRIVILEGE_USER);
  
@@ -76,7 +76,7 @@ index 5c5af4e8..130dfbf0 100644
  #endif
  
      // Common Handers used by both implementation.
-@@ -1533,10 +1538,5 @@ void register_netfn_sen_functions()
+@@ -1534,10 +1539,5 @@ void register_netfn_sen_functions()
      ipmi_register_callback(NETFUN_SENSOR, IPMI_CMD_PLATFORM_EVENT, nullptr,
                             ipmicmdPlatformEvent, PRIVILEGE_OPERATOR);
  

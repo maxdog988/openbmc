@@ -1,4 +1,4 @@
-From c4937a9afe713e0884bc27b1d0ffb3da37e9727a Mon Sep 17 00:00:00 2001
+From 33a5867b8361813a66c29449e146f51ffb6f6ca6 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 16:46:21 +0800
 Subject: [PATCH 01/18] Add-set-BIOS-version-support
@@ -9,7 +9,7 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 45 insertions(+)
 
 diff --git a/apphandler.cpp b/apphandler.cpp
-index 6d57345b..2207d39b 100644
+index c7b1c37f..0da8d29f 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
 @@ -55,6 +55,8 @@ static constexpr auto versionIntf = "xyz.openbmc_project.Software.Version";
@@ -68,7 +68,7 @@ index 6d57345b..2207d39b 100644
  ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
                                       std::vector<uint8_t> configData)
  {
-@@ -1522,6 +1564,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
+@@ -1521,6 +1563,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
          std::copy_n(configData.begin(), count, paramString.begin() + offset);
      }
      sysInfoParamStore->update(paramSelector, paramString);

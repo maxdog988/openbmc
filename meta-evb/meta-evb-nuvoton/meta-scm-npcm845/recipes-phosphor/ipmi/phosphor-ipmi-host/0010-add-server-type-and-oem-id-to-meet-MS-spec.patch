@@ -1,4 +1,4 @@
-From e0b413bfefb4cc63df31fbbd0e04d72a27aff059 Mon Sep 17 00:00:00 2001
+From dc38495df1456d0668189496de1c537a01c28a86 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Wed, 13 Jul 2022 11:57:10 +0800
 Subject: [PATCH 10/18] add server type and oem id to meet MS spec
@@ -9,10 +9,10 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/user_channel/usercommands.cpp b/user_channel/usercommands.cpp
-index 6467e45a..3949045e 100644
+index 53b34f83..81fb471d 100644
 --- a/user_channel/usercommands.cpp
 +++ b/user_channel/usercommands.cpp
-@@ -438,10 +438,10 @@ ipmi::RspType<uint8_t,  // channel number
+@@ -436,10 +436,10 @@ ipmi::RspType<uint8_t,  // channel number
      constexpr bool userAuth = false;       // User authentication - enabled
      constexpr bool nullUsers = false;      // Null user names - not supported
      constexpr bool anonymousLogin = false; // Anonymous login - not supported

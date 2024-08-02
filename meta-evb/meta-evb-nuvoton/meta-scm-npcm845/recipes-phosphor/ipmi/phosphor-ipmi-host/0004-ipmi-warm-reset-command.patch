@@ -1,4 +1,4 @@
-From c38710248b7289fb69673537c62ad2a3761f5962 Mon Sep 17 00:00:00 2001
+From 2306a143b02ac7f0e27bdf3dd005a26eac9de01c Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 5 Jul 2022 12:56:01 +0800
 Subject: [PATCH 04/18] ipmi warm reset command
@@ -9,11 +9,11 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 63 insertions(+), 1 deletion(-)
 
 diff --git a/globalhandler.cpp b/globalhandler.cpp
-index 992bdd87..974b0746 100644
+index 63767c7c..bdbcde7b 100644
 --- a/globalhandler.cpp
 +++ b/globalhandler.cpp
-@@ -7,7 +7,12 @@
- #include <xyz/openbmc_project/Common/error.hpp>
+@@ -5,7 +5,12 @@
+ #include <phosphor-logging/lg2.hpp>
  #include <xyz/openbmc_project/State/BMC/server.hpp>
  
 +#include <atomic>
@@ -25,7 +25,7 @@ index 992bdd87..974b0746 100644
  
  static constexpr auto bmcStateRoot = "/xyz/openbmc_project/state";
  static constexpr auto bmcStateIntf = "xyz.openbmc_project.State.BMC";
-@@ -19,6 +24,11 @@ using BMC = sdbusplus::server::xyz::openbmc_project::state::BMC;
+@@ -16,6 +21,11 @@ using BMC = sdbusplus::server::xyz::openbmc_project::state::BMC;
  
  void register_netfn_global_functions() __attribute__((constructor));
  
@@ -37,7 +37,7 @@ index 992bdd87..974b0746 100644
  void resetBMC()
  {
      sdbusplus::bus_t bus{ipmid_get_sd_bus_connection()};
-@@ -33,7 +43,30 @@ void resetBMC()
+@@ -30,7 +40,30 @@ void resetBMC()
                            convertForMessage(BMC::Transition::Reboot));
  }
  
@@ -60,7 +60,7 @@ index 992bdd87..974b0746 100644
 +    }
 +    catch (std::exception& e)
 +    {
-+        log<level::ERR>(e.what());
++        lg2::error("{ERROR}", "ERROR", e);
 +        reset_queued.clear();
 +    }
 +}
@@ -69,7 +69,7 @@ index 992bdd87..974b0746 100644
   *  @param - None
   *  @returns IPMI completion code.
   */
-@@ -53,11 +86,40 @@ ipmi::RspType<> ipmiGlobalReset()
+@@ -50,11 +83,40 @@ ipmi::RspType<> ipmiGlobalReset()
      return ipmi::responseSuccess();
  }
  
@@ -90,7 +90,7 @@ index 992bdd87..974b0746 100644
 +    }
 +    catch (std::exception& e)
 +    {
-+        log<level::ERR>(e.what());
++        lg2::error("Exception in Warm Reset: {ERROR}", "ERROR", e);
 +        reset_queued.clear();
 +        return ipmi::responseUnspecifiedError();
 +    }

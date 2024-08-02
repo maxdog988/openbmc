@@ -1,4 +1,4 @@
-From 3a0d9649adc837026c40b86f76292a72b0a41197 Mon Sep 17 00:00:00 2001
+From 69016616a9ba05291f3ef68a64f2f3f245e5c043 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 8 Jul 2022 16:41:26 +0800
 Subject: [PATCH 07/18] Set is from system interface return false
@@ -10,10 +10,10 @@ ipmid set true as default. Change the ipmid default value to send event.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sensorhandler.cpp b/sensorhandler.cpp
-index 130dfbf0..0c53053a 100644
+index 0043bf3a..245a3be8 100644
 --- a/sensorhandler.cpp
 +++ b/sensorhandler.cpp
-@@ -1396,7 +1396,7 @@ static bool isFromSystemChannel()
+@@ -1397,7 +1397,7 @@ static bool isFromSystemChannel()
      // TODO we could not figure out where the request is from based on IPMI
      // command handler parameters. because of it, we can not differentiate
      // request from SMS/SMM or IPMB channel

@@ -1,4 +1,4 @@
-From c2b4612c0cc39797f230dc5efb471d8e52f1de96 Mon Sep 17 00:00:00 2001
+From 27ed4ed5a328ddcceafb3da155b1c6f640f27881 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 26 Jul 2022 12:09:14 +0800
 Subject: [PATCH 15/18] update chassishandler from intel oem ipmi

@@ -1,4 +1,4 @@
-From e7b1d2bcfc7711ed41c53e4fec0f4bde432650ea Mon Sep 17 00:00:00 2001
+From 9eec7b5f34c64cf4e2f866231b25ff6771182d17 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Mon, 22 Aug 2022 13:50:48 +0800
 Subject: [PATCH 18/18] Use BMC state is POR to get ACfail status

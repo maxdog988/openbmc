@@ -1,4 +1,4 @@
-From fbad1c898c3b21aff13f885df74500e8451dcb64 Mon Sep 17 00:00:00 2001
+From da72ecec5c198f844c215ada904815be8904fd02 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:12:02 +0800
 Subject: [PATCH 09/18] Add session RemoteMACAddress support
@@ -9,7 +9,7 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/apphandler.cpp b/apphandler.cpp
-index feeb8374..36e645c4 100644
+index f3406ffa..acfcab32 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
 @@ -1175,7 +1175,6 @@ uint8_t getSessionState(ipmi::Context::ptr ctx, const std::string& service,
