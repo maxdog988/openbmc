@@ -1,7 +1,7 @@
-From 022cf5ec47f1b63b7b8d7f5aae453ed2a97cb011 Mon Sep 17 00:00:00 2001
+From e6a37b066094afea4d0cb99148679ea3a8352fe0 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Tue, 29 Jun 2021 10:34:23 +0800
-Subject: [PATCH] Add Nuvoton MCU firmware support
+Subject: [PATCH 2/4] Add Nuvoton MCU firmware support
 
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
@@ -14,10 +14,10 @@ Signed-off-by: Allen Kang <jhkang@nuvoton.com>
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsMcu.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index ab630757..af7793d6 100644
+index a4995076..62042675 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
-@@ -332,7 +332,8 @@
+@@ -333,7 +333,8 @@
          "sectionTitleBmcCards": "BMC",
          "sectionTitleBmcCardsCombined": "BMC and server",
          "sectionTitleHostCards": "Host",
@@ -28,7 +28,7 @@ index ab630757..af7793d6 100644
              "operationInProgress": "Server power operation in progress.",
              "serverMustBePoweredOffTo": "Server must be powered off to:",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index 43a8e079..08280340 100644
+index ca3ed523..fbda2500 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -6,6 +6,7 @@ const FirmwareStore = {
@@ -39,7 +39,7 @@ index 43a8e079..08280340 100644
      bmcActiveFirmwareId: null,
      hostActiveFirmwareId: null,
      applyTime: null,
-@@ -25,6 +26,7 @@ const FirmwareStore = {
+@@ -23,6 +24,7 @@ const FirmwareStore = {
          (firmware) => firmware.id === state.hostActiveFirmwareId,
        );
      },
@@ -47,15 +47,15 @@ index 43a8e079..08280340 100644
      backupBmcFirmware: (state) => {
        return state.bmcFirmware.find(
          (firmware) => firmware.id !== state.bmcActiveFirmwareId,
-@@ -41,6 +43,7 @@ const FirmwareStore = {
+@@ -39,6 +41,7 @@ const FirmwareStore = {
      setActiveHostFirmwareId: (state, id) => (state.hostActiveFirmwareId = id),
      setBmcFirmware: (state, firmware) => (state.bmcFirmware = firmware),
      setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
 +    setMcuFirmware: (state, firmware) => (state.mcuFirmware = firmware),
      setApplyTime: (state, applyTime) => (state.applyTime = applyTime),
      setHttpPushUri: (state, httpPushUri) => (state.httpPushUri = httpPushUri),
-     setTftpUploadAvailable: (state, tftpAvailable) =>
-@@ -83,6 +86,12 @@ const FirmwareStore = {
+   },
+@@ -79,6 +82,12 @@ const FirmwareStore = {
            const bmcFirmware = [];
            const hostFirmware = [];
            response.forEach(({ data }) => {

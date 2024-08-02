@@ -1,4 +1,4 @@
-From 53887f77406a2313a3162b3108de0b859786b7c2 Mon Sep 17 00:00:00 2001
+From 1ef83538f45c651c08e1d078a13398d510a2e07a Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
 Subject: [PATCH] pldm: fix pldmtool cmd fail issue
@@ -49,18 +49,18 @@ index 060148852..d2bd8c84c 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index 8695fe8d2..76216d423 100644
+index 39e1213d9..ed085204f 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
-@@ -65,6 +65,7 @@ PHOSPHOR_LOG2_USING;
+@@ -64,6 +64,7 @@ PHOSPHOR_LOG2_USING;
+ #include "oem_ibm.hpp"
  #endif
  
- constexpr uint8_t MCTP_MSG_TYPE_PLDM = 1;
 +uint8_t netid = 0;
  constexpr const char* PLDMService = "xyz.openbmc_project.PLDM";
  
  using namespace pldm;
-@@ -167,25 +168,32 @@ void optionUsage(void)
+@@ -166,25 +167,32 @@ void optionUsage(void)
      info("Usage: pldmd [options]");
      info("Options:");
      info(" [--verbose] - would enable verbosity");
@@ -104,7 +104,7 @@ index 8695fe8d2..76216d423 100644
      }
      // Setup PLDM requester transport
      auto hostEID = pldm::utils::readHostEID();
-@@ -207,7 +215,7 @@ int main(int argc, char** argv)
+@@ -206,7 +214,7 @@ int main(int argc, char** argv)
      Invoker invoker{};
      requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
                                                        instanceIdDb, verbose);

@@ -1,7 +1,7 @@
-From 1a5b3015179487bdff55257a258280f98ac4f125 Mon Sep 17 00:00:00 2001
+From 1109c3c0ba44d3a70ee91e5d386a857e9202db5b Mon Sep 17 00:00:00 2001
 From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 21 Feb 2023 13:46:21 +0800
-Subject: [PATCH] Add Nuvoton PSU firmware support
+Subject: [PATCH 4/4] Add Nuvoton PSU firmware support
 
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
@@ -13,10 +13,10 @@ Signed-off-by: Allen Kang <jhkang@nuvoton.com>
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsPsu.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index 3683d672..f8c3e932 100644
+index b33fe907..33d1bbe1 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
-@@ -332,8 +332,9 @@
+@@ -333,8 +333,9 @@
          "sectionTitleBmcCards": "BMC",
          "sectionTitleBmcCardsCombined": "BMC and server",
          "sectionTitleHostCards": "Host",
@@ -29,7 +29,7 @@ index 3683d672..f8c3e932 100644
          "alert": {
              "operationInProgress": "Server power operation in progress.",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index 8c4ef55b..322eba9e 100644
+index 9d73526b..53e41d30 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -8,6 +8,7 @@ const FirmwareStore = {
@@ -40,7 +40,7 @@ index 8c4ef55b..322eba9e 100644
      bmcActiveFirmwareId: null,
      hostActiveFirmwareId: null,
      applyTime: null,
-@@ -29,6 +30,7 @@ const FirmwareStore = {
+@@ -27,6 +28,7 @@ const FirmwareStore = {
      },
      mcuFirmware: (state) => state.mcuFirmware,
      cpldFirmware: (state) => state.cpldFirmware,
@@ -48,15 +48,15 @@ index 8c4ef55b..322eba9e 100644
      backupBmcFirmware: (state) => {
        return state.bmcFirmware.find(
          (firmware) => firmware.id !== state.bmcActiveFirmwareId,
-@@ -47,6 +49,7 @@ const FirmwareStore = {
+@@ -45,6 +47,7 @@ const FirmwareStore = {
      setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
      setMcuFirmware: (state, firmware) => (state.mcuFirmware = firmware),
      setCpldFirmware: (state, firmware) => (state.cpldFirmware = firmware),
 +    setPsuFirmware: (state, firmware) => (state.psuFirmware = firmware),
      setApplyTime: (state, applyTime) => (state.applyTime = applyTime),
      setHttpPushUri: (state, httpPushUri) => (state.httpPushUri = httpPushUri),
-     setTftpUploadAvailable: (state, tftpAvailable) =>
-@@ -99,6 +102,10 @@ const FirmwareStore = {
+   },
+@@ -95,6 +98,10 @@ const FirmwareStore = {
                const cpldFirmware = data?.Version;
                commit('setCpldFirmware', cpldFirmware);
              }
