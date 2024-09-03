@@ -1,4 +1,4 @@
-From 1ef83538f45c651c08e1d078a13398d510a2e07a Mon Sep 17 00:00:00 2001
+From 0aada857ba6528f2492158c311aa0e0d49930fd9 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
 Subject: [PATCH] pldm: fix pldmtool cmd fail issue
@@ -10,13 +10,13 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  common/transport.cpp         |  7 +++++++
  common/transport.hpp         |  4 ++++
- pldmd/pldmd.cpp              | 32 ++++++++++++++++++++------------
+ pldmd/pldmd.cpp              | 34 ++++++++++++++++++++++------------
  pldmtool/pldm_cmd_helper.cpp |  4 ++++
  pldmtool/pldm_cmd_helper.hpp |  4 +++-
- 5 files changed, 38 insertions(+), 13 deletions(-)
+ 5 files changed, 40 insertions(+), 13 deletions(-)
 
 diff --git a/common/transport.cpp b/common/transport.cpp
-index d9924151f..32ec37efb 100644
+index 9641c38c5..0c4bd1d61 100644
 --- a/common/transport.cpp
 +++ b/common/transport.cpp
 @@ -134,6 +134,13 @@ PldmTransport::~PldmTransport()
@@ -49,7 +49,7 @@ index 060148852..d2bd8c84c 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index 39e1213d9..ed085204f 100644
+index 8941418a3..95f5826fa 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
 @@ -64,6 +64,7 @@ PHOSPHOR_LOG2_USING;
@@ -104,17 +104,26 @@ index 39e1213d9..ed085204f 100644
      }
      // Setup PLDM requester transport
      auto hostEID = pldm::utils::readHostEID();
-@@ -206,7 +214,7 @@ int main(int argc, char** argv)
+@@ -208,7 +216,6 @@ int main(int argc, char** argv)
      Invoker invoker{};
      requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
                                                        instanceIdDb, verbose);
 -
-+    pldmTransport.setNetid(netid);
+     std::unique_ptr<pldm_pdr, decltype(&pldm_pdr_destroy)> pdrRepo(
+         pldm_pdr_init(), pldm_pdr_destroy);
+     if (!pdrRepo)
+@@ -221,6 +228,9 @@ int main(int argc, char** argv)
+             std::make_unique<pldm::host_effecters::HostEffecterParser>(
+                 &instanceIdDb, pldmTransport.getEventSource(), pdrRepo.get(),
+                 &dbusHandler, HOST_JSONS_DIR, &reqHandler);
++
++     pldmTransport.setNetid(netid);
++
  #ifdef LIBPLDMRESPONDER
      using namespace pldm::state_sensor;
      dbus_api::Host dbusImplHost(bus, "/xyz/openbmc_project/pldm");
 diff --git a/pldmtool/pldm_cmd_helper.cpp b/pldmtool/pldm_cmd_helper.cpp
-index afd49dd57..5a51a66e4 100644
+index 1de5b8d0b..2699828b0 100644
 --- a/pldmtool/pldm_cmd_helper.cpp
 +++ b/pldmtool/pldm_cmd_helper.cpp
 @@ -68,6 +68,10 @@ int CommandInterface::pldmSendRecv(std::vector<uint8_t>& requestMsg,
@@ -129,23 +138,22 @@ index afd49dd57..5a51a66e4 100644
      {
          void* responseMessage = nullptr;
 diff --git a/pldmtool/pldm_cmd_helper.hpp b/pldmtool/pldm_cmd_helper.hpp
-index a59bb66d0..471516357 100644
+index e66897413..29033f356 100644
 --- a/pldmtool/pldm_cmd_helper.hpp
 +++ b/pldmtool/pldm_cmd_helper.hpp
-@@ -79,10 +79,11 @@ class CommandInterface
+@@ -79,9 +79,10 @@ class CommandInterface
      explicit CommandInterface(const char* type, const char* name,
                                CLI::App* app) :
-         pldmType(type),
--        commandName(name), mctp_eid(PLDM_ENTITY_ID), pldmVerbose(false),
-+        commandName(name), mctp_eid(PLDM_ENTITY_ID), mctp_netid(0), pldmVerbose(false),
-         instanceId(0)
+         pldmType(type), commandName(name), mctp_eid(PLDM_ENTITY_ID),
+-        pldmVerbose(false), instanceId(0)
++        mctp_netid(0), pldmVerbose(false), instanceId(0)
      {
          app->add_option("-m,--mctp_eid", mctp_eid, "MCTP endpoint ID");
 +        app->add_option("-x,--mctp_netid", mctp_netid, "MCTP endpoint net ID");
          app->add_flag("-v, --verbose", pldmVerbose);
          app->add_option("-n, --retry-count", numRetries,
                          "Number of retry when PLDM request message is failed");
-@@ -135,6 +136,7 @@ class CommandInterface
+@@ -134,6 +135,7 @@ class CommandInterface
      const std::string pldmType;
      const std::string commandName;
      uint8_t mctp_eid;
