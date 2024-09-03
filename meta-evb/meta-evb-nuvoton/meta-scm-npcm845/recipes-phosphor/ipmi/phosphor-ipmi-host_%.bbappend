@@ -3,7 +3,7 @@ FILESEXTRAPATHS:append := "${THISDIR}/${PN}:"
 EXTRA_OEMESON:append = " -Di2c-whitelist-check=disabled"
 
 SRC_URI:append = " file://0001-Add-set-BIOS-version-support.patch"
-SRC_URI:append = " file://0002-Add-SEL-add-command.patch"
+#SRC_URI:append = " file://0002-Add-SEL-add-command.patch"
 SRC_URI:append = " file://0003-Add-sensor-type-command.patch"
 SRC_URI:append = " file://0004-ipmi-warm-reset-command.patch"
 SRC_URI:append = " file://0005-get-system-guid-command.patch"

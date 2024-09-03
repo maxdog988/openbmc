@@ -1,19 +1,19 @@
-From eec73264484d0f64f23253efb825aa7f1a9ed000 Mon Sep 17 00:00:00 2001
+From d8e8695727647896cd0cd22ef0a22e97e91ecb11 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 17:23:50 +0800
-Subject: [PATCH 03/18] Add sensor type command
+Subject: [PATCH] Add sensor type command
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
- dbus-sdr/sensorcommands.cpp | 33 +++++++++++++++++++++++++++++++++
+ dbus-sdr/sensorcommands.cpp | 36 ++++++++++++++++++++++++++++++++++++
  sensorhandler.cpp           | 10 +++++-----
- 2 files changed, 38 insertions(+), 5 deletions(-)
+ 2 files changed, 41 insertions(+), 5 deletions(-)
 
 diff --git a/dbus-sdr/sensorcommands.cpp b/dbus-sdr/sensorcommands.cpp
-index 6517fddb..ba24c9bf 100644
+index b36ffe8e..d6588804 100644
 --- a/dbus-sdr/sensorcommands.cpp
 +++ b/dbus-sdr/sensorcommands.cpp
-@@ -2421,6 +2421,35 @@ static ipmi::RspType<uint8_t, // respcount
+@@ -2359,6 +2359,35 @@ static ipmi::RspType<uint8_t, // respcount
                                   sdrLastAdd);
  }
  
@@ -49,22 +49,29 @@ index 6517fddb..ba24c9bf 100644
  /* end sensor commands */
  
  /* storage commands */
-@@ -2935,6 +2964,10 @@ void registerSensorFunctions()
-                                ipmi::dcmi::cmdGetDcmiSensorInfo,
-                                ipmi::Privilege::Operator,
-                                ipmi::dcmi::getSensorInfo);
+@@ -2873,10 +2902,17 @@ void registerSensorFunctions()
+         ipmi::prioOpenBmcBase, ipmi::groupDCMI,
+         ipmi::dcmi::cmdGetDcmiSensorInfo, ipmi::Privilege::Operator,
+         ipmi::dcmi::getSensorInfo);
++
+     // <Get Temperature Readings>
+     ipmi::registerGroupHandler(
+         ipmi::prioOpenBmcBase, ipmi::groupDCMI,
+         ipmi::dcmi::cmdGetTemperatureReadings, ipmi::Privilege::User,
+         ipmi::dcmi::getTempReadings);
++
 +    // <Get Sensor Type>
 +    ipmi::registerHandler(ipmi::prioOpenBmcBase, ipmi::netFnSensor,
 +                          ipmi::sensor_event::cmdGetSensorType,
 +                          ipmi::Privilege::User, ipmiSenGetSensorType);
-     // <Get Temperature Readings>
-     ipmi::registerGroupHandler(ipmi::prioOpenBmcBase, ipmi::groupDCMI,
-                                ipmi::dcmi::cmdGetTemperatureReadings,
++
+ }
+ } // namespace ipmi
 diff --git a/sensorhandler.cpp b/sensorhandler.cpp
-index 7cbd2f85..0043bf3a 100644
+index dc0d85c9..32c61f6d 100644
 --- a/sensorhandler.cpp
 +++ b/sensorhandler.cpp
-@@ -1526,6 +1526,11 @@ void register_netfn_sen_functions()
+@@ -1525,6 +1525,11 @@ void register_netfn_sen_functions()
      ipmi_register_callback(NETFUN_SENSOR, IPMI_CMD_GET_DEVICE_SDR, nullptr,
                             ipmi_sen_get_sdr, PRIVILEGE_USER);
  
@@ -76,7 +83,7 @@ index 7cbd2f85..0043bf3a 100644
  #endif
  
      // Common Handers used by both implementation.
-@@ -1534,10 +1539,5 @@ void register_netfn_sen_functions()
+@@ -1533,10 +1538,5 @@ void register_netfn_sen_functions()
      ipmi_register_callback(NETFUN_SENSOR, IPMI_CMD_PLATFORM_EVENT, nullptr,
                             ipmicmdPlatformEvent, PRIVILEGE_OPERATOR);
  

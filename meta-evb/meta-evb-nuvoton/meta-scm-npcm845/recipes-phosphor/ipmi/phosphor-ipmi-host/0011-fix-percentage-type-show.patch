@@ -1,18 +1,17 @@
-From 055b8ca6b0b89635aca5d0c41e6e695187e123e6 Mon Sep 17 00:00:00 2001
+From eea77d6ec0d5cea89630959b90619adf94b92e33 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
-Date: Fri, 11 Nov 2022 15:55:51 +0800
-Subject: [PATCH 11/18] fix percentage type show
+Date: Tue, 3 Sep 2024 12:07:58 +0800
+Subject: [PATCH] fix percentage type show
 
-Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  dbus-sdr/sensorcommands.cpp | 21 ++++++++++++++++++++-
  1 file changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/dbus-sdr/sensorcommands.cpp b/dbus-sdr/sensorcommands.cpp
-index ba24c9bf..a7308bc0 100644
+index 9f37b8ff..16eb8810 100644
 --- a/dbus-sdr/sensorcommands.cpp
 +++ b/dbus-sdr/sensorcommands.cpp
-@@ -1794,6 +1794,18 @@ void constructSensorSdrHeaderKey(uint16_t sensorNum, uint16_t recordID,
+@@ -1793,6 +1793,18 @@ void constructSensorSdrHeaderKey(uint16_t sensorNum, uint16_t recordID,
      record.key.owner_lun = lun;
      record.key.sensor_number = sensornumber;
  }
@@ -32,10 +31,10 @@ index ba24c9bf..a7308bc0 100644
      ipmi::Context::ptr ctx,
      const std::unordered_set<std::string>& ipmiDecoratorPaths,
 @@ -1902,7 +1914,14 @@ bool constructSensorSdr(
-                                 (bExpSign << 3) | bExpBits;
  
      // Set the analog reading byte interpretation accordingly
--    record.body.sensor_units_1 = (bSigned ? 1 : 0) << 7;
+     record.body.sensor_units_1 = (bSigned ? 1 : 0) << 7;
+-
 +    if (isPercentage(sensorMap))
 +    {
 +        get_sdr::body::set_percentage(&record.body);
@@ -44,9 +43,9 @@ index ba24c9bf..a7308bc0 100644
 +    {
 +        record.body.sensor_units_1 = (bSigned ? 1 : 0) << 7;
 +    }
- 
      // TODO(): Perhaps care about Tolerance, Accuracy, and so on
      // These seem redundant, but derivable from the above 5 attributes
+     // Original comment said "todo fill out rest of units"
 -- 
 2.34.1
 

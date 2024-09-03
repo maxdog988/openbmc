@@ -1,18 +1,18 @@
-From 27ed4ed5a328ddcceafb3da155b1c6f640f27881 Mon Sep 17 00:00:00 2001
+From 4a96eaf5b9fa5ed0a27730c88971508299da9620 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 26 Jul 2022 12:09:14 +0800
-Subject: [PATCH 15/18] update chassishandler from intel oem ipmi
+Subject: [PATCH] update chassishandler from intel oem ipmi
 
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- chassishandler.cpp | 244 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 177 insertions(+), 67 deletions(-)
+ chassishandler.cpp | 243 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 177 insertions(+), 66 deletions(-)
 
 diff --git a/chassishandler.cpp b/chassishandler.cpp
-index e089083b..25efca24 100644
+index 850b0905..f66ed5b2 100644
 --- a/chassishandler.cpp
 +++ b/chassishandler.cpp
-@@ -65,6 +65,7 @@ static constexpr size_t forceIdentifyPos = 1;
+@@ -59,6 +59,7 @@ static constexpr size_t ipAddrOffset = 17;
  
  namespace ipmi
  {
@@ -20,9 +20,9 @@ index e089083b..25efca24 100644
  constexpr Cc ccParmNotSupported = 0x80;
  
  static inline auto responseParmNotSupported()
-@@ -108,15 +109,17 @@ const static constexpr char chassisSMDevAddrProp[] = "SMDeviceAddress";
+@@ -101,15 +102,17 @@ const static constexpr char chassisSELDevAddrProp[] = "SELDeviceAddress";
+ const static constexpr char chassisSMDevAddrProp[] = "SMDeviceAddress";
  const static constexpr char chassisBridgeDevAddrProp[] = "BridgeDeviceAddress";
- static constexpr uint8_t chassisCapFlagMask = 0x0f;
  static constexpr uint8_t chassisCapAddrMask = 0xfe;
 -static constexpr const char* powerButtonIntf =
 -    "xyz.openbmc_project.Chassis.Buttons.Power";
@@ -45,7 +45,7 @@ index e089083b..25efca24 100644
  // Phosphor Host State manager
  namespace State = sdbusplus::server::xyz::openbmc_project::state;
  namespace fs = std::filesystem;
-@@ -1015,42 +1018,39 @@ std::optional<bool> getPowerStatus()
+@@ -1008,42 +1011,39 @@ std::optional<bool> getPowerStatus()
   */
  bool getACFailStatus()
  {
@@ -61,8 +61,8 @@ index e089083b..25efca24 100644
      std::shared_ptr<sdbusplus::asio::connection> bus = getSdBus();
      try
      {
--        auto service = ipmi::getService(*bus, powerControlIntf,
--                                        powerControlObj);
+-        auto service =
+-            ipmi::getService(*bus, powerControlIntf, powerControlObj);
 +        auto service = ipmi::getService(*bus, acBootIntf, acBootObj);
  
 -        ipmi::Value variant = ipmi::getDbusProperty(
@@ -104,7 +104,7 @@ index e089083b..25efca24 100644
      }
      catch (const sdbusplus::exception_t& e)
      {
-@@ -1061,28 +1061,67 @@ static std::optional<bool> getButtonEnabled(const std::string& buttonPath,
+@@ -1054,25 +1054,64 @@ static std::optional<bool> getButtonEnabled(const std::string& buttonPath,
      return std::make_optional(buttonDisabled);
  }
  
@@ -132,8 +132,8 @@ index e089083b..25efca24 100644
              "Fail to set button Enabled property ({SERVICE}:{PATH}): {ERROR}",
 -            "SERVICE", service, "PATH", buttonPath, "ERROR", ec.message());
 +            "SERVICE", service, "PATH", buttonPath, "ERROR", e);
-+        return false;
-+    }
+         return false;
+     }
 +
 +    return 0;
 +}
@@ -160,11 +160,11 @@ index e089083b..25efca24 100644
 +        lg2::error(
 +            "Failed to fetch RestartCause property ({PATH}/{INTERFACE}) {ERROR}",
 +            "PATH", restartCausePath, "INTERFACE", restartCauseIntf, "ERROR", ec.message());
-         return false;
-     }
-     return true;
- }
- 
++        return false;
++    }
++    return true;
++}
++
 +static bool checkIPMIRestartCause(ipmi::Context::ptr& ctx,
 +                                  bool& ipmiRestartCause)
 +{
@@ -176,33 +176,30 @@ index e089083b..25efca24 100644
 +    ipmiRestartCause =
 +        (restartCause ==
 +         "xyz.openbmc_project.State.Host.RestartCause.IpmiCommand");
-+    return true;
-+}
-+
- static std::optional<bool> getChassisIntrusionStatus(ipmi::Context::ptr& ctx)
- {
-     constexpr const char* chassisIntrusionPath =
-@@ -1160,8 +1199,7 @@ ipmi::RspType<bool,    // Power is on
+     return true;
+ }
+ 
+@@ -1153,8 +1192,7 @@ ipmi::RspType<bool,    // Power is on
      }
  
      //  Front Panel Button Capabilities and disable/enable status(Optional)
--    std::optional<bool> powerButtonReading = getButtonEnabled(powerButtonPath,
--                                                              powerButtonIntf);
+-    std::optional<bool> powerButtonReading =
+-        getButtonEnabled(powerButtonPath, powerButtonIntf);
 +    std::optional<bool> powerButtonReading = getButtonEnabled(powerButtonPath);
      // allow disable if the interface is present
      bool powerButtonDisableAllow = static_cast<bool>(powerButtonReading);
      // default return the button is enabled (not disabled)
-@@ -1172,8 +1210,7 @@ ipmi::RspType<bool,    // Power is on
+@@ -1165,8 +1203,7 @@ ipmi::RspType<bool,    // Power is on
          powerButtonDisabled = *powerButtonReading;
      }
  
--    std::optional<bool> resetButtonReading = getButtonEnabled(resetButtonPath,
--                                                              resetButtonIntf);
+-    std::optional<bool> resetButtonReading =
+-        getButtonEnabled(resetButtonPath, resetButtonIntf);
 +    std::optional<bool> resetButtonReading = getButtonEnabled(resetButtonPath);
      // allow disable if the interface is present
      bool resetButtonDisableAllow = static_cast<bool>(resetButtonReading);
      // default return the button is enabled (not disabled)
-@@ -1184,8 +1221,27 @@ ipmi::RspType<bool,    // Power is on
+@@ -1177,8 +1214,27 @@ ipmi::RspType<bool,    // Power is on
          resetButtonDisabled = *resetButtonReading;
      }
  
@@ -230,7 +227,7 @@ index e089083b..25efca24 100644
      bool chassisIntrusionActive = false;
      std::optional<bool> chassisIntrusionStatus = getChassisIntrusionStatus(ctx);
      if (chassisIntrusionStatus)
-@@ -1202,16 +1258,13 @@ ipmi::RspType<bool,    // Power is on
+@@ -1195,16 +1251,13 @@ ipmi::RspType<bool,    // Power is on
      constexpr bool powerDownOverload = false;
      constexpr bool powerDownInterlock = false;
      constexpr bool powerDownPowerFault = false;
@@ -247,7 +244,7 @@ index e089083b..25efca24 100644
      constexpr bool sleepButtonDisableAllow = false;
  
      return ipmi::responseSuccess(
-@@ -1227,12 +1280,12 @@ ipmi::RspType<bool,    // Power is on
+@@ -1220,12 +1273,12 @@ ipmi::RspType<bool,    // Power is on
          coolingFanFault, chassisIdentifyState, chassisIdentifySupport,
          false, // reserved
  
@@ -263,7 +260,7 @@ index e089083b..25efca24 100644
  {
      Unknown = 0x0,
      RemoteCommand = 0x1,
-@@ -1286,14 +1339,14 @@ static IpmiRestartCause
+@@ -1279,14 +1332,14 @@ static IpmiRestartCause
              return IpmiRestartCause::Unknown;
          }
      }
@@ -280,7 +277,7 @@ index e089083b..25efca24 100644
  {
      constexpr const char* restartCausePath = "/xyz/openbmc_project/state/host0";
      constexpr const char* restartCauseIntf = "xyz.openbmc_project.State.Host";
-@@ -1321,23 +1374,81 @@ static std::optional<uint4_t> getRestartCause(ipmi::Context::ptr ctx)
+@@ -1314,23 +1367,81 @@ static std::optional<uint4_t> getRestartCause(ipmi::Context::ptr ctx)
          "ERROR", ec.message(), "PATH", restartCausePath, "INTERFACE",
          restartCauseIntf);
      return std::nullopt;
@@ -367,14 +364,13 @@ index e089083b..25efca24 100644
  }
  /** @brief Implementation of chassis control command
   *
-@@ -2321,24 +2432,23 @@ ipmi::RspType<uint3_t, // policy support
+@@ -2313,23 +2424,23 @@ ipmi::RspType<uint3_t, // policy support
      return ipmi::responseSuccess(power_policy::allSupport, reserved);
  }
  
--ipmi::RspType<> ipmiSetFrontPanelButtonEnables(ipmi::Context::ptr ctx,
--                                               bool disablePowerButton,
--                                               bool disableResetButton, bool,
--                                               bool, uint4_t)
+-ipmi::RspType<> ipmiSetFrontPanelButtonEnables(
+-    ipmi::Context::ptr ctx, bool disablePowerButton, bool disableResetButton,
+-    bool, bool, uint4_t)
 +ipmi::RspType<> ipmiSetFrontPanelButtonEnables(bool disablePowerButton,
 +                                               bool disableResetButton,
 +                                               bool disableInterruptButton,

@@ -1,27 +1,33 @@
 EnclosureFault:
     identify:
         Action: 'On'
+        Priority: 'Blink'
 
 EnclosureIdentify:
     identify:
         Action: 'Blink'
         DutyOn: 50
         Period: 1000
+        Priority: 'Blink'
 
 caterr_led:
     caterr:
         Action: 'Blink'
         DutyOn: 50
+        Priority: 'Blink'
 
 fan_fault:
     blade_attention:
         Action: 'Blink'
         DutyOn: 50
+        Priority: 'Blink'
 
 boot_status_inactive:
     power_amber:
         Action: 'On'
+        Priority: 'Blink'
 
 boot_status_standby:
     power_green:
         Action: 'On'
+        Priority: 'Blink'
