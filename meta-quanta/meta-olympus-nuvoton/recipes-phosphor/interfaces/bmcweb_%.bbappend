@@ -14,9 +14,6 @@ EXTRA_OEMESON:append:olympus-nuvoton = " -Dredfish-cpu-log=enabled"
 # Enable Redfish DBUS log/Journal support
 EXTRA_OEMESON:append:olympus-nuvoton = " ${@entity_enabled(d, '-Dredfish-bmc-journal=enabled', '-Dredfish-dbus-log=enabled')}"
 
-# Enable TFTP
-EXTRA_OEMESON:append:olympus-nuvoton = " -Dinsecure-tftp-update=enabled"
-
 # Increase body limit for BIOS FW
 EXTRA_OEMESON:append:olympus-nuvoton = " -Dhttp-body-limit=65"
 

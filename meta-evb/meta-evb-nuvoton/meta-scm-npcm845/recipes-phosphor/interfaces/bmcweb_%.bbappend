@@ -1,9 +1,6 @@
 # Enable Redfish Journal support
 EXTRA_OEMESON:append = " -Dredfish-bmc-journal=enabled"
 
-# Enable TFTP
-EXTRA_OEMESON:append  = " -Dinsecure-tftp-update=enabled"
-
 # Increase body limit for FW size
 EXTRA_OEMESON:append  = " -Dhttp-body-limit=65"
 
