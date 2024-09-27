@@ -1006,7 +1006,7 @@ This section will describe how to test i3c master/slave on the EVB by running mc
   * wire J_I3C.1 to J_I3c.9
   * wire J_I3c.2 to J_I3C.10
 
-- Modify [linux-nuvoton_6.1%.bbappend](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_6.1%25.bbappend) to include below patch and config.
+- Modify [linux-nuvoton_6.6%.bbappend](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_6.6%25.bbappend) to include below patch and config.
 ```
 SRC_URI:append:evb-npcm845 = " file://0001-dts-i3c-slave.patch"
 SRC_URI:append:evb-npcm845 = " file://i3c_mctp.cfg"
