@@ -1,0 +1,151 @@
+From 8fedc4e600f68aee91b8d763ea1129ec6e3b6947 Mon Sep 17 00:00:00 2001
+From: Allen Kang <jhkang@nuvoton.com>
+Date: Tue, 21 Feb 2023 13:46:21 +0800
+Subject: [PATCH 4/4] Add Nuvoton PSU firmware support
+
+Signed-off-by: Allen Kang <jhkang@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ src/locales/en-US.json                        |  5 ++-
+ src/store/modules/Operations/FirmwareStore.js |  7 ++++
+ src/views/Operations/Firmware/Firmware.vue    |  5 +++
+ .../Operations/Firmware/FirmwareCardsPsu.vue  | 42 +++++++++++++++++++
+ 4 files changed, 57 insertions(+), 2 deletions(-)
+ create mode 100644 src/views/Operations/Firmware/FirmwareCardsPsu.vue
+
+diff --git a/src/locales/en-US.json b/src/locales/en-US.json
+index 71b2052d..3319ec62 100644
+--- a/src/locales/en-US.json
++++ b/src/locales/en-US.json
+@@ -333,8 +333,9 @@
+         "sectionTitleBmcCards": "BMC",
+         "sectionTitleBmcCardsCombined": "BMC and server",
+         "sectionTitleHostCards": "Host",
+-	"sectionTitleMcuCards": "MCU",
+-	"sectionTitleCpldCards": "CPLD",
++        "sectionTitleMcuCards": "MCU",
++        "sectionTitleCpldCards": "CPLD",
++        "sectionTitlePsuCards": "PSU",
+ 	"sectionTitleUpdateFirmware": "Update firmware",
+         "alert": {
+             "operationInProgress": "Server power operation in progress.",
+diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
+index 587d93ef..54e4d210 100644
+--- a/src/store/modules/Operations/FirmwareStore.js
++++ b/src/store/modules/Operations/FirmwareStore.js
+@@ -8,6 +8,7 @@ const FirmwareStore = {
+     hostFirmware: [],
+     mcuFirmware: null,
+     cpldFirmware: null,
++    psuFirmware: null,
+     bmcActiveFirmwareId: null,
+     hostActiveFirmwareId: null,
+     applyTime: null,
+@@ -28,6 +29,7 @@ const FirmwareStore = {
+     },
+     mcuFirmware: (state) => state.mcuFirmware,
+     cpldFirmware: (state) => state.cpldFirmware,
++    psuFirmware: (state) => state.psuFirmware,
+     backupBmcFirmware: (state) => {
+       return state.bmcFirmware.find(
+         (firmware) => firmware.id !== state.bmcActiveFirmwareId,
+@@ -46,6 +48,7 @@ const FirmwareStore = {
+     setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
+     setMcuFirmware: (state, firmware) => (state.mcuFirmware = firmware),
+     setCpldFirmware: (state, firmware) => (state.cpldFirmware = firmware),
++    setPsuFirmware: (state, firmware) => (state.psuFirmware = firmware),
+     setApplyTime: (state, applyTime) => (state.applyTime = applyTime),
+     setHttpPushUri: (state, httpPushUri) => (state.httpPushUri = httpPushUri),
+     setMultipartHttpPushUri: (state, multipartHttpPushUri) =>
+@@ -98,6 +101,10 @@ const FirmwareStore = {
+               const cpldFirmware = data?.Version;
+               commit('setCpldFirmware', cpldFirmware);
+             }
++            if (Description === 'PSU image') {
++              const psuFirmware = data?.Version;
++              commit('setPsuFirmware', psuFirmware);
++            }
+             const firmwareType = data?.RelatedItem?.[0]?.['@odata.id']
+               .split('/')
+               .pop();
+diff --git a/src/views/Operations/Firmware/Firmware.vue b/src/views/Operations/Firmware/Firmware.vue
+index 5917e469..9fb28e84 100644
+--- a/src/views/Operations/Firmware/Firmware.vue
++++ b/src/views/Operations/Firmware/Firmware.vue
+@@ -23,6 +23,9 @@
+ 
+         <!-- CPLD Firmware -->
+         <cpld-cards />
++
++        <!-- PSU Firmware -->
++        <psu-cards />
+       </b-col>
+     </b-row>
+ 
+@@ -50,6 +53,7 @@ import FormUpdate from './FirmwareFormUpdate';
+ import HostCards from './FirmwareCardsHost';
+ import McuCards from './FirmwareCardsMcu';
+ import CpldCards from './FirmwareCardsCpld';
++import PsuCards from './FirmwareCardsPsu';
+ import PageSection from '@/components/Global/PageSection';
+ import PageTitle from '@/components/Global/PageTitle';
+ 
+@@ -65,6 +69,7 @@ export default {
+     HostCards,
+     McuCards,
+     CpldCards,
++    PsuCards,
+     PageSection,
+     PageTitle,
+   },
+diff --git a/src/views/Operations/Firmware/FirmwareCardsPsu.vue b/src/views/Operations/Firmware/FirmwareCardsPsu.vue
+new file mode 100644
+index 00000000..c0b94319
+--- /dev/null
++++ b/src/views/Operations/Firmware/FirmwareCardsPsu.vue
+@@ -0,0 +1,42 @@
++<template>
++  <page-section :section-title="$t('pageFirmware.sectionTitlePsuCards')">
++    <b-card-group deck>
++      <!-- Running image -->
++      <b-card>
++        <template #header>
++          <p class="font-weight-bold m-0">
++            {{ $t('pageFirmware.cardTitleRunning') }}
++          </p>
++        </template>
++        <dl class="mb-0">
++          <dt>{{ $t('pageFirmware.cardBodyVersion') }}</dt>
++          <dd class="mb-0">{{ runningVersion }}</dd>
++        </dl>
++      </b-card>
++    </b-card-group>
++  </page-section>
++</template>
++
++<script>
++import PageSection from '@/components/Global/PageSection';
++
++export default {
++  components: { PageSection },
++  computed: {
++    runningVersion() {
++      return this.$store.getters['firmware/psuFirmware'] || '--';
++    },
++  },
++};
++</script>
++
++<style lang="scss" scoped>
++@import '@/assets/styles/bmc/helpers/_index.scss';
++@import '@/assets/styles/bootstrap/_helpers.scss';
++
++@import '@/assets/styles/bootstrap/_helpers.scss';
++
++.page-section {
++  margin-top: -$spacer * 1.5;
++}
++</style>
+-- 
+2.34.1
+

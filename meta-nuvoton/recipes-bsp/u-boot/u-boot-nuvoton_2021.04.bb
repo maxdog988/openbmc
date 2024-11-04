@@ -8,4 +8,3 @@ PROVIDES += "u-boot"
 DEPENDS += "dtc-native"
 
 SRC_URI:append:df-phosphor-mmc = " file://u-boot-emmc.cfg"
-

@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:append:olympus-nuvoton := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend:olympus-nuvoton := "${THISDIR}/files:"
 
 SRC_URI:append:olympus-nuvoton = " file://config.txt"
 

@@ -12,11 +12,7 @@ IGPS_BRANCH ?= "main"
 SRC_URI = " \
     git://github.com/Nuvoton-Israel/igps-npcm8xx;branch=${IGPS_BRANCH};protocol=https \
 "
-<<<<<<<< HEAD:meta-nuvoton/recipes-bsp/images/npcm8xx-bootloader_04.02.04.bb
-SRCREV = "de9ca8d9ab84b8b9ad519449f0a85feff30eaff0"
-========
 SRCREV = "c36a02060f9f1cdb1382629bd1f54e43676bdebb"
->>>>>>>> 5ae2f38601:meta-nuvoton/recipes-bsp/images/npcm8xx-bootloader_04.02.03.bb
 
 S = "${WORKDIR}/git"
 

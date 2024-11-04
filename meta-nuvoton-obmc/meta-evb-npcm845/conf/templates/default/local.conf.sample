@@ -1,0 +1,2 @@
+MACHINE ??= "evb-npcm845"
+DISTRO ?= "openbmc-phosphor"

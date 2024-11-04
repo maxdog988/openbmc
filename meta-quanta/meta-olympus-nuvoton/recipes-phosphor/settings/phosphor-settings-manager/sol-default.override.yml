@@ -8,7 +8,3 @@
               Default: 'true'
           Progress:
               Default: 0
-          ForceAuthentication:
-              Default: 'true'
-          ForceEncryption:
-              Default: 'true'

@@ -39,8 +39,6 @@ SUMMARY:${PN}-system = "EVB NPCM845 System"
 RDEPENDS:${PN}-system = " \
         obmc-ikvm \
         iperf3 \
-        usb-emmc-storage \
-        usb-network \
         nmon \
         memtester \
         htop \
@@ -53,28 +51,11 @@ RDEPENDS:${PN}-system = " \
         rsyslog \
         loadsvf \
         pciutils \
-        cpfw \
-        dhrystone \
-        ent \
-        rw-perf \
-        phosphor-ecc \
-        i3c-tools \
-        phosphor-ipmi-blobs \
-        phosphor-image-signing \
-        program-vbios \
-        program-edid \
         dhrystone \
         phosphor-ecc \
         phosphor-ipmi-blobs \
         phosphor-image-signing \
         optee-client \
         optee-test \
-        cerberus-utility \
-        estoraged \
-        cryptsetup \
-        systemd-analyze \
-        pldm \
-        mctp \
-        usb-tty \
         persistent-net-name \
         "
