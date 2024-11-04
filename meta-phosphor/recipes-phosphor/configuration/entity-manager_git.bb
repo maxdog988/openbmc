@@ -9,10 +9,13 @@ DEPENDS = "boost \
            phosphor-logging \
            sdbusplus \
            valijson \
+           phosphor-dbus-interfaces \
 "
-SRCREV = "2ec1f15f33d83e9bddb5e3318a6d94d4a92ddc90"
+SRCREV = "5c1a61a84069b48ccc27e45ffc82d5ca87b330a1"
 PACKAGECONFIG ??= "ipmi-fru"
+
 PACKAGECONFIG[ipmi-fru] = "-Dfru-device=true, -Dfru-device=false, i2c-tools,"
+PACKAGECONFIG[dts-vpd] = "-Ddevicetree-vpd=true, -Ddevicetree-vpd=false"
 PACKAGECONFIG[validate-json] = "-Dvalidate-json=true, \
                                 -Dvalidate-json=false, \
                                 ${PYTHON_PN}-jsonschema-native"
@@ -26,6 +29,7 @@ S = "${WORKDIR}/git"
 SYSTEMD_PACKAGES = "${PN} ${EXTRA_ENTITY_MANAGER_PACKAGES}"
 SYSTEMD_SERVICE:${PN} = "xyz.openbmc_project.EntityManager.service"
 SYSTEMD_SERVICE:fru-device = "xyz.openbmc_project.FruDevice.service"
+SYSTEMD_SERVICE:devicetree-vpd = "devicetree-vpd-parserd.service"
 SYSTEMD_AUTO_ENABLE:fru-device:ibm-power-cpu = "disable"
 
 inherit pkgconfig meson systemd python3native
@@ -33,6 +37,7 @@ inherit pkgconfig meson systemd python3native
 EXTRA_OEMESON = "-Dtests=disabled"
 EXTRA_ENTITY_MANAGER_PACKAGES = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'ipmi-fru', 'fru-device', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'dts-vpd', 'devicetree-vpd', '', d)} \
     "
 
 do_install:append() {
@@ -43,5 +48,11 @@ FILES:${PN} += " \
     ${datadir}/dbus-1/system-services/xyz.openbmc_project.EntityManager.service \
     "
 FILES:fru-device = "${bindir}/fru-device ${datadir}/${BPN}/blacklist.json"
+FILES:devicetree-vpd = "${bindir}/devicetree-vpd-parserd"
+
+RRECOMMENDS:${PN} = " \
+    ${@bb.utils.contains('PACKAGECONFIG', 'ipmi-fru', 'fru-device', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'dts-vpd', 'devicetree-vpd', '', d)} \
+    "
 
 PACKAGE_BEFORE_PN = "${EXTRA_ENTITY_MANAGER_PACKAGES}"
