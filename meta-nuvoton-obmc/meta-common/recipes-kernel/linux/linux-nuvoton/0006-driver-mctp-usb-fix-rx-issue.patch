@@ -1,0 +1,148 @@
+From 26e6c6ff3a8b79d2f08358345fba3f6e1f3c9e03 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Wed, 18 Sep 2024 17:07:45 +0800
+Subject: [PATCH] driver: mctp usb: fix rx issue
+
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ drivers/net/mctp/mctp-usb.c          |  6 +--
+ drivers/usb/gadget/function/f_mctp.c | 81 ++++++++++++++++++----------
+ 2 files changed, 55 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/net/mctp/mctp-usb.c b/drivers/net/mctp/mctp-usb.c
+index 7c0a43bf0a3f..2205570e43c6 100644
+--- a/drivers/net/mctp/mctp-usb.c
++++ b/drivers/net/mctp/mctp-usb.c
+@@ -180,7 +180,7 @@ static void mctp_usb_in_complete(struct urb *urb)
+ 		struct sk_buff *skb2 = NULL;
+ 		struct mctp_usb_hdr *hdr;
+ 
+-		hdr = skb_pull(skb, sizeof(*hdr));
++		hdr = skb_pull_data(skb, sizeof(*hdr));
+ 		if (!hdr)
+ 			break;
+ 
+@@ -198,14 +198,14 @@ static void mctp_usb_in_complete(struct urb *urb)
+ 			break;
+ 		}
+ 
+-		if (hdr->len > skb->len) {
++		if ((hdr->len - sizeof(*hdr)) > skb->len) {
+ 			dev_dbg(&mctp_usb->usbdev->dev,
+ 				"%s: short packet (xfer) %d, actual %d\n",
+ 				__func__, hdr->len, skb->len);
+ 			break;
+ 		}
+ 
+-		if (hdr->len < skb->len) {
++		if ((hdr->len - sizeof(*hdr)) < skb->len) {
+ 			/* more packets may follow - clone to a new
+ 			 * skb to use on the next iteration
+ 			 */
+diff --git a/drivers/usb/gadget/function/f_mctp.c b/drivers/usb/gadget/function/f_mctp.c
+index 1060a4800152..84b8e02f453b 100644
+--- a/drivers/usb/gadget/function/f_mctp.c
++++ b/drivers/usb/gadget/function/f_mctp.c
+@@ -369,7 +369,6 @@ static void mctp_usbg_handle_rx_urb(struct f_mctp *mctp,
+ 	struct device *dev = &mctp->function.config->cdev->gadget->dev;
+ 	struct pcpu_dstats *dstats = this_cpu_ptr(mctp->dev->dstats);
+ 	struct sk_buff *skb = req->context;
+-	struct mctp_usb_hdr *hdr;
+ 	struct mctp_skb_cb *cb;
+ 	unsigned int len;
+ 	u16 id;
+@@ -377,39 +376,63 @@ static void mctp_usbg_handle_rx_urb(struct f_mctp *mctp,
+ 	len = req->actual;
+ 	__skb_put(skb, len);
+ 
+-	hdr = skb_pull_data(skb, sizeof(*hdr));
+-	if (!hdr)
+-		goto err;
++	while (skb) {
++		struct sk_buff *skb2 = NULL;
++		struct mctp_usb_hdr *hdr;
+ 
+-	id = le16_to_cpu(hdr->id);
+-	if (id != MCTP_USB_DMTF_ID) {
+-		dev_dbg(dev, "%s: invalid id %04x\n", __func__, id);
+-		goto err;
+-	}
++		hdr = skb_pull_data(skb, sizeof(*hdr));
++		if (!hdr)
++			goto err;
+ 
+-	if (hdr->len < sizeof(struct mctp_hdr) + sizeof(struct mctp_usb_hdr)) {
+-		dev_dbg(dev, "%s: short packet (hdr) %d\n",
+-			__func__, hdr->len);
+-		goto err;
+-	}
++		id = le16_to_cpu(hdr->id);
++		if (id != MCTP_USB_DMTF_ID) {
++			dev_dbg(dev, "%s: invalid id %04x\n", __func__, id);
++			goto err;
++		}
+ 
+-	/* todo: multi-packet transfers */
+-	if (hdr->len < skb->len) {
+-		dev_dbg(dev, "%s: short packet (xfer) %d, actual %d\n",
+-			__func__, hdr->len, skb->len);
+-		goto err;
+-	}
++		if (hdr->len < sizeof(struct mctp_hdr) + sizeof(struct mctp_usb_hdr)) {
++			dev_dbg(dev, "%s: short packet (hdr) %d\n",
++				__func__, hdr->len);
++			goto err;
++		}
++
++		if ((hdr->len - sizeof(*hdr)) > skb->len) {
++			dev_dbg(dev,
++				"%s: short packet (xfer) %d, actual %d\n",
++				__func__, hdr->len, skb->len);
++			break;
++		}
+ 
+-	skb->protocol = htons(ETH_P_MCTP);
+-	skb_reset_network_header(skb);
+-	cb = __mctp_cb(skb);
+-	cb->halen = 0;
+-	netif_rx(skb);
++		if ((hdr->len - sizeof(*hdr)) < skb->len) {
++			/* more packets may follow - clone to a new
++			 * skb to use on the next iteration
++			 */
++			skb2 = skb_clone(skb, GFP_ATOMIC);
++			if (skb2) {
++				if (!skb_pull(skb2, hdr->len)) {
++					kfree_skb(skb2);
++					skb2 = NULL;
++				}
++			}
++			skb_trim(skb, hdr->len);
++		}
+ 
+-	u64_stats_update_begin(&dstats->syncp);
+-	u64_stats_inc((u64_stats_t *)&dstats->rx_packets);
+-	u64_stats_add((u64_stats_t *)&dstats->rx_bytes, len);
+-	u64_stats_update_end(&dstats->syncp);
++
++		skb->protocol = htons(ETH_P_MCTP);
++		skb_reset_network_header(skb);
++		cb = __mctp_cb(skb);
++		cb->halen = 0;
++		netif_rx(skb);
++
++		u64_stats_update_begin(&dstats->syncp);
++		u64_stats_inc((u64_stats_t *)&dstats->rx_packets);
++		u64_stats_add((u64_stats_t *)&dstats->rx_bytes, len);
++		u64_stats_update_end(&dstats->syncp);
++		skb = skb2;
++	}
++
++	if (skb)
++		kfree_skb(skb);
+ 
+ 	return;
+ 
+-- 
+2.34.1
+

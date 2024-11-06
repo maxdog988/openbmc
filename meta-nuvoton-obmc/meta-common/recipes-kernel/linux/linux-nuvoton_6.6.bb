@@ -5,17 +5,26 @@ SRCREV = "b9fca54c39d1c261372f580f13a9b52785ecab82"
 
 require ../../../../meta-nuvoton/recipes-kernel/linux/linux-nuvoton.inc
 
-SRC_URI:append:nuvoton = " file://0017-drivers-i2c-workaround-for-i2c-slave-behavior.patch"
 SRC_URI:append:nuvoton = " file://enable-emc.cfg"
 SRC_URI:append:nuvoton:df-obmc-static-norootfs = " file://enable-spinor-ubifs.cfg"
+
+# AF_MCTP core patches
+SRC_URI:append:nuvoton = " file://0001-mctp-avoid-confusion-over-local-peer-dest-source-add.patch"
+SRC_URI:append:nuvoton = " file://0002-mctp-make-key-lookups-match-the-ANY-address-on-eithe.patch"
+SRC_URI:append:nuvoton = " file://0003-mctp-serial-use-netif_receive_skb-instead-of-netif_r.patch"
+
+# AF_MCTP over USB patches
+SRC_URI:append:nuvoton = " file://0001-usb-Add-generic-MCTP-include.patch"
+SRC_URI:append:nuvoton = " file://0002-net-mctp-Add-MCTP-USB-transport-driver.patch"
+SRC_URI:append:nuvoton = " file://0003-usb-gadget-Add-MCTP-USB-function.patch"
+SRC_URI:append:nuvoton = " file://0004-usb-gadget-mctp-defer-tx-to-batch.patch"
+SRC_URI:append:nuvoton = " file://0005-driver-usb-f_mctp-add-high-speed-support.patch"
+SRC_URI:append:nuvoton = " file://0006-driver-mctp-usb-fix-rx-issue.patch"
+SRC_URI:append:nuvoton = " file://0007-driver-mctp-usb-set-max-mtu-to-255.patch"
 
 # New Arch VDMX/VDMA driver
 # SRC_URI:append:nuvoton = " file://2222-driver-misc-add-nuvoton-vdmx-vdma-driver.patch"
 # SRC_URI:append:nuvoton = " file://2223-net-mctp-Support-mctp-over-pcie-vdm.patch"
 
-# SRC_URI:append:nuvoton = " file://0004-driver-ncsi-replace-del-timer-sync.patch"
+# Patch for Intel MCTP over PCIe VDM support
 # SRC_URI:append:nuvoton = " file://0015-driver-misc-nuvoton-vdm-support-openbmc-libmctp.patch"
-
-SRC_URI:append:nuvoton = " file://0001-mctp-avoid-confusion-over-local-peer-dest-source-add.patch"
-SRC_URI:append:nuvoton = " file://0002-mctp-make-key-lookups-match-the-ANY-address-on-eithe.patch"
-SRC_URI:append:nuvoton = " file://0003-mctp-serial-use-netif_receive_skb-instead-of-netif_r.patch"

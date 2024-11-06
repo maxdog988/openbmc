@@ -1,0 +1,65 @@
+From 80d8e487f94351a88083c06389bbeedd0d909049 Mon Sep 17 00:00:00 2001
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+Date: Thu, 13 Jun 2024 15:20:31 +0800
+Subject: [PATCH 1/4] usb: Add generic MCTP include
+
+Upcoming changes will add both a USB host- and gadget driver for the
+MCTP-over-USB protocol. Add a header that provides common definitions
+across both of these: the packet header format and a few framing
+definitions.
+
+Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
+---
+ MAINTAINERS                  |  1 +
+ include/linux/usb/mctp-usb.h | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 include/linux/usb/mctp-usb.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8cbdbd0741cb..c153b1f17e04 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12615,6 +12615,7 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/networking/mctp.rst
+ F:	drivers/net/mctp/
++F:	include/linux/usb/mctp-usb.h
+ F:	include/net/mctp.h
+ F:	include/net/mctpdevice.h
+ F:	include/net/netns/mctp.h
+diff --git a/include/linux/usb/mctp-usb.h b/include/linux/usb/mctp-usb.h
+new file mode 100644
+index 000000000000..a3efe141520d
+--- /dev/null
++++ b/include/linux/usb/mctp-usb.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * mctp-usb.h - MCTP USB transport binding: common definitions.
++ *
++ * These are shared between the host and gadget drivers.
++ *
++ * Copyright (C) 2024 Code Construct Pty Ltd
++ */
++
++#ifndef __LINUX_USB_MCTP_USB_H
++#define __LINUX_USB_MCTP_USB_H
++
++#include <linux/types.h>
++
++struct mctp_usb_hdr {
++	__le16	id;
++	__u8	rsvd;
++	__u8	len;
++} __packed;
++
++#define MCTP_USB_XFER_SIZE	512
++#define MCTP_USB_BTU		68
++#define MCTP_USB_MTU_MIN	MCTP_USB_BTU
++#define MCTP_USB_MTU_MAX	(U8_MAX - sizeof(struct mctp_usb_hdr))
++#define MCTP_USB_DMTF_ID	0x1ab4
++
++#endif /*  __LINUX_USB_MCTP_USB_H */
+-- 
+2.34.1
+

@@ -5,16 +5,8 @@ FILESEXTRAPATHS:prepend:nuvoton := "${THISDIR}/${PN}:"
 # SRC_URI = "git://github.com/khangng-ampere/mctp;branch=main;protocol=https"
 
 SRC_URI:append:nuvoton = " file://0001-Add-mctp-discovery-command.patch"
-SRC_URI:append:nuvoton = " file://mctpd.service"
-SRC_URI:append:nuvoton = " file://mctp-config.sh"
 # SRC_URI:append:nuvoton = " file://0001-mctpd-Support-mctp-over-pcie-vdm.patch"
-
 SRC_URI:append:nuvoton = " file://0001-Modified-the-type-of-NetworkId-to-uint32_t.patch"
 
 DEPENDS += "i2c-tools"
 
-FILES:${PN}:append:nuvoton = " ${bindir}/mctp-config.sh"
-do_install:prepend:nuvoton () {
-    install -Dm 0755 ${WORKDIR}/mctp-config.sh ${D}${bindir}/mctp-config.sh
-    install -m 644 ${WORKDIR}/mctpd.service ${S}/conf/mctpd.service
-}

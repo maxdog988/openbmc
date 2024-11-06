@@ -1,0 +1,54 @@
+From be75747f40f01e12694ab28ca7f889784047bcf1 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Tue, 24 Sep 2024 10:00:08 +0800
+Subject: [PATCH] driver: mctp usb: set max mtu to 255
+
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ drivers/net/mctp/mctp-usb.c          | 2 +-
+ drivers/usb/gadget/function/f_mctp.c | 2 +-
+ include/linux/usb/mctp-usb.h         | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/mctp/mctp-usb.c b/drivers/net/mctp/mctp-usb.c
+index 2205570e43c6..cdfe26f0de64 100644
+--- a/drivers/net/mctp/mctp-usb.c
++++ b/drivers/net/mctp/mctp-usb.c
+@@ -262,7 +262,7 @@ static void mctp_usb_netdev_setup(struct net_device *dev)
+ {
+ 	dev->type = ARPHRD_MCTP;
+ 
+-	dev->mtu = MCTP_USB_MTU_MIN;
++	dev->mtu = MCTP_USB_MTU_MAX;
+ 	dev->min_mtu = MCTP_USB_MTU_MIN;
+ 	dev->max_mtu = MCTP_USB_MTU_MAX;
+ 
+diff --git a/drivers/usb/gadget/function/f_mctp.c b/drivers/usb/gadget/function/f_mctp.c
+index 84b8e02f453b..e8ca76c42cc4 100644
+--- a/drivers/usb/gadget/function/f_mctp.c
++++ b/drivers/usb/gadget/function/f_mctp.c
+@@ -700,7 +700,7 @@ static void mctp_usbg_netdev_setup(struct net_device *dev)
+ {
+ 	dev->type = ARPHRD_MCTP;
+ 
+-	dev->mtu = MCTP_USB_MTU_MIN;
++	dev->mtu = MCTP_USB_MTU_MAX;
+ 	dev->min_mtu = MCTP_USB_MTU_MIN;
+ 	dev->max_mtu = MCTP_USB_MTU_MAX;
+ 
+diff --git a/include/linux/usb/mctp-usb.h b/include/linux/usb/mctp-usb.h
+index a3efe141520d..98b243a47b38 100644
+--- a/include/linux/usb/mctp-usb.h
++++ b/include/linux/usb/mctp-usb.h
+@@ -19,7 +19,7 @@ struct mctp_usb_hdr {
+ } __packed;
+ 
+ #define MCTP_USB_XFER_SIZE	512
+-#define MCTP_USB_BTU		68
++#define MCTP_USB_BTU		U8_MAX
+ #define MCTP_USB_MTU_MIN	MCTP_USB_BTU
+ #define MCTP_USB_MTU_MAX	(U8_MAX - sizeof(struct mctp_usb_hdr))
+ #define MCTP_USB_DMTF_ID	0x1ab4
+-- 
+2.34.1
+

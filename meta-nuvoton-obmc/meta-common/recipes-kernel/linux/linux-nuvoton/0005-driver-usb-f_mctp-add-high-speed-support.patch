@@ -1,0 +1,62 @@
+From ef381049b9f5abfd253d6b6b3ad5b340d2a4ab40 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Mon, 16 Sep 2024 16:23:56 +0800
+Subject: [PATCH] driver: usb: f_mctp: add high speed support
+
+---
+ drivers/usb/gadget/function/f_mctp.c | 32 +++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/function/f_mctp.c b/drivers/usb/gadget/function/f_mctp.c
+index ba2526803e43..1060a4800152 100644
+--- a/drivers/usb/gadget/function/f_mctp.c
++++ b/drivers/usb/gadget/function/f_mctp.c
+@@ -97,6 +97,33 @@ static struct usb_descriptor_header *fs_mctp_descs[] = {
+ 	NULL,
+ };
+ 
++static struct usb_endpoint_descriptor hs_mctp_source_desc = {
++	.bLength =		USB_DT_ENDPOINT_SIZE,
++	.bDescriptorType =	USB_DT_ENDPOINT,
++
++	.bEndpointAddress =	USB_DIR_IN,
++	.bmAttributes =		USB_ENDPOINT_XFER_BULK,
++	.wMaxPacketSize =	cpu_to_le16(MCTP_USB_XFER_SIZE),
++};
++
++static struct usb_endpoint_descriptor hs_mctp_sink_desc = {
++	.bLength =		USB_DT_ENDPOINT_SIZE,
++	.bDescriptorType =	USB_DT_ENDPOINT,
++
++	.bEndpointAddress =	USB_DIR_OUT,
++	.bmAttributes =		USB_ENDPOINT_XFER_BULK,
++	.wMaxPacketSize =	cpu_to_le16(MCTP_USB_XFER_SIZE),
++};
++
++
++static struct usb_descriptor_header *hs_mctp_descs[] = {
++	(struct usb_descriptor_header *) &mctp_usbg_intf,
++	(struct usb_descriptor_header *) &hs_mctp_source_desc,
++	(struct usb_descriptor_header *) &hs_mctp_sink_desc,
++	NULL,
++};
++
++
+ /* strings */
+ static struct usb_string mctp_usbg_strings[] = {
+ 	{ .s = "MCTP over USB" },
+@@ -142,7 +169,10 @@ static int mctp_usbg_bind(struct usb_configuration *c, struct usb_function *f)
+ 		return -ENODEV;
+ 	}
+ 
+-	rc = usb_assign_descriptors(f, fs_mctp_descs, NULL, NULL, NULL);
++	hs_mctp_source_desc.bEndpointAddress = fs_mctp_source_desc.bEndpointAddress;
++	hs_mctp_sink_desc.bEndpointAddress = fs_mctp_sink_desc.bEndpointAddress;
++
++	rc = usb_assign_descriptors(f, fs_mctp_descs, hs_mctp_descs, NULL, NULL);
+ 	if (rc) {
+ 		ERROR(cdev, "assign_descriptors failed %d\n", rc);
+ 		return rc;
+-- 
+2.34.1
+

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+localEid=8
+
+mctp addr add ${localEid} dev mctpi3c0
+mctp link set mctpi3c0 up
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP SetupEndpoint say "mctpi3c0" 6 0x06 0x32 0x12 0x34 0x56 0x07
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP LearnEndpoint say "mctpi3c0" 6 0x06 0x32 0x12 0x34 0x56 0x07
+
+mctp addr add ${localEid} dev mctpi2c0
+mctp link set mctpi2c0 up
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP SetupEndpoint say "mctpi2c0" 1 0x10
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP LearnEndpoint say "mctpi2c0" 1 0x10
+
+mctp addr add ${localEid} dev mctpusb0
+mctp link set mctpusb0 up
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP SetupEndpoint say "mctpusb0" 0
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP LearnEndpoint say "mctpusb0" 0
