@@ -1,3 +1,3 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI:append = " file://0006-libpldm-fix-pldmtool-cmd-fail-issue.patch"
+SRC_URI:append = " file://0001-libpldm-add-netid-parameter-support.patch"

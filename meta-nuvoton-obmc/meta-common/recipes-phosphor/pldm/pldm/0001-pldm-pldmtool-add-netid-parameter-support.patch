@@ -1,10 +1,9 @@
-From 0aada857ba6528f2492158c311aa0e0d49930fd9 Mon Sep 17 00:00:00 2001
+From c7e426dfed55f0f0383a86a163ab41d20b09ac51 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
-Subject: [PATCH] pldm: fix pldmtool cmd fail issue
+Subject: [PATCH] pldm: pldmtool: add netid parameter support
 
 - Add netid parameter for sending request message.
-- Modify the value of the response message sent by pldmd to the correct value.
 
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
@@ -34,10 +33,10 @@ index 9641c38c5..0c4bd1d61 100644
  {
      return pfd.fd;
 diff --git a/common/transport.hpp b/common/transport.hpp
-index 060148852..d2bd8c84c 100644
+index e9e1808ec..d3d95b4ff 100644
 --- a/common/transport.hpp
 +++ b/common/transport.hpp
-@@ -34,6 +34,10 @@ class PldmTransport
+@@ -35,6 +35,10 @@ class PldmTransport
       */
      int getEventSource() const;
  
@@ -49,18 +48,18 @@ index 060148852..d2bd8c84c 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index 8941418a3..95f5826fa 100644
+index 2352b60c5..fdd4116c9 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
-@@ -64,6 +64,7 @@ PHOSPHOR_LOG2_USING;
- #include "oem_ibm.hpp"
+@@ -68,6 +68,7 @@ PHOSPHOR_LOG2_USING;
+ #include "oem/ampere/oem_ampere.hpp"
  #endif
  
 +uint8_t netid = 0;
  constexpr const char* PLDMService = "xyz.openbmc_project.PLDM";
  
  using namespace pldm;
-@@ -166,25 +167,32 @@ void optionUsage(void)
+@@ -170,25 +171,32 @@ void optionUsage(void)
      info("Usage: pldmd [options]");
      info("Options:");
      info(" [--verbose] - would enable verbosity");
@@ -104,7 +103,7 @@ index 8941418a3..95f5826fa 100644
      }
      // Setup PLDM requester transport
      auto hostEID = pldm::utils::readHostEID();
-@@ -208,7 +216,6 @@ int main(int argc, char** argv)
+@@ -212,7 +220,6 @@ int main(int argc, char** argv)
      Invoker invoker{};
      requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
                                                        instanceIdDb, verbose);
@@ -112,7 +111,7 @@ index 8941418a3..95f5826fa 100644
      std::unique_ptr<pldm_pdr, decltype(&pldm_pdr_destroy)> pdrRepo(
          pldm_pdr_init(), pldm_pdr_destroy);
      if (!pdrRepo)
-@@ -221,6 +228,9 @@ int main(int argc, char** argv)
+@@ -225,6 +232,9 @@ int main(int argc, char** argv)
              std::make_unique<pldm::host_effecters::HostEffecterParser>(
                  &instanceIdDb, pldmTransport.getEventSource(), pdrRepo.get(),
                  &dbusHandler, HOST_JSONS_DIR, &reqHandler);

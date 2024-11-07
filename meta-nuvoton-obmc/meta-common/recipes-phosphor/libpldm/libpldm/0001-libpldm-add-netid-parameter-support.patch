@@ -1,7 +1,7 @@
 From ade3086ff0d1ff3203bfb9bccbd271dd71efcb3f Mon Sep 17 00:00:00 2001
 From: Mia Lin <mimi05633@gmail.com>
 Date: Wed, 4 Oct 2023 11:20:20 +0800
-Subject: [PATCH] libpldm: fix pldmtool cmd fail issue
+Subject: [PATCH] libpldm: add netid parameter support
 
  - Add an API to set netid and send request message with netid.
 
