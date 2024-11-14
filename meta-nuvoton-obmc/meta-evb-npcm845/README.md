@@ -170,13 +170,11 @@ Below is an example of changing the FIU0 speed to 50MHz.
 ```
 ### Configuration
 
-- If you are using the Red EVB board, please enable the [dts patch](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_%25.bbappend#L5)
-
 ### Build
 1. Target EVB NPCM845
 Source the setup script as follows:
 ```ruby
-. setup evb-npcm845
+. setup evb-npcm845-stage
 ```
 
 2. Choose the distro
@@ -192,7 +190,7 @@ DISTRO=arbel-evb-entity bitbake obmc-phosphor-image
 ```
 
 ### Output Images
-* You will find images in path build/evb-npcm845/tmp/deploy/images/evb-npcm845
+* You will find images in path build/evb-npcm845-stage/tmp/deploy/images/evb-npcm845-stage
 
 Type          | Description                                                                                                     |
 :-------------|:-------------------------------------------------------------------------------------------------------- |
@@ -217,7 +215,7 @@ You need to make sure which one is your device and board. Then execute the corre
 Note: UpdateInputBinaries*.bat resets all the images and xml files inside **py_scripts/ImageGeneration/inputs**<br/>
 After that users can override the existing files in the inputs folder, or use as is.
 
-In OpenBMC, there is one variable for configure Arbel A1/Z1 device in file [evb-npcm845.conf](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/conf/machine/evb-npcm845.conf )<br/>
+In OpenBMC, there is one variable for configure Arbel A1/Z1 device in file [evb-npcm845.conf](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/conf/machine/evb-npcm845-stage.conf )<br/>
 If you are using Z1 device, please modify variable **DEVICE_GEN = "Z1"**, before bitbake obmc-phosphor-image.<br/>
 
 
@@ -363,9 +361,9 @@ boot
 ```ruby
 [  OK  ] Reached target Login Prompts.
 
-Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro) 0.1.0 evb-npcm845 ttyS0
+Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro) 0.1.0 evb-npcm845-stage ttyS0
 
-evb-npcm845 login:
+evb-npcm845-stage login:
 ```
 
 ## Boot from eMMC
@@ -706,7 +704,7 @@ Creating 1 MTD partitions on "spi3.0":
 ```
 ```ruby
 # MTD number for FIU3 is mtd7
-root@evb-npcm845:~# cat /proc/mtd
+root@evb-npcm845-stage:~# cat /proc/mtd
 dev:    size   erasesize  name
 mtd0: 04000000 00001000 "bmc"
 mtd1: 007c0000 00001000 "u-boot"
@@ -720,8 +718,8 @@ mtd7: 02000000 00001000 "spi3-system1"
 
 2. Erase/Write/Read flash
 ```ruby
-root@evb-npcm845:/tmp# tftp -g -r image-bmc 192.168.0.128
-root@evb-npcm845:/tmp# flashcp -v image-bmc /dev/mtd7
+root@evb-npcm845-stage:/tmp# tftp -g -r image-bmc 192.168.0.128
+root@evb-npcm845-stage:/tmp# flashcp -v image-bmc /dev/mtd7
 Erasing block: 8192/8192 (100%)
 Writing kb: 32768/32768 (100%)
 Verifying kb: 32768/32768 (100%)
@@ -803,7 +801,7 @@ eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq qlen 1000
 3. iperf3 test
 
 ```
-root@evb-npcm845:~# iperf3 -c 192.168.0.128 -R
+root@evb-npcm845-stage:~# iperf3 -c 192.168.0.128 -R
 Connecting to host 192.168.0.128, port 5201
 Reverse mode, remote host 192.168.0.128 is sending
 [  5] local 192.168.0.12 port 45320 connected to 192.168.0.128 port 5201
@@ -940,7 +938,7 @@ CONFIG_SVC_I3C_MASTER=y
 - Use [i3ctransfer](https://github.com/vitor-soares-snps/i3c-tools) tool to test
 - Read SPD device type
 ```
-root@evb-npcm845:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
+root@evb-npcm845-stage:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
 Success on message 0
   received data:
     0x51
@@ -992,7 +990,7 @@ CONFIG_I3C_HUB=y
 
 - Use i3ctransfer tool to read SPD device type
 ```
-root@evb-npcm845:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
+root@evb-npcm845-stage:~# i3ctransfer -d /dev/i3c-0-4cc51180000 -w "0x00,0x00" -r 2
 Success on message 0
   received data:
     0x51
@@ -1006,7 +1004,7 @@ This section will describe how to test i3c master/slave on the EVB by running mc
   * wire J_I3C.1 to J_I3c.9
   * wire J_I3c.2 to J_I3C.10
 
-- Modify [linux-nuvoton_6.6%.bbappend](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_6.6%25.bbappend) to include below patch and config.
+- Modify [linux-nuvoton_6.6%.bbappend](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-kernel/linux/linux-nuvoton_6.6%25.bbappend) to include below patch and config.
 ```
 SRC_URI:append = " file://0001-dts-i3c-slave.patch"
 SRC_URI:append = " file://i3c_mctp.cfg"
@@ -1014,20 +1012,20 @@ SRC_URI:append = " file://i3c_mctp.cfg"
 
 - Enter Openbmc, there will be 2 mctp device nodes. i3c-mctp-0 is the device node of I3C master, i3c-mctp-target-0 is the device node of I3C slave.
 ```
-root@evb-npcm845:~# ls /dev/i3c-mctp*
+root@evb-npcm845-stage:~# ls /dev/i3c-mctp*
 /dev/i3c-mctp-0         /dev/i3c-mctp-target-0
 ```
 
-- [mctp test applications](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton/recipes-phosphor/libmctp)
+- [mctp test applications](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton-obmc/meta-common/recipes-phosphor/libmctp)
 
 - Start the mctp daemon, the daemon will echo the received messages to the sender, like an echo server.
 ```
-root@evb-npcm845:~# mctp-npcmi3c-daemon -p /dev/i3c-mctp-target-0 -e 32&
+root@evb-npcm845-stage:~# mctp-npcmi3c-daemon -p /dev/i3c-mctp-target-0 -e 32&
 ```
 
 - Run the mctp test application, it will send a message to the mctp daemon and receive the response. If the received message is the same as the sent message, the execution result will show "test complete"
 ```
-root@evb-npcm845:~# test_npcmi3c -p /dev/i3c-mctp-0 -e 8 -d 32
+root@evb-npcm845-stage:~# test_npcmi3c -p /dev/i3c-mctp-0 -e 8 -d 32
 mctp_npcmi3c_daemon test
 mctp_npcmi3c_daemon test complete
 ```
@@ -1060,7 +1058,7 @@ loadsvf -d /dev/jtag0 -s Arbel_EVB_CPLD_X02_siox_loopback.svf
 - After CPLD is programmed, three LEDs (blue/yellow/red, near to SW1) are turned on.
 
 - The CPLD SVF can be downloaded from here:
-[arbelevb_cpld.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/arbelevb_cpld.svf ), [arbelevb_readid.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/arbelevb_readid.svf ), [Arbel_EVB_CPLD_X02_siox_loopback.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/Arbel_EVB_CPLD_X02_siox_loopback.svf )
+[arbelevb_cpld.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/arbelevb_cpld.svf ), [arbelevb_readid.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/arbelevb_readid.svf ), [Arbel_EVB_CPLD_X02_siox_loopback.svf](https://github.com/Nuvoton-Israel/openbmc/tree/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-evb-npcm845/loadsvf/files/Arbel_EVB_CPLD_X02_siox_loopback.svf )
 
 ## SMBus
 
@@ -1242,7 +1240,7 @@ CONFIG_NPCM_ESPI_VWGPIO=y
 ```
 - Booting EVB to OpenBMC, and you can use libgpiod tools to check the information
 ```
-root@evb-npcm845:/# gpioinfo 9
+root@evb-npcm845-stage:/# gpioinfo 9
 gpiochip9 - 128 lines:
         line   0:      unnamed       unused  output  active-high
         line   1:      unnamed       unused  output  active-high
@@ -1272,10 +1270,10 @@ gpiochip9 - 128 lines:
         line 126:      unnamed       unused   input  active-high
         line 127: "VW_FM_BIOS_POST_CMPLT_N" "power-control" input active-high [used]
 
-root@evb-npcm845:/# gpioset 9 12=0
-root@evb-npcm845:/# gpioset 9 12=1
+root@evb-npcm845-stage:/# gpioset 9 12=0
+root@evb-npcm845-stage:/# gpioset 9 12=1
 
-root@evb-npcm845:/# gpioget 9 124
+root@evb-npcm845-stage:/# gpioget 9 124
 0
 ```
 - Using x86-power-control to monitor gpio127 status
@@ -1322,7 +1320,7 @@ CONFIG_GPIO_NPCM_SGPIO=y
 ```
 - Boot EVB to Openbmc, you can check gpiochip8 information
 ```
-root@evb-npcm845:~# gpioinfo 8
+root@evb-npcm845-stage:~# gpioinfo 8
 gpiochip8 - 128 lines:
         line   0:  "POWER_OUT"       unused  output  active-high
         line   1:  "RESET_OUT"       unused  output  active-high
@@ -1456,31 +1454,31 @@ gpiochip8 - 128 lines:
 ```
 - Now, you can turn on/off LED_CPLD_7
 ```
-root@evb-npcm845:~# gpioset 8 8=0
-root@evb-npcm845:~# gpioset 8 8=1
+root@evb-npcm845-stage:~# gpioset 8 8=0
+root@evb-npcm845-stage:~# gpioset 8 8=1
 ```
 - GPIO interrupt loopback test
 ```
-root@evb-npcm845:~# gpiomon 8 64 &
-root@evb-npcm845:~# gpioset 8 0=1
+root@evb-npcm845-stage:~# gpiomon 8 64 &
+root@evb-npcm845-stage:~# gpioset 8 0=1
 event:  RISING EDGE offset: 64 timestamp: [   83882.867414528]
-root@evb-npcm845:~# gpioset 8 0=0
+root@evb-npcm845-stage:~# gpioset 8 0=0
 event: FALLING EDGE offset: 64 timestamp: [   83884.267443984]
 ```
 
 ### Interrupt Stress Test
 - Monitor pins 64 ~ 79 with gpiomon
 ```
-root@evb-npcm845:~# gpiomon 8 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 &
+root@evb-npcm845-stage:~# gpiomon 8 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 &
 ```
 - Prepare a script to toggle pins 0 ~ 15 which are loopback to 64 ~ 79 repeatedly
 ```
-root@evb-npcm845:~# gpioset 8 0=1 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1
-root@evb-npcm845:~# gpioset 8 0=0 1=0 2=0 3=0 4=0 5=0 6=0 7=0 8=0 9=0 10=0 11=0 12=0 13=0 14=0 15=0
+root@evb-npcm845-stage:~# gpioset 8 0=1 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1
+root@evb-npcm845-stage:~# gpioset 8 0=0 1=0 2=0 3=0 4=0 5=0 6=0 7=0 8=0 9=0 10=0 11=0 12=0 13=0 14=0 15=0
 ```
 - Monitor pins 96 ~ 103 from another console (login via SSH) 
 ```
-root@evb-npcm845:~# gpiomon 8 96 97 98 99 100 101 102 103
+root@evb-npcm845-stage:~# gpiomon 8 96 97 98 99 100 101 102 103
 ```
 - Connect and disconnect pin 96 ~ 103 to 3.3V on J_CPLD header repeatedly.
 ```
@@ -1918,7 +1916,7 @@ Please add to the kernel configuration:
 CONFIG_CRYPTO_TEST=m
 And copy tcrypt.ko to npcm845 EVB
 
-root@evb-npcm845:~# insmod ./tcrypt.ko mode=500
+root@evb-npcm845-stage:~# insmod ./tcrypt.ko mode=500
 tcrypt:
 testing speed of async ecb(aes) (Nuvoton-ecb-aes) encryption
 tcrypt: test 0 (128 bit key, 16 byte blocks): 1 operation in 6948 cycles (16 bytes)
@@ -2036,7 +2034,7 @@ CONFIG_CRYPTO_TEST=m
 And copy tcrypt.ko to npcm845 EVB
 test mode: 403(sha1), 404(sha256), 405(sha384), 406(sha512)
 
-root@evb-npcm845:~# insmod ./tcrypt.ko mode=403
+root@evb-npcm845-stage:~# insmod ./tcrypt.ko mode=403
 
 testing speed of async sha1 (nuvoton_sha)
 tcrypt: test  0 (   16 byte blocks,   16 bytes per update,   1 updates):    782 cycles/operation,   48 cycles/byte
@@ -2154,7 +2152,7 @@ J4.2 (GND)
 
 - There will be one mtd device called 'spi1_spare0' after booting to Linux
 ```
-root@evb-npcm845:~# cat /proc/mtd
+root@evb-npcm845-stage:~# cat /proc/mtd
 dev:    size   erasesize  name
 mtd8: 08000000 00001000 "spi1_spare0"
 ```
@@ -2281,22 +2279,22 @@ The client address under test is 0x30.
   ```
 - GetDIB
   ```
-  root@evb-npcm845:~# peci_cmds raw 0x30 0x1 0x8 0xf7
+  root@evb-npcm845-stage:~# peci_cmds raw 0x30 0x1 0x8 0xf7
    0x04 0x31 0x00 0x00 0x00 0x00 0x00 0x00
   ```
 - GetTemp
   ```
-  root@evb-npcm845:~# peci_cmds raw 0x30 0x1 0x2 0x01
+  root@evb-npcm845-stage:~# peci_cmds raw 0x30 0x1 0x2 0x01
    0x00 0x30
   ```
 - RdPkgConfig
   ```
-  root@evb-npcm845:~# peci_cmds raw 0x30 0x5 0x5 0xa1
+  root@evb-npcm845-stage:~# peci_cmds raw 0x30 0x5 0x5 0xa1
    0x40 0x50 0x06 0x00 0x00
   ```
 - RdIAMSR
   ```
-  root@evb-npcm845:~# peci_cmds raw 0x30 0x5 0x9 0xb1
+  root@evb-npcm845-stage:~# peci_cmds raw 0x30 0x5 0x9 0xb1
    0x40 0x65 0x7a 0xc4 0x3f 0x65 0x7a 0xc4 0x3f
   ```
 
@@ -2482,7 +2480,7 @@ CONFIG_RESET_NPCM=y
 # QEMU
 
 **Build a BMC image**
-Since Qemu does not support NPCM SHA HW module, please enable the [config](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-evb/meta-evb-nuvoton/meta-evb-npcm845/recipes-bsp/u-boot/u-boot-nuvoton_%25.bbappend#L8) to disable the SHA HW feature in the uboot recipe and rebuild the bmc image
+Since Qemu does not support NPCM SHA HW module, please enable the [config](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-bsp/u-boot/u-boot-nuvoton_%25.bbappend#L8) to disable the SHA HW feature in the uboot recipe and rebuild the bmc image
 
 **Build QEMU**
 ```
@@ -2510,7 +2508,7 @@ Failed to initialize SPI flash at 0:0 (error -22)
 
 **Solution**
 
-Find a image-u-boot in build/evb-npcm845/tmp/deploy/images/
+Find a image-u-boot in build/evb-npcm845-stage/tmp/deploy/images/
 
 ### Use [IGPS](#igps) tool
 1. BMC enters to FUP mode
@@ -2523,7 +2521,7 @@ Find a image-u-boot in build/evb-npcm845/tmp/deploy/images/
 
 ### Use a workable u-boot binary
 
-1. Find a u-boot.bin in build/evb-npcm845/tmp/deploy/images/
+1. Find a u-boot.bin in build/evb-npcm845-stage/tmp/deploy/images/
 2. load this u-boot.bin to 0x8000
 ```
 U-Boot>setenv gatewayip            192.168.0.254
