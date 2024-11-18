@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/linux-nuvoton:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-nuvoton:${THISDIR}/linux-nuvoton-601:"
 
 SRC_URI:append = " file://evb-npcm845-stage.cfg"
 SRC_URI:append = " file://enable-v4l2.cfg"
@@ -20,7 +20,7 @@ SRC_URI:append = " file://0001-dts-npcm845-evb-enable-slave-eeprom-on-i2c11.patc
 # for af_mctp test
 SRC_URI:append = " file://0001-dts-mctp-i2c-controller.patch"
 SRC_URI:append = " file://0002-dts-mctp-i3c-controller.patch"
-SRC_URI:append = " file://0004-dts-evb-npcm845-enable-udc8.patch"
+SRC_URI:append = " file://0001-dts-arm64-npcm845-evb-enable-udc8.patch"
 SRC_URI:append = " file://mctp.cfg"
 
 # Support af_mctp over pcie vdm

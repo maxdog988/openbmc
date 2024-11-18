@@ -1,0 +1,56 @@
+From b84565a43ffde26e4f0c5382973a4b5b5cdc6ac5 Mon Sep 17 00:00:00 2001
+From: Jim Liu <t90615@gmail.com>
+Date: Mon, 18 Nov 2024 16:29:18 +0800
+Subject: [PATCH] dts: arm64: npcm845 evb: enable udc8
+
+Signed-off-by: Jim Liu <t90615@gmail.com>
+---
+ .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts   | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+index c30977202d48..5e7fb3df879b 100644
+--- a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
++++ b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+@@ -26,6 +26,7 @@ aliases {
+ 		udc5 = &udc5;
+ 		udc6 = &udc6;
+ 		udc7 = &udc7;
++		udc8 = &udc8;
+ 		fiu0 = &fiu0;
+ 		fiu1 = &fiu3;
+ 		fiu2 = &fiux;
+@@ -266,10 +267,6 @@ &ehci1 {
+ 	status = "okay";
+ };
+ 
+-&ehci2 {
+-	status = "okay";
+-};
+-
+ &ohci1 {
+         status = "okay";
+ };
+@@ -321,6 +318,19 @@ &udc7 {
+ 	status = "okay";
+ };
+ 
++&udc8 {
++	status = "okay";
++};
++
++&gcr {
++        mux-controller {
++                udc8_mux: compatible = "mmio-mux";
++                #mux-control-cells = <1>;
++                mux-reg-masks = <0x009C 0xC000>;
++                idle-states = <3>;
++        };
++};
++
+ &lpc_kcs {
+ 	kcs1: kcs1@0 {
+ 		status = "okay";
+-- 
+2.34.1
+
