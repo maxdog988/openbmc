@@ -1,27 +1,25 @@
-From 60bfdde81e7bbc96a9ee8f35ff2e01536894de57 Mon Sep 17 00:00:00 2001
-From: cpchiang <cpchiang1@nuvoton.com>
-Date: Tue, 16 May 2023 13:35:32 +0800
+From 18c82521deac72f772b903bf472cc96c6b0a8854 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Tue, 19 Nov 2024 09:23:38 +0800
 Subject: [PATCH] hwmon temp: add lm75 support
 
-hwmon temp: add lm75 support.
-
-Signed-off-by: cpchiang <cpchiang1@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- src/HwmonTempMain.cpp | 1 +
+ src/hwmon-temp/HwmonTempMain.cpp | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/src/HwmonTempMain.cpp b/src/HwmonTempMain.cpp
-index 340bf11c..ec48ac2a 100644
---- a/src/HwmonTempMain.cpp
-+++ b/src/HwmonTempMain.cpp
-@@ -59,6 +59,7 @@ static const I2CDeviceTypeMap sensorTypes{
-     {"HDC1080", I2CDeviceType{"hdc1080", false}},
-     {"JC42", I2CDeviceType{"jc42", true}},
-     {"LM75A", I2CDeviceType{"lm75a", true}},
+diff --git a/src/hwmon-temp/HwmonTempMain.cpp b/src/hwmon-temp/HwmonTempMain.cpp
+index f7ccb4f0..edd728cf 100644
+--- a/src/hwmon-temp/HwmonTempMain.cpp
++++ b/src/hwmon-temp/HwmonTempMain.cpp
+@@ -65,6 +65,7 @@ static constexpr double minValueTemperature = -128;     // DegreesC
+ namespace fs = std::filesystem;
+ 
+ static const I2CDeviceTypeMap sensorTypes{
 +    {"LM75", I2CDeviceType{"lm75", true}},
-     {"LM95234", I2CDeviceType{"lm95234", true}},
-     {"MAX31725", I2CDeviceType{"max31725", true}},
-     {"MAX31730", I2CDeviceType{"max31730", true}},
+     {"ADM1021", I2CDeviceType{"adm1021", true}},
+     {"DPS310", I2CDeviceType{"dps310", false}},
+     {"EMC1403", I2CDeviceType{"emc1403", true}},
 -- 
-2.17.1
+2.43.0
 
