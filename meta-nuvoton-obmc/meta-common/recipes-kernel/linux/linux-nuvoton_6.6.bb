@@ -28,3 +28,7 @@ SRC_URI:append:nuvoton = " file://0007-driver-mctp-usb-set-max-mtu-to-255.patch"
 
 # Patch for Intel MCTP over PCIe VDM support
 # SRC_URI:append:nuvoton = " file://0015-driver-misc-nuvoton-vdm-support-openbmc-libmctp.patch"
+
+# Patch for Legacy UDC driver
+# SRC_URI:append:nuvoton = " file://0001-usb-gadget-udc-add-NPCM-UDC-support.patch"
+# SRC_URI:append:nuvoton = " file://enable-usb-legacy.cfg"
