@@ -3,6 +3,8 @@ From: Ban Feng <kcfeng0@nuvoton.com>
 Date: Tue, 6 Jun 2023 11:33:34 +0800
 Subject: [PATCH] Create Associations From Defined Property
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 ---
  src/entity_manager.cpp | 29 +++++++++++++++++++++++++++++

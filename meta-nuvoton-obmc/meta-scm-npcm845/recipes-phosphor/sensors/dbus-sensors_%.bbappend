@@ -26,6 +26,6 @@ PACKAGECONFIG = "\
 
 #do_install:append() {
 #    install -d ${D}${systemd_system_unitdir}
-#    install -m 0644 ${WORKDIR}/xyz.openbmc_project.dimmsensor.service \
+#    install -m 0644 ${UNPACKDIR}/xyz.openbmc_project.dimmsensor.service \
 #        ${D}${systemd_system_unitdir}
 #}

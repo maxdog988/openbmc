@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Wed, 8 Feb 2023 14:54:34 +0800
 Subject: [PATCH 2/3] Redfish Add power metrics support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  redfish-core/lib/power.hpp | 75 ++++++++++++++++++++++++++++++++++++++

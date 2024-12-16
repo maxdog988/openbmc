@@ -32,6 +32,6 @@ SRC_URI:append = " file://ipmi-warm-reset.conf"
 SYSTEMD_SERVICE:${PN}:append = " phosphor-ipmi-warm-reset.target"
 
 do_install:append() {
-        install -D -m 0644 ${WORKDIR}/ipmi-warm-reset.conf \
+        install -D -m 0644 ${UNPACKDIR}/ipmi-warm-reset.conf \
                         ${D}${systemd_system_unitdir}/phosphor-ipmi-host.service.d/ipmi-warm-reset.conf
 }

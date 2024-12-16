@@ -12,7 +12,8 @@ SRC_URI = " \
     file://evb-npcm750-ipmi-inventory-sensors.yaml \
     "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -m 0644 -D evb-npcm750-ipmi-fru-properties.yaml \

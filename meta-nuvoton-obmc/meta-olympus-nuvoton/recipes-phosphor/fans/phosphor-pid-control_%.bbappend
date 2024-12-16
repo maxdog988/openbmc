@@ -33,23 +33,23 @@ SYSTEMD_LINK:${PN}:append = " ${@compose_list(d, 'DISABLE_PID_FMT', 'OBMC_CHASSI
 
 do_install:append() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/fan-default-speed.sh ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/fan-default-speed.sh ${D}/${bindir}
     install -d ${D}${systemd_unitdir}/system
 
     if [ "${DISTRO}" != "olympus-entity" ];then
         install -d ${D}${datadir}/swampd
-        install -m 0644 -D ${WORKDIR}/config-olympus-nuvoton.json \
+        install -m 0644 -D ${UNPACKDIR}/config-olympus-nuvoton.json \
             ${D}${datadir}/swampd/config.json
-        install -m 0644 ${WORKDIR}/phosphor-pid-control-olympus.service \
+        install -m 0644 ${UNPACKDIR}/phosphor-pid-control-olympus.service \
             ${D}${systemd_unitdir}/system/phosphor-pid-control.service
     fi
 
-    install -m 0644 ${WORKDIR}/phosphor-pid-control-stop.service \
+    install -m 0644 ${UNPACKDIR}/phosphor-pid-control-stop.service \
         ${D}${systemd_unitdir}/system
-    #install -m 0644 ${WORKDIR}/phosphor-pid-control-bootcheck.service \
+    #install -m 0644 ${UNPACKDIR}/phosphor-pid-control-bootcheck.service \
     #    ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/fan-reboot-control.service \
+    install -m 0644 ${UNPACKDIR}/fan-reboot-control.service \
         ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/fan-boot-control.service \
+    install -m 0644 ${UNPACKDIR}/fan-boot-control.service \
         ${D}${systemd_unitdir}/system
 }

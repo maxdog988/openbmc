@@ -17,6 +17,8 @@ argument be the Action taken.
 Deleted the watchdog monitor for `Enabled` flag. Property changed on
 `Enabled` does not indicate a timeout watchdog event.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Change-Id: I3cd09912648e7a38bbfe187c06d596bec654d313
 Signed-off-by: Willy Tu <wltu@google.com>
 ---

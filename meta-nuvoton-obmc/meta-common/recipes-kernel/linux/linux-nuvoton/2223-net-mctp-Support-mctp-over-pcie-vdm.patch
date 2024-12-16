@@ -3,6 +3,8 @@ From: Mia Lin <mimi05633@gmail.com>
 Date: Tue, 5 Dec 2023 14:52:43 +0800
 Subject: [PATCH 1/1] net: mctp: Support mctp over pcie vdm
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  drivers/misc/npcm-vdm.c      |  54 +++-

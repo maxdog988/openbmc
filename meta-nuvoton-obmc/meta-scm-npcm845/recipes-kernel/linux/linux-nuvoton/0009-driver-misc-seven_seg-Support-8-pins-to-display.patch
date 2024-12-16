@@ -6,6 +6,8 @@ Subject: [PATCH 1/1] driver: misc: seven_seg: Support 8 pins to display
 - Keep the status of post code
 - Fix unbind panic and bind fail issue
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  drivers/misc/seven_seg_disp.c | 12 +++++-----

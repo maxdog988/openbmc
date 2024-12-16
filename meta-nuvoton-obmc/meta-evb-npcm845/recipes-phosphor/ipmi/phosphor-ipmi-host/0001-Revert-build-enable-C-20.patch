@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Thu, 5 May 2022 11:04:15 +0800
 Subject: [PATCH] Revert "build: enable C++20"
 
+Upstream-Status: Inappropriate [oe-specific]
+
 This reverts commit f53696edb8c9560b5d6a0f681429cf67f168a083.
 ---
  configure.ac | 2 +-

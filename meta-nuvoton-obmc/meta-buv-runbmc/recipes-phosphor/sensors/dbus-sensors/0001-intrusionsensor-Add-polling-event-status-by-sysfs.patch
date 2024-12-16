@@ -11,6 +11,8 @@ E.g. the json config as below.
      "Type": "ChassisIntrusionSensor"
  }
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  src/ChassisIntrusionSensor.cpp | 120 +++++++++++++++++++++++++++++++--

@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 14 Feb 2023 13:15:33 +0800
 Subject: [PATCH] scm-npcm845 board setting
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  board/nuvoton/arbel/arbel.c | 19 +++++++++++++++++++

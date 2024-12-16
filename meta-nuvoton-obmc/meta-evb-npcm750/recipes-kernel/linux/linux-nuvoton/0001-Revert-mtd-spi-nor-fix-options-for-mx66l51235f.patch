@@ -3,6 +3,8 @@ From: kwliu <kwliu@nuvoton.com>
 Date: Mon, 8 Apr 2019 14:11:27 +0800
 Subject: [PATCH] Revert "mtd: spi-nor: fix options for mx66l51235f"
 
+Upstream-Status: Inappropriate [oe-specific]
+
 This reverts commit cba4523ea02ef904385986f9e8ca569e7d8ee596.
 ---
  drivers/mtd/spi-nor/spi-nor.c | 2 +-

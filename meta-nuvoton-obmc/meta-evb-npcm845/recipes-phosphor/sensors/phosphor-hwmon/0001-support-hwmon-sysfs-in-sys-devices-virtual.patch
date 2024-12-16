@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Thu, 24 Jun 2021 14:09:03 +0800
 Subject: [PATCH] support hwmon sysfs in /sys/devices/virtual
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---

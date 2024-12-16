@@ -4,6 +4,8 @@ Date: Tue, 18 Apr 2023 11:23:55 +0800
 Subject: [PATCH 10/10] phosphor-power: support PSU hot plug DBus property and
  removed/installed log.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  elog-errors.hpp                               | 110 ++++++++++++++++++

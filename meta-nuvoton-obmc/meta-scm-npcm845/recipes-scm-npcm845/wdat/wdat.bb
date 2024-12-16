@@ -11,7 +11,8 @@ FILESEXTRAPATHS:append := "${THISDIR}/files:"
 
 inherit cmake pkgconfig systemd
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 SRC_URI = "file://CMakeLists.txt \
 		  file://wdat.cpp \
 		  file://wdat@.service \
@@ -28,6 +29,6 @@ do_install() {
     install -d ${D}/lib/systemd/system
     install -Dm755 ${S}/wdat@.service ${D}/lib/systemd/system
     install -d ${D}${datadir}/wdat
-    install -m 0644 -D ${WORKDIR}/action.json \
+    install -m 0644 -D ${UNPACKDIR}/action.json \
         ${D}${datadir}/wdat/action.json
 }

@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:44:30 +0800
 Subject: [PATCH 14/18] add oem sel support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  dbus-sdr/storagecommands.cpp | 21 +++++++++++++++++++++

@@ -13,6 +13,8 @@ required for compatibility with Intel platforms.
    5. Assign watchdog cause for correct reset cause reporting
    6. Add NMI Pre-Interrupt support for IPMI watchdog timer.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: James Feist <james.feist@linux.intel.com>
 Signed-off-by: Ren Yu <yux.ren@intel.com>
 Signed-off-by: Yong Li <yong.b.li@linux.intel.com>

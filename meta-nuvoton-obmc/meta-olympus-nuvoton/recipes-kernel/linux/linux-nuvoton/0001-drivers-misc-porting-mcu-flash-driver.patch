@@ -3,6 +3,8 @@ From: Allen <jhkang@nuvoton.com>
 Date: Tue, 20 Sep 2022 14:34:25 +0800
 Subject: [PATCH] drivers: misc: porting mcu flash driver
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen <jhkang@nuvoton.com>
 ---
  drivers/misc/Kconfig             |   6 +

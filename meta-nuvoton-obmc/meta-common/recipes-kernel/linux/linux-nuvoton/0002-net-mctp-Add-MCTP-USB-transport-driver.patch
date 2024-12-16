@@ -12,6 +12,8 @@ WIP. Still todo:
  - power management
  - skb/urb pre-allocation
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  drivers/net/mctp/Kconfig    |  10 ++

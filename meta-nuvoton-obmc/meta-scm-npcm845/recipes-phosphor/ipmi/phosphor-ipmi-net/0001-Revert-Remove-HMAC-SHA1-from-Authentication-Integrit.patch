@@ -4,6 +4,8 @@ Date: Thu, 7 Jul 2022 16:27:15 +0800
 Subject: [PATCH 1/4] Revert "Remove HMAC-SHA1 from Authentication/Integrity
  Alg"
 
+Upstream-Status: Inappropriate [oe-specific]
+
 This reverts commit 4c494398a36d9f1bdc4f256f937487c7ebcc4e95.
 ---
  auth_algo.hpp      | 3 ++-

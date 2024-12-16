@@ -12,12 +12,12 @@ do_install:append() {
 	
 	install -m 0644 -D ${WORKDIR}/git/configurations/intel_front_panel.json \
         ${D}${datadir}/entity-manager/configurations/intel_front_panel.json
-	install -m 0644 -D ${WORKDIR}/is162f22.json \
+	install -m 0644 -D ${UNPACKDIR}/is162f22.json \
 		${D}${datadir}/entity-manager/configurations/is162f22.json
-    install -m 0644 -D ${WORKDIR}/scm.json \
+    install -m 0644 -D ${UNPACKDIR}/scm.json \
         ${D}${datadir}/entity-manager/configurations/scm.json
-    install -m 0644 -D ${WORKDIR}/hpm.json \
+    install -m 0644 -D ${UNPACKDIR}/hpm.json \
         ${D}${datadir}/entity-manager/configurations/hpm.json
-    install -m 0644 ${WORKDIR}/blacklist.json \
+    install -m 0644 ${UNPACKDIR}/blacklist.json \
         ${D}${datadir}/entity-manager/blacklist.json
 }

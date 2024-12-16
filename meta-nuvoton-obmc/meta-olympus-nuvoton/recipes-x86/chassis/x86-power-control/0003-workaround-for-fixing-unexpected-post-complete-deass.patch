@@ -4,6 +4,8 @@ Date: Mon, 10 Jan 2022 09:22:17 +0800
 Subject: [PATCH 3/3] workaround for fixing unexpected post complete deassert
  event in olympus
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  src/power_control.cpp | 4 +---

@@ -6,6 +6,6 @@ FILES:${PN}:append:buv-runbmc = " ${datadir}/x86-power-control/power-config-host
 
 do_install:append:buv-runbmc() {
     install -d ${D}${datadir}/x86-power-control
-    install -m 0644 -D ${WORKDIR}/power-config-host0.json \
+    install -m 0644 -D ${UNPACKDIR}/power-config-host0.json \
         ${D}${datadir}/x86-power-control/power-config-host0.json
 }

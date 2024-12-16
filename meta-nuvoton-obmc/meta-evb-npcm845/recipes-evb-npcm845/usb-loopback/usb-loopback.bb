@@ -11,10 +11,10 @@ SRC_URI += "file://usb_loopback.sh \
 
 do_install() {
     install -d ${D}/${sbindir}
-    install -m 0755 ${WORKDIR}/usb_loopback.sh ${D}/${sbindir}
+    install -m 0755 ${UNPACKDIR}/usb_loopback.sh ${D}/${sbindir}
 
     install -d ${D}${systemd_unitdir}/system/
-    install -m 0644 ${WORKDIR}/usb_loopback.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${UNPACKDIR}/usb_loopback.service ${D}${systemd_unitdir}/system
 }
 
 NATIVE_SYSTEMD_SUPPORT = "1"

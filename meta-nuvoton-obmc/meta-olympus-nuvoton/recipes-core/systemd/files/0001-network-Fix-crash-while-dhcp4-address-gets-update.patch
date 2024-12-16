@@ -3,6 +3,7 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 4 May 2021 17:27:28 +0800
 Subject: [PATCH] network: Fix crash while dhcp4 address gets update
 
+Upstream-Status: Inappropriate [oe-specific]
 ---
  src/network/networkd-address.c | 3 +++
  src/network/networkd-address.h | 1 +

@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Mon, 20 Jun 2022 16:06:39 +0800
 Subject: [PATCH] redfish: log_services: fix createDump functionality
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  redfish-core/lib/log_services.hpp | 46 ++++++++++++++++++++++++++++---

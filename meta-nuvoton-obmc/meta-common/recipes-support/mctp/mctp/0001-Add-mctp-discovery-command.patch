@@ -13,6 +13,8 @@ Base on
 
       Version 1.1
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  meson.build |  7 ++++++

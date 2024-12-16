@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 17 Oct 2022 08:41:19 +0800
 Subject: [PATCH] Add RemoteIPAddr support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  message_handler.cpp |  3 +-
  socket_channel.hpp  | 70 +++++++++++++++++++++++++++++++++++++++++++++

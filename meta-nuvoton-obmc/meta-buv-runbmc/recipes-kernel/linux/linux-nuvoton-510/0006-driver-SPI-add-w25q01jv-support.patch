@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 28 Aug 2020 09:45:40 +0800
 Subject: [PATCH] driver: SPI: add w25q01jv support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  drivers/mtd/spi-nor/spi-nor.c | 2 ++
  1 file changed, 2 insertions(+)

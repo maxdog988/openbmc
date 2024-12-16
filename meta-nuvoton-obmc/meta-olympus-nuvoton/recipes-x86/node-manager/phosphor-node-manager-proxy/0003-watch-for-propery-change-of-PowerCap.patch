@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Fri, 31 Jan 2020 16:42:03 +0800
 Subject: [PATCH] watch for propery change of PowerCap
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  NodeManagerProxy.hpp | 26 ++++++++++++++++++++++++++
  1 file changed, 26 insertions(+)

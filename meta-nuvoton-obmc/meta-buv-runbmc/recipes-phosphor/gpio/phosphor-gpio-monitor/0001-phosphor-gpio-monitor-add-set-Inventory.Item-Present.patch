@@ -4,6 +4,8 @@ Date: Fri, 6 Sep 2024 18:40:22 +0800
 Subject: [PATCH] Subject: [PATCH] phosphor-gpio-monitor: add set
  Inventory.Item Present property
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 Signed-off-by: Michael Chang <hwchang2@nuvoton.com>
 ---

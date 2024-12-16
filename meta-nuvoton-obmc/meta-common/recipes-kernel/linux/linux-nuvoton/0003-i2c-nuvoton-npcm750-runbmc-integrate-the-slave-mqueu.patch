@@ -6,6 +6,8 @@ Subject: [PATCH] i2c: nuvoton-npcm750-runbmc: integrate the slave mqueue
 1. Add support for the runbmc IPMB functionality
 2. The slave mqueue node is required on the i2c bus 5 for runbmc.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: kfting <kfting@nuvoton.com>
 ---
  .../sysfs-bus-i2c-devices-slave-mqueue        |  10 +

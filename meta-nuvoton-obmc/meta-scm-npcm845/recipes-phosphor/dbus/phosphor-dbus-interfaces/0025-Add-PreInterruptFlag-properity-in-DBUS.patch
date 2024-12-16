@@ -13,6 +13,8 @@ need record PreTimeoutInterruptOccurFlag
 at xyz.openbmmc_project.State.Watchdog when watchdog
 pre-timeout interrupt occurred.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ren Yu <yux.ren@intel.com>
 ---
  yaml/xyz/openbmc_project/State/Watchdog.interface.yaml | 5 +++++

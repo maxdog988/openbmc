@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 3 Sep 2024 12:07:58 +0800
 Subject: [PATCH] fix percentage type show
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  dbus-sdr/sensorcommands.cpp | 21 ++++++++++++++++++++-
  1 file changed, 20 insertions(+), 1 deletion(-)

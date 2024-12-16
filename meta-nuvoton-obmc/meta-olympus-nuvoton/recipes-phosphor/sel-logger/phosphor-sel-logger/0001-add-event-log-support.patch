@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Fri, 16 Oct 2020 14:49:24 +0800
 Subject: [PATCH] add event log support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  CMakeLists.txt                |  11 +++

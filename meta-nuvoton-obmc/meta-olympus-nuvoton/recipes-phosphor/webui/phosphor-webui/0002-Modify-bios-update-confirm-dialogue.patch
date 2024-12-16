@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/app/configuration/controllers/firmware-controller.html b/app/configuration/controllers/firmware-controller.html
 index 98f9c008..08b87579 100644
 --- a/app/configuration/controllers/firmware-controller.html

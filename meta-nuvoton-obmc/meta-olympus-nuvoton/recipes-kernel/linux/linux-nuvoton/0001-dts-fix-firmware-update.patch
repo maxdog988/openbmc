@@ -4,6 +4,8 @@ Date: Fri, 21 Oct 2022 08:35:47 +0800
 Subject: [PATCH 1/1] meta-quanta: meta-olympus-nuvoton: fix firmware update issues
 Fix image-u-boot too big and flash permission denied issues
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: yhyang2 <yhyang2@nuvoton.com>
 ---
  arch/arm/boot/dts/nuvoton-npcm750-runbmc-olympus.dts | 3 +--

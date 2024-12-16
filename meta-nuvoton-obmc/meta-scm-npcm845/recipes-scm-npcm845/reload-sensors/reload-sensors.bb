@@ -15,10 +15,10 @@ SRC_URI = " file://reload-sensors.sh \
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/reload-sensors.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/reload-sensors.sh ${D}${bindir}/
 
     install -d ${D}${systemd_system_unitdir}
-    install -m 0644 ${WORKDIR}/reload-sensors.service ${D}${systemd_system_unitdir}
+    install -m 0644 ${UNPACKDIR}/reload-sensors.service ${D}${systemd_system_unitdir}
 }
 
 SYSTEMD_PACKAGES = "${PN}"

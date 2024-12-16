@@ -15,10 +15,10 @@ SYSTEMD_SERVICE:${PN} = " fan_init.service"
 
 do_install() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/fan_init.sh ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/fan_init.sh ${D}/${bindir}
 
     install -d ${D}${systemd_system_unitdir}
-    install -m 0644 ${WORKDIR}/fan_init.service \
+    install -m 0644 ${UNPACKDIR}/fan_init.service \
         ${D}${systemd_system_unitdir}
 }
 

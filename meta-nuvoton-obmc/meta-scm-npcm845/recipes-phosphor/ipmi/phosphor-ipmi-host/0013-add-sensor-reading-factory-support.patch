@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 3 Sep 2024 12:01:16 +0800
 Subject: [PATCH] add sensor reading factory support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---

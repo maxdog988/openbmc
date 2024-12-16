@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/src/network/networkd-manager.c b/src/network/networkd-manager.c
 index a365bcbde7..85676bfb6a 100644
 --- a/src/network/networkd-manager.c

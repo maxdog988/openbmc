@@ -18,6 +18,8 @@ end up with packets on the per-cpu NAPI backlog queue.
 [We will need proper MCTP skb hash support for RPS, but that will be a
 later change...]
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  drivers/net/mctp/mctp-serial.c | 2 +-

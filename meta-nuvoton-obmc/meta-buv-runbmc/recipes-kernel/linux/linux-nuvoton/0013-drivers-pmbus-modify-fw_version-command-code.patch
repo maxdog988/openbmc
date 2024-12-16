@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Wed, 28 Jun 2023 16:45:32 +0800
 Subject: [PATCH] drivers: pmbus: modify fw_version command code
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  drivers/hwmon/pmbus/inspur-ipsps.c | 4 ++--

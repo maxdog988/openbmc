@@ -3,6 +3,8 @@ From: kwliu <kwliu@nuvoton.com>
 Date: Mon, 8 Jul 2019 10:05:09 +0800
 Subject: [PATCH] add tps53622 and tps53659
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  drivers/hwmon/pmbus/Kconfig    |  17 +++++

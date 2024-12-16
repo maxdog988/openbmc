@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 21 Feb 2023 17:14:15 +0800
 Subject: [PATCH] Fan fault test
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  power-supply/power_supply.cpp | 1 +
  1 file changed, 1 insertion(+)

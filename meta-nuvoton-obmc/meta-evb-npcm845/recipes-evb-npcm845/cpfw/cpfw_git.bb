@@ -5,7 +5,8 @@ LICENSE = "CLOSED"
 
 SRC_URI = "file://cp_fw.elf"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 INSANE_SKIP:${PN} = "arch"
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

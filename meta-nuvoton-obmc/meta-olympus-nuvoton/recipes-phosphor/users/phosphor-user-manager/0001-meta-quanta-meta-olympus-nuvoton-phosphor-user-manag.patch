@@ -6,6 +6,8 @@ Subject: [PATCH] meta-quanta:meta-olympus-nuvoton:phosphor-user-manager pass
 
 1. Deal with the group id and name consistency
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: kfting <kfting@nuvoton.com>
 ---
  user_mgr.cpp | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++-

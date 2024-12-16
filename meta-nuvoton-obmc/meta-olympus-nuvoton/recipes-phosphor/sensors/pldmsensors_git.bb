@@ -25,5 +25,5 @@ SRC_URI += "file://pldmsensors.json "
 
 do_install:append() {
     install -d ${D}${sysconfdir}/default
-    install -m 0644 ${WORKDIR}/pldmsensors.json ${D}${sysconfdir}/default
+    install -m 0644 ${UNPACKDIR}/pldmsensors.json ${D}${sysconfdir}/default
 }

@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 6 May 2022 16:29:49 +0800
 Subject: [PATCH] update NMISource interface from intel-dbus-interface
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  .../Chassis/Control/NMISource.interface.yaml  | 27 ++++++++++---------

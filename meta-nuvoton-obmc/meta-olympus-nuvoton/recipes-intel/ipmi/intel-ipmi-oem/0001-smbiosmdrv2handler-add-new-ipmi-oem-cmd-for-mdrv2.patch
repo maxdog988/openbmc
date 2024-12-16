@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Mon, 8 Jun 2020 10:52:40 +0800
 Subject: [PATCH] smbiosmdrv2handler: add new ipmi oem cmd for mdrv2
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  include/oemcommands.hpp        |  1 +

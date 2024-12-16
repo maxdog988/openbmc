@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 9 May 2024 16:44:56 +0800
 Subject: [PATCH] Enable openbmc copy base file to ram feature
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
  include/configs/arbel.h | 1 +

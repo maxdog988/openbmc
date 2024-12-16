@@ -7,6 +7,8 @@ This interface definition was created on base of the MCTP design
 proposed in this document:
 https://gerrit.openbmc-project.xyz/c/openbmc/docs/+/28424/9/designs/mctp.md
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Arun P. Mohanan <arun.p.m@linux.intel.com>
 Signed-off-by: Mariusz Kowalski <mariusz.kowalski@intel.com>
 Signed-off-by: Karol Wachowski <karol.wachowski@intel.com>

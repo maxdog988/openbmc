@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 10:54:09 +0800
 Subject: [PATCH 2/2] support chassis on/off and post complete target
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  src/power_control.cpp | 66 +++++++++++++++++++++++++++++++++++++++++++

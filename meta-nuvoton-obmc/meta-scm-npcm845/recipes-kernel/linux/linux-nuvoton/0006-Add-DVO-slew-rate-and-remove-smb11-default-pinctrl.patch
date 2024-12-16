@@ -3,6 +3,8 @@ From: Monte Lee <Monte_Lee@wiwynn.com>
 Date: Tue, 7 Mar 2023 13:57:48 +0800
 Subject: [PATCH] Add DVO slew rate and remove smb11 default pinctrl
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   |  6 +-
  .../nuvoton/nuvoton-npcm845-pincfg-evb.dtsi   | 60 +++++++++++++++++++

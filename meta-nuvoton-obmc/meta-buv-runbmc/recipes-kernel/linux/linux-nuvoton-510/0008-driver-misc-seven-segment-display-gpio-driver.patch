@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Thu, 25 Mar 2021 13:12:00 +0800
 Subject: [PATCH] driver: misc: seven segment display/gpio driver
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  drivers/misc/Kconfig          |  16 +++

@@ -10,5 +10,5 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 do_install () {
 	install -d ${D}${bindir}/
-	install ${WORKDIR}/rd_perf_test ${WORKDIR}/wr_perf_test ${D}${bindir}
+	install ${UNPACKDIR}/rd_perf_test ${UNPACKDIR}/wr_perf_test ${D}${bindir}
 }

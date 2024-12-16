@@ -16,6 +16,8 @@ Add delay for NPCM BIC.
    Add delay 100us~110us for max write 255 bytes.
    If write data more than 255 bytes, need increase the delay value.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: cpchiang <cpchiang1@nuvoton.com>
 ---
  drivers/i3c/master/svc-i3c-master.c | 8 ++++++++

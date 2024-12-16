@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Fri, 27 Sep 2024 15:35:19 +0800
 Subject: [PATCH] dts: i3c slave
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts | 9 ++++++---

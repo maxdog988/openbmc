@@ -3,6 +3,8 @@ From: Mia Lin <mimi05633@gmail.com>
 Date: Mon, 10 Jul 2023 18:30:32 +0800
 Subject: [PATCH 2/2] driver: misc: nuvoton: vdm: support openbmc libmctp
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  drivers/misc/npcm-vdm/vdm_common.c | 17 ++++++++++++-----

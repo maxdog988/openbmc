@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 17 Feb 2022 08:50:52 +0800
 Subject: [PATCH] Support ignore update uboot with eMMC image
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
  obmc-flash-bmc | 41 +++++++++++++++++++++++++++++------------

@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 1 Aug 2022 17:59:00 +0800
 Subject: [PATCH] rtl8211f: customized led
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  drivers/net/phy/realtek.c | 21 +++++++++++++++++++++

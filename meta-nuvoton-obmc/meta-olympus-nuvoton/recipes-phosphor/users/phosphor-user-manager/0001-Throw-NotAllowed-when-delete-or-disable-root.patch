@@ -6,6 +6,8 @@ Subject: [PATCH] Throw NotAllowed when delete or disable root
 Throw NotAllowed execption when try to delete or disable root instead of
 throw InternalFailure execption.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 

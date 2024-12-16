@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 16 Aug 2022 16:58:12 +0800
 Subject: [PATCH 4/4] set channel security keys
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  command/rakp34.cpp | 12 ++++++++++++

@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Tue, 23 Feb 2021 11:39:34 +0800
 Subject: [PATCH 6/6] server-control: support bmc last reboot cause information
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  app/common/services/api-utils.js              | 20 +++++++++++++++++++

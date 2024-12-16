@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Thu, 9 Jan 2020 11:21:30 +0800
 Subject: [PATCH 24/34] driver: ncsi: replace del_timer_sync() with del_timer()
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  net/ncsi/ncsi-manage.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

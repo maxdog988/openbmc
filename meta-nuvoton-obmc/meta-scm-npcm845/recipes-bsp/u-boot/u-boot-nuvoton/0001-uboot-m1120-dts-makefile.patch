@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Wed, 2 Aug 2023 16:31:13 +0800
 Subject: [PATCH] uboot m1120 dts makefile
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
  arch/arm/dts/Makefile | 3 ++-

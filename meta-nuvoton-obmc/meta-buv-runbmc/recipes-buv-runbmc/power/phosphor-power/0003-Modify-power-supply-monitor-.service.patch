@@ -6,6 +6,8 @@ Subject: [PATCH 3/3] Modify power-supply-monitor@.service
 `psu-monitor` can't create powersupply until
 xyz.openbmc_project.Inventory.Manager.service is running.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  services/power-supply-monitor@.service | 8 ++++----

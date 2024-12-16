@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Tue, 19 Jul 2022 10:54:08 +0800
 Subject: [PATCH] Support bridging commands
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  bridgingcommands.cpp | 542 +++++++++++++++++++++++++++++++++++++++++++

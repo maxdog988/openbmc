@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Mon, 20 Jul 2020 16:54:00 +0800
 Subject: [PATCH 2/2] move emc debug message to dev_dbg
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  drivers/net/ethernet/nuvoton/npcm7xx_emc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)

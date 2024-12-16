@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 8 Jul 2022 16:41:26 +0800
 Subject: [PATCH 07/18] Set is from system interface return false
 
+Upstream-Status: Inappropriate [oe-specific]
+
 The ipmitool get the event is from system interface return false, but
 ipmid set true as default. Change the ipmid default value to send event.
 ---

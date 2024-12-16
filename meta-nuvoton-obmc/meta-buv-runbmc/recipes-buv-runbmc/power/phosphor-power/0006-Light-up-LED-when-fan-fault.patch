@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 21 Feb 2023 17:19:12 +0800
 Subject: [PATCH] Light up LED when fan fault
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  power-supply/power_supply.cpp | 9 +++++++++
  1 file changed, 9 insertions(+)

@@ -3,6 +3,8 @@ From: Allen <jhkang@nuvoton.com>
 Date: Tue, 4 Oct 2022 18:32:55 +0800
 Subject: [PATCH 1/5] fix build error due to c++17
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  CMakeLists.txt       | 2 +-

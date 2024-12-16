@@ -5,6 +5,8 @@ Subject: [PATCH] Update i2c slave mqueue for kernel 6.1
 
 Update i2c slave mqueue patch for i2c driver structure changed.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
  drivers/i2c/i2c-slave-mqueue.c | 4 ++--

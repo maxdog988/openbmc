@@ -8,6 +8,8 @@ MCTP-over-USB transport.
 
 WIP; needs more testing in error paths.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  MAINTAINERS                          |   1 +

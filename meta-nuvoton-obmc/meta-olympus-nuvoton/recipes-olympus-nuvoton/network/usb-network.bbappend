@@ -9,10 +9,10 @@ FILES:${PN}:append = " ${sysconfdir_native}/systemd/network/00-bmc-usb0.network"
 
 do_install:append() {
     install -d ${D}${sysconfdir_native}/systemd/network/
-    install -m 0644 ${WORKDIR}/00-bmc-usb0.network \
+    install -m 0644 ${UNPACKDIR}/00-bmc-usb0.network \
         ${D}${sysconfdir_native}/systemd/network
 
     install -d ${D}${datadir}/usb-network
-    install -m 0644 -D ${WORKDIR}/usb-network.conf \
+    install -m 0644 -D ${UNPACKDIR}/usb-network.conf \
         ${D}${datadir}/usb-network
 }

@@ -14,7 +14,7 @@ SRC_URI:append:scm-npcm845 = " file://bmc_health_config.json"
 
 #do_install:append:scm-npcm845() {
 #    install -d ${D}/${sysconfdir}/healthMon/
-#    install -m 0644 ${WORKDIR}/bmc_health_config.json ${D}/${sysconfdir}/healthMon/
-#    install -D -m 0644 ${WORKDIR}/utilization-health-sel@.service ${D}${systemd_system_unitdir}
-#    install -D -m 0755 ${WORKDIR}/utilization-health-sel.sh ${D}/${bindir}/utilization-health-sel.sh
+#    install -m 0644 ${UNPACKDIR}/bmc_health_config.json ${D}/${sysconfdir}/healthMon/
+#    install -D -m 0644 ${UNPACKDIR}/utilization-health-sel@.service ${D}${systemd_system_unitdir}
+#    install -D -m 0755 ${UNPACKDIR}/utilization-health-sel.sh ${D}/${bindir}/utilization-health-sel.sh
 #}

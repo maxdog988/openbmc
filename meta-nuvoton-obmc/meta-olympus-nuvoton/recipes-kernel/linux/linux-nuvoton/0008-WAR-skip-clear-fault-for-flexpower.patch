@@ -6,6 +6,8 @@ Subject: [PATCH] WAR: skip clear fault for flexpower
 There is a bug in this psu.
 When BMC sends clear fault cmd to this psu, the i2c bus will be hanged up due to psu firmware issue.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  drivers/hwmon/pmbus/pmbus.c                          | 1 +

@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 6 Feb 2020 12:00:51 +0800
 Subject: [PATCH 4/5] add force recovery functions
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  NodeManagerProxy.cpp | 107 +++++++++++++++++++++++++++++++++++++++++++
  NodeManagerProxy.hpp |  21 +++++++++

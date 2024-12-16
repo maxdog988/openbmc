@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 3 Feb 2020 18:36:32 +0800
 Subject: [PATCH 2/5] fixed sensors name
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  NodeManagerProxy.cpp | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)

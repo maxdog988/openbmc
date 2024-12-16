@@ -5,6 +5,8 @@ Subject: [PATCH] boot openbmc from emmc
 
 Add env for boot Openbmc from eMMC.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  include/configs/arbel.h | 6 ++++++

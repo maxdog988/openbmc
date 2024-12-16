@@ -14,6 +14,8 @@ Tested-by:
 Verified channel access through ipmitool get/set channel
 access command
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Change-Id: I3b592a19363eef684e31d5f7c34dad8f2f9211df
 Signed-off-by: AppaRao Puli <apparao.puli@linux.intel.com>
 Signed-off-by: Yong Li <yong.b.li@linux.intel.com>

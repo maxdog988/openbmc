@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 4 Aug 2023 13:28:41 +0800
 Subject: [PATCH] Add smb23b pin define
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
  arch/arm/dts/nuvoton-common-npcm8xx.dtsi | 4 ++++

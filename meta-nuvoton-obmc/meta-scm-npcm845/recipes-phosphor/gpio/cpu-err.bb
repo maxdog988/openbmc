@@ -8,7 +8,8 @@ inherit obmc-phosphor-systemd
 DEPENDS += "phosphor-gpio-monitor"
 RDEPENDS:${PN} += "phosphor-gpio-monitor-monitor"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 SRC_URI += "file://toggle_caterr_led.sh"
 
 do_install() {

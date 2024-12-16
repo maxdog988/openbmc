@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 16 Sep 2024 16:23:56 +0800
 Subject: [PATCH] driver: usb: f_mctp: add high speed support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  drivers/usb/gadget/function/f_mctp.c | 32 +++++++++++++++++++++++++++-
  1 file changed, 31 insertions(+), 1 deletion(-)

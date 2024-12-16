@@ -18,5 +18,5 @@ SYSTEMD_SERVICE:${PN} = "dpinit.service"
 
 do_install() {
     install -m 0755 -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/dpinit ${D}/usr/bin/
+    install -m 0755 ${UNPACKDIR}/dpinit ${D}/usr/bin/
 }

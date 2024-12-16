@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 30 Nov 2020 14:33:04 +0800
 Subject: [PATCH] driver: misc: nuvoton: vdm: support openbmc libmctp
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  drivers/misc/npcm-vdm/vdm_common.c | 87 +++---------------------------
  drivers/misc/npcm-vdm/vdm_module.c | 26 +++++++--

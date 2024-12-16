@@ -19,6 +19,8 @@ Result:
 "BootProgress": "xyz.openbmc_project.State.Boot.Progress.ProgressStages.OSStart",
 "OperatingSystemState": "xyz.openbmc_project.State.OperatingSystem.Status.OSStatus.Standby" }
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  lpcsnoop/snoop.hpp |  27 +++++++++

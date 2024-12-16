@@ -11,6 +11,6 @@ SYSTEMD_SERVICE:${PN}:append = " \
 
 do_install:append() {
     install -d ${D}${systemd_unitdir}/system/
-    install -m 0644 ${WORKDIR}/phosphor-ecc.service \
+    install -m 0644 ${UNPACKDIR}/phosphor-ecc.service \
         ${D}${systemd_unitdir}/system
 }

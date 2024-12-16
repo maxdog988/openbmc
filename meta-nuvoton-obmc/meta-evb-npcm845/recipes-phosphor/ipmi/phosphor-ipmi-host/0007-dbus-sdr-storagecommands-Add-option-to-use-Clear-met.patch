@@ -26,6 +26,8 @@ Tested:
    after the latest Record ID before the clear. This indicates that
    the SEL files were cleared by the IPMI Clear SEL command.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Charles Boyer <Charles.Boyer@fii-usa.com>
 Change-Id: I4461b4ba7449c12e276b1b0e0e7d54ace611643f
 ---

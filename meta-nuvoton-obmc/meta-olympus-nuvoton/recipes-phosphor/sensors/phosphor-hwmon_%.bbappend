@@ -64,5 +64,5 @@ SYSTEMD_LINK:${PN}:append = " ${@compose_list(d, 'DISABLE_POWER_FMT', 'OBMC_CHAS
 
 do_install:append() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/olympus-reload-sensor.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/olympus-reload-sensor.sh ${D}${bindir}/
 }

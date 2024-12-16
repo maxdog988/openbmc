@@ -3,6 +3,8 @@ From: kfting <kfting@nuvoton.com>
 Date: Thu, 16 Jul 2020 14:22:53 +0800
 Subject: [PATCH] Modify dbus call style for calling setTime
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: kfting <kfting@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---

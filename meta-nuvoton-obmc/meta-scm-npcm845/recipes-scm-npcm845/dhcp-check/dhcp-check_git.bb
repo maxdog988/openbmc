@@ -1,7 +1,8 @@
 SUMMARY = "DHCP Check"
 DESCRIPTION = "Script to check and restart network interface if DHCP fails to get an address"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 SRC_URI = "file://dhcp-check.sh \
            file://dhcp-check.service \
 "

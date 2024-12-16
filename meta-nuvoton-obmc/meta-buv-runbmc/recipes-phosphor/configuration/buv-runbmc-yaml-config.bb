@@ -12,7 +12,8 @@ SRC_URI:buv-runbmc = " \
     file://buv-runbmc-ipmi-inventory-sensors.yaml \
     "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install:buv-runbmc() {
     install -m 0644 -D buv-runbmc-ipmi-fru-properties.yaml \

@@ -40,6 +40,8 @@ root@evb-npcm845:~# busctl tree xyz.openbmc_project.HwmonTempSensor
         ├─/xyz/openbmc_project/sensors/temperature/BMC_CPU_Temp1
         └─ ...
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---

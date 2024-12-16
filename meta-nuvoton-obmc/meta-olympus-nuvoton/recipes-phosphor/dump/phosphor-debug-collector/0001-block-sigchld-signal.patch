@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/dump_manager_main.cpp b/dump_manager_main.cpp
 index fe1a147..59c2ed6 100644
 --- a/dump_manager_main.cpp

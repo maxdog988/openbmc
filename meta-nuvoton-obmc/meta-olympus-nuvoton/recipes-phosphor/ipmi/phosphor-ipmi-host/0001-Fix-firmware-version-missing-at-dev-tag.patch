@@ -6,6 +6,8 @@ Subject: [PATCH 1/1] Fix firmware version missing at dev tag
 The firmware version "v" must at the first character, we should not
 handle other "v" (like "dev") to avoid parsing string error.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  apphandler.cpp | 2 +-

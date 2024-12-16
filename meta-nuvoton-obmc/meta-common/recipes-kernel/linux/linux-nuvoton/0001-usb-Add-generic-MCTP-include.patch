@@ -8,6 +8,8 @@ MCTP-over-USB protocol. Add a header that provides common definitions
 across both of these: the packet header format and a few framing
 definitions.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  MAINTAINERS                  |  1 +

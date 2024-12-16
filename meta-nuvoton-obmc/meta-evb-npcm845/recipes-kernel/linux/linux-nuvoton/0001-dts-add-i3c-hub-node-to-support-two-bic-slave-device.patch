@@ -5,6 +5,8 @@ Subject: [PATCH 3/3] dts: add i3c hub node to support two bic slave devices
 
 add i3c hub node to support two bic slave devices.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: cpchiang <cpchiang1@nuvoton.com>
 ---
  .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts   | 18 ++++++++++++++++++

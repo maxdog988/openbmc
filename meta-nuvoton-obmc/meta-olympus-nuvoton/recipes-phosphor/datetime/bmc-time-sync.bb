@@ -13,5 +13,5 @@ SYSTEMD_SERVICE:${PN} = "bmc-time-sync.service"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/get_host_date.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/get_host_date.sh ${D}${bindir}/
 }

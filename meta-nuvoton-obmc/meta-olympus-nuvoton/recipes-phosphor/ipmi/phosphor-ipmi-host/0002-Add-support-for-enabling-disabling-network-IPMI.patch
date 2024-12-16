@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Fri, 13 Dec 2019 16:13:50 +0800
 Subject: [PATCH 2/2] Add support for enabling/disabling network IPMI
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  user_channel/channel_mgmt.cpp | 95 +++++++++++++++++++++++++++++++++++

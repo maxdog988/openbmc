@@ -7,6 +7,8 @@ The gimple-iterator.h header must be included before gimple-fold.h
 starting with GCC 13. Reorganize gimple headers to work for all GCC
 versions.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Reported-by: Palmer Dabbelt <palmer@rivosinc.com>
 Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 Link: https://lore.kernel.org/all/20230113173033.4380-1-palmer@rivosinc.com/

@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 14 Feb 2023 14:39:21 +0800
 Subject: [PATCH 5/5] Add create PSU DBUs obj
 
+
+Upstream-Status: Inappropriate [oe-specific]
 ---
  power-supply/power_supply.cpp | 73 +++++++++++++++++++++++++++++++++++
  power-supply/power_supply.hpp |  2 +

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/app/common/directives/firmware-list.html b/app/common/directives/firmware-list.html
 index 4ebf117..5f18d91 100644
 --- a/app/common/directives/firmware-list.html

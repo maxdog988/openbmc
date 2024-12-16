@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Wed, 8 Feb 2023 13:30:18 +0800
 Subject: [PATCH 1/1] Run after /xyz/openbmc_project/user path created
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  xyz.openbmc_project.Network.service.in | 1 +

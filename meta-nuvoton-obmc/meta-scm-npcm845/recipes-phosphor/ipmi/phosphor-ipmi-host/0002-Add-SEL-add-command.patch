@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 17:08:47 +0800
 Subject: [PATCH] Add SEL add command
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  dbus-sdr/storagecommands.cpp | 83 +++++++++++++++++++++++++++++++++---

@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Wed, 21 Feb 2024 17:35:03 +0800
 Subject: [PATCH 1/1] arch: arm: npcm: Set fuse images after uboot end
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  arch/arm/mach-npcm/secure_boot.c | 3 ++-

@@ -3,6 +3,8 @@ From: jimliu2 <JJLIU0@nuvoton.com>
 Date: Fri, 12 Nov 2021 11:19:55 +0800
 Subject: [PATCH] i2c: npcm: add retry probe to fix sometime SCL/SDA low
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  drivers/i2c/busses/i2c-npcm7xx.c | 22 +++++++++++++++++-----

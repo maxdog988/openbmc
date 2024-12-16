@@ -8,6 +8,8 @@ In kernel 5.15, op->dummy.buswidth might be 0 in OpenBMC emmc image.
 If so, NPCM_FIU_UMA_CFG will be set to an unexpected value.
 To avoid this issue, we do nothig when op->dummy.buswidth is 0.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang<jhkang@nuvoton.com>
 ---
  drivers/spi/spi-npcm-fiu.c | 7 ++++++-

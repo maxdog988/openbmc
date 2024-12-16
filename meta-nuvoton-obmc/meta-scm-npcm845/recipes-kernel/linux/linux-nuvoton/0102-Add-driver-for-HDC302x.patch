@@ -3,6 +3,8 @@ From: Angela TH Lin <angela_th_lin@wiwynn.com>
 Date: Tue, 7 Mar 2023 11:22:55 +0800
 Subject: [PATCH] Add driver for HDC302x
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  drivers/hwmon/Kconfig   |  11 ++
  drivers/hwmon/Makefile  |   1 +

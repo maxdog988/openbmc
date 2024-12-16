@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 14:46:11 +0800
 Subject: [PATCH 2/5] increase adc max reading
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  src/ADCSensor.cpp | 2 +-

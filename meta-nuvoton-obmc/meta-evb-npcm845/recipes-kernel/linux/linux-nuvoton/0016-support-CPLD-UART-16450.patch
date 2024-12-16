@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 10 Feb 2023 12:01:52 +0800
 Subject: [PATCH] support CPLD UART 16450
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts  | 59 ++++++++++++++++++-

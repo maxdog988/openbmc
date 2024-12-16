@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Thu, 23 Feb 2023 10:46:31 +0800
 Subject: [PATCH] Modify power-supply-monitor@.service
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  services/power-supply-monitor@.service | 4 ----
  1 file changed, 4 deletions(-)

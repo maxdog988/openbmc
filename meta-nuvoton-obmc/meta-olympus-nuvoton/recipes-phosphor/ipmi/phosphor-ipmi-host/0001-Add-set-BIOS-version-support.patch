@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 13 May 2022 10:30:14 +0800
 Subject: [PATCH] Add set BIOS version support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  apphandler.cpp | 45 +++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 45 insertions(+)

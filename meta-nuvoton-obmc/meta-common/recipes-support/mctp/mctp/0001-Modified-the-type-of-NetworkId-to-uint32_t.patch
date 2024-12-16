@@ -30,6 +30,8 @@ xyz.openbmc_project.MCTP.Endpoint   interface -         -            -
 .NetworkId                          property  u         1            const
 .SupportedMessageTypes              property  ay        2 0 1        const
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: RickyWu-wiwynn <ricky_cx_wu@wiwynn.com>
 ---
  src/mctpd.c | 4 ++--

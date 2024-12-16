@@ -20,5 +20,5 @@ SYSTEMD_SERVICE:${PN} = "bmc-reboot-cause.service"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/reboot-cause.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/reboot-cause.sh ${D}${bindir}/
 }

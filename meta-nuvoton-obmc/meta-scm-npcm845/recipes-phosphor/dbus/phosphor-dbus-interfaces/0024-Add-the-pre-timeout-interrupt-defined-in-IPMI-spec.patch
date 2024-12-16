@@ -7,6 +7,8 @@ The IPMI watchdog pre-timeout interrupt is used to set the different
 pre-timeout interrupt source. Add them as a dbus property,
 IPMI set/get watchdog commands will use it.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ren Yu <yux.ren@intel.com>
 ---
  .../State/Watchdog.interface.yaml             | 22 +++++++++++++++++++

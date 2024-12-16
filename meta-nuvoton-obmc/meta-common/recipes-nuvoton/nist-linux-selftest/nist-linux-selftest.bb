@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/Nuvoton-Israel/nist-linux-selftest;protocol=https;br
            file://nist-linux-selftest.service \
           "
 
-SRCREV = "5890ce57565df253c35a5478758a09a29df2b0e4"
+SRCREV = "ec7f69943b565e179b6f2db80e7c9c403a26ade6"
 
 inherit systemd
 inherit obmc-phosphor-systemd

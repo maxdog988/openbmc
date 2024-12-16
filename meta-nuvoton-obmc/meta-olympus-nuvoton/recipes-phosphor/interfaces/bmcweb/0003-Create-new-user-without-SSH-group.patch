@@ -5,6 +5,8 @@ Subject: [PATCH 3/3] Create new user without SSH group
 
 Remove SSH group permission from default groups when create new user.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  redfish-core/lib/account_service.hpp | 13 ++++++++++++-

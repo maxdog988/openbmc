@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 30 Oct 2023 11:03:16 +0800
 Subject: [PATCH] dts: arm64: npcm845 evb: enable udc8
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts    | 17 +++++++++--------

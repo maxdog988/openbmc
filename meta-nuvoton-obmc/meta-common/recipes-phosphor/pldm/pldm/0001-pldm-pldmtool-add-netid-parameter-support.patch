@@ -5,6 +5,8 @@ Subject: [PATCH] pldm: pldmtool: add netid parameter support
 
 - Add netid parameter for sending request message.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  common/transport.cpp         |  7 +++++++

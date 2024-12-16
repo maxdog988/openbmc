@@ -4,6 +4,8 @@ Date: Wed, 23 Jun 2021 13:53:43 +0800
 Subject: [PATCH] adjust current size of dump directory to near linux du
  command
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  dump_manager_bmc.cpp | 6 ++----

@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/arch/arm/boot/dts/nuvoton-npcm750-buv-runbmc.dts b/arch/arm/boot/dts/nuvoton-npcm750-buv-runbmc.dts
 index e8e9f5e357c4..70e5ebf6d1b1 100644
 --- a/arch/arm/boot/dts/nuvoton-npcm750-buv-runbmc.dts

@@ -3,6 +3,8 @@ From: Marvin Lin <milkfafa@gmail.com>
 Date: Fri, 14 Oct 2022 16:21:59 +0800
 Subject: [PATCH] dts supports legacy vcd ece drivers
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 18 ++++++++++++
  arch/arm/boot/dts/nuvoton-npcm750-evb.dts     | 22 +++++++++++++-

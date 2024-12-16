@@ -3,6 +3,7 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Wed, 15 Jun 2022 16:07:53 +0800
 Subject: [PATCH] Restore and verify BIOS
 
+Upstream-Status: Inappropriate [oe-specific]
 ---
  image_verify.cpp |  1 +
  item_updater.cpp | 24 +++++++++++++++++++++++-

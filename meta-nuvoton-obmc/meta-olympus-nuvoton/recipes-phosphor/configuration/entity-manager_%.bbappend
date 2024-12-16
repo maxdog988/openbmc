@@ -33,10 +33,10 @@ SYSTEMD_LINK:${PN}:append = " ${@compose_list(d, 'DISABLE_POWER_FMT', 'OBMC_CHAS
 do_install:append() {
     rm -f ${D}${datadir}/entity-manager/configurations/*.json
     install -d ${D}${datadir}/entity-manager
-    install -m 0644 -D ${WORKDIR}/F0B_BMC_MB.json \
+    install -m 0644 -D ${UNPACKDIR}/F0B_BMC_MB.json \
         ${D}${datadir}/entity-manager/configurations/F0B_BMC_MB.json
-    install -m 0644 -D ${WORKDIR}/PSU_0.json \
+    install -m 0644 -D ${UNPACKDIR}/PSU_0.json \
         ${D}${datadir}/entity-manager/configurations/PSU_0.json
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/olympus-reload-sensor.sh ${D}${bindir}
+    install -m 0755 ${UNPACKDIR}/olympus-reload-sensor.sh ${D}${bindir}
 }

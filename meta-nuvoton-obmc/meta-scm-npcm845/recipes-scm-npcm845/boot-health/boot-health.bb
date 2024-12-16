@@ -10,8 +10,8 @@ SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE:${PN} = "scm-boot-health.service scm-warm-reset-sel.service"
 
 do_install() {
-    install -D -m 0644 ${WORKDIR}/scm-boot-health.service \
+    install -D -m 0644 ${UNPACKDIR}/scm-boot-health.service \
         ${D}${systemd_unitdir}/system/scm-boot-health.service
-    install -D -m 0644 ${WORKDIR}/scm-warm-reset-sel.service \
+    install -D -m 0644 ${UNPACKDIR}/scm-warm-reset-sel.service \
         ${D}${systemd_unitdir}/system/scm-warm-reset-sel.service
 }

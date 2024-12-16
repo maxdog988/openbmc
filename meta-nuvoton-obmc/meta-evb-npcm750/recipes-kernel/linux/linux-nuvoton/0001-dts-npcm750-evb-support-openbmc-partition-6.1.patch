@@ -3,6 +3,9 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Wed, 7 Apr 2021 13:53:51 +0800
 Subject: [PATCH] dts: npcm750-evb: support openbmc partition
 
+Upstream-Status: Inappropriate [oe-specific]
+
+
 ---
  arch/arm/boot/dts/nuvoton-npcm750-evb.dts | 60 ++++++++---------------
  1 file changed, 21 insertions(+), 39 deletions(-)

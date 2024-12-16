@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Fri, 6 Sep 2024 11:54:46 +0800
 Subject: [PATCH] support host boot progress
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>

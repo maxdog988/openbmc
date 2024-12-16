@@ -4,6 +4,8 @@ Date: Thu, 14 Nov 2024 09:44:17 +0800
 Subject: [PATCH] driver: hwmon: max31790: Improve the speed query of
  retrieving fan controller properties.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Michael Chang <hwchang2@nuvoton.com>
 ---
  drivers/hwmon/max31790.c | 70 ++++++++++++++++++++++++++++------------
@@ -59,7 +61,7 @@ index 20bf5ffadefe..fbd06e14e4de 100644
 +		rv = i2c_smbus_read_word_swapped(client,
 +				MAX31790_REG_TACH_COUNT(channel));
 +		if(rv < 0)
-+			return ERR_PTR(rv);
++			return rv;
 +
 +		if (rv == FAN_COUNT_REG_MAX)
  			rpm = 0;
@@ -75,7 +77,7 @@ index 20bf5ffadefe..fbd06e14e4de 100644
 +		rv = i2c_smbus_read_word_swapped(client,
 +				MAX31790_REG_TARGET_COUNT(channel));
 +		if(rv < 0)
-+			return ERR_PTR(rv);
++			return rv;
 +
 +		rpm = RPM_FROM_REG(rv, sr);
  		*val = rpm;
@@ -87,13 +89,13 @@ index 20bf5ffadefe..fbd06e14e4de 100644
 +		rv = i2c_smbus_read_byte_data(client,
 +				MAX31790_REG_FAN_FAULT_STATUS1);
 +		if(rv < 0)
-+			return ERR_PTR(rv);
++			return rv;
 +
 +		fault_status |= rv & 0x3F;
 +		rv = i2c_smbus_read_byte_data(client,
 +				MAX31790_REG_FAN_FAULT_STATUS2);
 +		if(rv < 0)
-+			return ERR_PTR(rv);
++			return rv;
 +
 +		fault_status |= (rv & 0x3F) << 6;
 +		*val = !!(fault_status & (1 << channel));
@@ -107,7 +109,7 @@ index 20bf5ffadefe..fbd06e14e4de 100644
  			int reg = MAX31790_REG_TARGET_COUNT(channel % NR_CHANNEL);
 +			rv = i2c_smbus_read_word_swapped(client, reg);
 +			if(rv < 0)
-+				return ERR_PTR(rv);
++				return rv;
  
 -			i2c_smbus_write_byte_data(data->client, reg,
 -						  data->target_count[channel % NR_CHANNEL] >> 8);
@@ -158,7 +160,7 @@ index 20bf5ffadefe..fbd06e14e4de 100644
 -		*val = data->pwm[channel] >> 8;
 +		rv = i2c_smbus_read_word_swapped(client, MAX31790_REG_PWM_DUTY_CYCLE(channel));
 +		if(rv < 0)
-+			return ERR_PTR(rv);
++			return rv;
 +
 +		*val = rv >> 8;
  		return 0;

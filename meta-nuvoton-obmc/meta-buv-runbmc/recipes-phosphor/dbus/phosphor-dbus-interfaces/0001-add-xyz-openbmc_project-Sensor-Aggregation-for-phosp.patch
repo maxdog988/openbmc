@@ -4,6 +4,8 @@ Date: Fri, 3 Feb 2023 09:28:35 +0800
 Subject: [PATCH] add xyz/openbmc_project/Sensor/Aggregation/ for
  phosphor-power
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  .../Aggregation/History/Average/meson.build   | 15 +++++

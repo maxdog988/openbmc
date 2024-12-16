@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Mon, 11 Dec 2023 17:35:55 +0800
 Subject: [PATCH 3/3] Adjust paths for use OTP with Bitbake
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  ImageGeneration/inputs/mergedFuses.xml      |  8 ++++----

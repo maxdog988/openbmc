@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Fri, 28 Jan 2022 16:37:32 +0800
 Subject: [PATCH] add oem command get bios post code
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  Makefile.am     |  1 +

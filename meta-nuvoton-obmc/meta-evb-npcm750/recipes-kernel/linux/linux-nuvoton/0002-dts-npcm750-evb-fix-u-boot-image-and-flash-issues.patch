@@ -5,6 +5,8 @@ Subject: [PATCH] dts: npcm750-evb: fix u-boot image and flash issues
 
 Fix image-u-boot too big and flash permission denied issues
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  arch/arm/boot/dts/nuvoton-npcm750-evb.dts | 4 ++--

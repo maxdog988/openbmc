@@ -15,6 +15,8 @@ Tested:
 1. Tag with v1.11.0001-ampere and check ipmitool mc info report
    firmware revision to 1.11
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Hieu Huynh <hieuh@os.amperecomputing.com>
 Change-Id: I7340827dfc6de6664dde4b58e61197f81b4f89ca
 ---

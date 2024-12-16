@@ -9,5 +9,5 @@ SNOOP_DEVICE = "npcm7xx-lpc-bpc0"
 
 #do_install:append() {
 #        install -d ${D}${sysconfdir}/default/obmc/bios/
-#        install -m 0644 ${WORKDIR}/bios_defs.json ${D}/${sysconfdir}/default/obmc/bios/
+#        install -m 0644 ${UNPACKDIR}/bios_defs.json ${D}/${sysconfdir}/default/obmc/bios/
 #}

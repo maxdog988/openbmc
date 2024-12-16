@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Wed, 12 Jun 2024 15:38:19 +0800
 Subject: [PATCH] add w25q512nw support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  drivers/mtd/spi/spi-nor-ids.c | 5 +++++

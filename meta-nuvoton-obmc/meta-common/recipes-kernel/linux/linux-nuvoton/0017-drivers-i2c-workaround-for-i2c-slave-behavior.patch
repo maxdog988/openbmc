@@ -5,6 +5,8 @@ Subject: [PATCH] drivers: i2c: workaround for i2c slave behavior
 
 1. Not verified yet.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: kfting <kfting@nuvoton.com>
 ---
  drivers/i2c/busses/i2c-npcm7xx.c | 6 +++---

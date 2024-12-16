@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Fri, 13 May 2022 14:07:17 +0800
 Subject: [PATCH] skip POWER_BUTTON and POST_COMPLETE
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  src/power_control.cpp | 14 +++++++++-----

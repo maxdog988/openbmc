@@ -3,6 +3,8 @@ From: Ban Feng <kcfeng0@nuvoton.com>
 Date: Fri, 3 Mar 2023 11:17:05 +0800
 Subject: [PATCH] Add new type of settable interface - PowerSupply
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 ---
  src/entity_manager.cpp | 7 ++++---

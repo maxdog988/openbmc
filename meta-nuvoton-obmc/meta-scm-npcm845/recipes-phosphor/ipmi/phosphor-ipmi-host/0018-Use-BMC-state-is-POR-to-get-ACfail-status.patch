@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Mon, 22 Aug 2022 13:50:48 +0800
 Subject: [PATCH 18/18] Use BMC state is POR to get ACfail status
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  chassishandler.cpp | 27 +++++++++++++++++++++++++++
  1 file changed, 27 insertions(+)

@@ -3,6 +3,8 @@ From: Brian Ma <chma0@nuvoton.com>
 Date: Fri, 28 Aug 2020 09:45:40 +0800
 Subject: [PATCH] driver: SPI: add w25q01jv support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  drivers/mtd/spi-nor/winbond.c | 2 ++

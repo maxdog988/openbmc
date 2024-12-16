@@ -8,13 +8,13 @@ SRC_URI:append = " file://power_reading.json"
 SRC_URI:append = " file://dcmi_sensors.json"
 
 do_install:append() {
-    install -m 0644 -D ${WORKDIR}/channel_config.json \
+    install -m 0644 -D ${UNPACKDIR}/channel_config.json \
         ${D}${datadir}/ipmi-providers/channel_config.json
-    install -m 0644 -D ${WORKDIR}/dev_id.json \
+    install -m 0644 -D ${UNPACKDIR}/dev_id.json \
         ${D}${datadir}/ipmi-providers/dev_id.json
-    install -m 0644 -D ${WORKDIR}/power_reading.json \
+    install -m 0644 -D ${UNPACKDIR}/power_reading.json \
         ${D}${datadir}/ipmi-providers/power_reading.json
-    install -m 0644 -D ${WORKDIR}/dcmi_sensors.json \
+    install -m 0644 -D ${UNPACKDIR}/dcmi_sensors.json \
         ${D}${datadir}/ipmi-providers/dcmi_sensors.json
 }
 

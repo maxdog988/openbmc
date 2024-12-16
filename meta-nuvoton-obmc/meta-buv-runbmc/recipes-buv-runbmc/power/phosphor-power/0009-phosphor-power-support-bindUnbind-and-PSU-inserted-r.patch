@@ -4,6 +4,8 @@ Date: Wed, 15 Mar 2023 13:36:48 +0800
 Subject: [PATCH] phosphor-power: support bindUnbind and PSU inserted/removed
  event log
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 ---
  power-supply/power_supply.cpp | 62 +++++++++++++++++++++++++++++++++++

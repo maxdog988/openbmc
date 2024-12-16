@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Wed, 13 Jul 2022 11:57:10 +0800
 Subject: [PATCH 10/18] add server type and oem id to meet MS spec
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  user_channel/usercommands.cpp | 4 ++--

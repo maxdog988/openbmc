@@ -3,6 +3,8 @@ From: Tim Lee <timlee660101@gmail.com>
 Date: Mon, 20 Jun 2022 15:50:04 +0800
 Subject: [PATCH 4/5] bmcweb: chassis: add indicatorLED support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---
  redfish-core/lib/chassis.hpp | 106 +++++++++++++++++++++++++++++++++--

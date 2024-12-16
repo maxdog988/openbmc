@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 14 Feb 2023 11:42:49 +0800
 Subject: [PATCH] uboot scm dts
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  arch/arm/dts/Makefile | 3 ++-

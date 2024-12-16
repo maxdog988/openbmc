@@ -3,6 +3,8 @@ From: Ban Feng <kcfeng0@nuvoton.com>
 Date: Fri, 3 Mar 2023 11:21:27 +0800
 Subject: [PATCH] Support Entity-Manager for power supply monitoring
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 ---
  meson.build                               |   4 +-

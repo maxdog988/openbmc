@@ -7,6 +7,8 @@ Some PMBus chips respond with invalid data when reading the WRITE_PROTECT
 register. For such chips, this flag should be set so that the PMBus core
 driver doesn't use the WRITE_PROTECT command to determine its behavior.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 ---
  drivers/hwmon/pmbus/inspur-ipsps.c | 2 +-

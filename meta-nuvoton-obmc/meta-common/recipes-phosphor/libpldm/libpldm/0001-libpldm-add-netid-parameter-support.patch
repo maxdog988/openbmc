@@ -5,6 +5,8 @@ Subject: [PATCH] libpldm: add netid parameter support
 
  - Add an API to set netid and send request message with netid.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---

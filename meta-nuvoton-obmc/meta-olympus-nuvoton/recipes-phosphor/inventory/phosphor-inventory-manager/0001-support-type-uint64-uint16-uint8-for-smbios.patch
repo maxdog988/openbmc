@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 20 Feb 2023 11:24:28 +0800
 Subject: [PATCH] support type uint64 and uint8 for smbios
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  types.hpp | 2 +-

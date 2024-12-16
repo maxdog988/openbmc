@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Mon, 6 Mar 2023 16:14:17 +0800
 Subject: [PATCH] Add buv-runbmc PSU driver, inspur-ipsps.c.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  arch/arm/boot/dts/nuvoton-npcm750-buv-runbmc.dts | 9 +++++----

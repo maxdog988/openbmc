@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Mon, 26 Dec 2022 15:44:01 +0800
 Subject: [PATCH] dts: modify flash layout for increasing flash size
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  arch/arm/boot/dts/nuvoton-npcm750-runbmc-olympus.dts | 6 +++---

@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Thu, 9 Feb 2023 15:34:36 +0800
 Subject: [PATCH] Modify Olympus PSU driver to inspur-ipsps.c
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  arch/arm/boot/dts/nuvoton-npcm750-runbmc-olympus.dts | 2 +-

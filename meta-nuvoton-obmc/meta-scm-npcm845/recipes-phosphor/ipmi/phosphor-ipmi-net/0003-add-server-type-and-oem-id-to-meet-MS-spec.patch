@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Wed, 13 Jul 2022 11:54:13 +0800
 Subject: [PATCH 3/4] add server type and oem id in the response
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  command/channel_auth.cpp | 8 ++++----

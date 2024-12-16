@@ -3,6 +3,8 @@ From: Eason Yang <yhyang2@nuvoton.com>
 Date: Mon, 6 Feb 2023 11:49:04 +0800
 Subject: [PATCH] Add support for MCU firmware upgrade
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <yhyang2@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---

@@ -3,6 +3,8 @@ From: Mia Lin <mimi05633@gmail.com>
 Date: Wed, 14 Aug 2024 16:34:08 +0800
 Subject: [PATCH 1/1] rstc supports to control register and manage sub-device
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 3 ++-

@@ -13,6 +13,8 @@ match the local/peer semantics.
 Avoid this confusion by naming the arguments as 'local' and 'peer', and
 remove the double swap. The calling order now matches mctp_key_alloc.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  include/net/mctp.h |  2 +-

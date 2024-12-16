@@ -28,9 +28,9 @@ SYSTEMD_SERVICE:${PN} = " \
 do_install:append() {
     for i in ${HOST_CONSOLE_TTY}
     do
-        install -m 0644 ${WORKDIR}/server.${i}.conf ${D}${sysconfdir}/${BPN}/server.${i}.conf
-        install -m 0644 ${WORKDIR}/${BPN}-${i}-ssh.socket ${D}${systemd_unitdir}/system/${BPN}-${i}-ssh.socket
-        install -m 0644 ${WORKDIR}/${BPN}-${i}-ssh@.service ${D}${systemd_unitdir}/system/${BPN}-${i}-ssh@.service
+        install -m 0644 ${UNPACKDIR}/server.${i}.conf ${D}${sysconfdir}/${BPN}/server.${i}.conf
+        install -m 0644 ${UNPACKDIR}/${BPN}-${i}-ssh.socket ${D}${systemd_unitdir}/system/${BPN}-${i}-ssh.socket
+        install -m 0644 ${UNPACKDIR}/${BPN}-${i}-ssh@.service ${D}${systemd_unitdir}/system/${BPN}-${i}-ssh@.service
     done
 
     # Deal with files installed by the base package's .bb install function
@@ -40,9 +40,9 @@ do_install:append() {
     rm -f ${D}${systemd_unitdir}/system/${BPN}-ssh@.service
     rm -f ${D}${systemd_unitdir}/system/${BPN}-ssh.socket
     # Overwrite base package's obmc-console@.service with our own
-    #install -m 0644 ${WORKDIR}/${BPN}@.service ${D}${systemd_unitdir}/system/${BPN}@.service
+    #install -m 0644 ${UNPACKDIR}/${BPN}@.service ${D}${systemd_unitdir}/system/${BPN}@.service
 
     # handle Nuvoton rules
     rm -f ${D}/${nonarch_base_libdir}/udev/rules.d/80-obmc-console-uart.rules
-    install -D -m 0644 ${WORKDIR}/80-scm-npcm845-sol.rules ${D}/${nonarch_base_libdir}/udev/rules.d
+    install -D -m 0644 ${UNPACKDIR}/80-scm-npcm845-sol.rules ${D}/${nonarch_base_libdir}/udev/rules.d
 }

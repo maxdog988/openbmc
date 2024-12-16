@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 31 Jul 2020 17:39:53 +0800
 Subject: [PATCH] support type uint8 uint16 uint64 for inventory manager
 
+Upstream-Status: Inappropriate [oe-specific]
+
 This patch is used for smbios in inventory manager.
 ---
  yaml/xyz/openbmc_project/Inventory/Manager.interface.yaml | 2 +-

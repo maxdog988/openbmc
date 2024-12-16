@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 16:46:21 +0800
 Subject: [PATCH 01/18] Add-set-BIOS-version-support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  apphandler.cpp | 45 +++++++++++++++++++++++++++++++++++++++++++++

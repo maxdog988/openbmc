@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 17 Apr 2023 15:38:51 +0800
 Subject: [PATCH] dts: mctp i2c controller
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts | 12 +++++++++++-

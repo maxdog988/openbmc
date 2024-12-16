@@ -6,6 +6,8 @@ Subject: [PATCH] Handle now allow execption in account service
 Return message resourceCannotBeDeleted when get NowAllowed execption
 during delete user instead of resourceNotFound.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 Signed-off-by: Tim Lee <timlee660101@gmail.com>
 ---

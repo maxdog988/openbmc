@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Wed, 19 Jul 2023 09:02:21 +0800
 Subject: [PATCH] add npcmi3c binding
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  Makefile.am                 |   8 +-

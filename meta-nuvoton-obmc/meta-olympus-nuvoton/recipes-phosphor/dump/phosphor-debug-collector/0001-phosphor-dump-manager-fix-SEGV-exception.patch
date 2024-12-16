@@ -9,6 +9,8 @@ execute ++ operation on the entry that has has been deleted.
 Error:
 xyz.openbmc_project.Dump.Manager.service: Main process exited, code=dumped, status=11/SEGV
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  dump_manager.cpp | 2 +-

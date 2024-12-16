@@ -3,6 +3,8 @@ From: kflin <kflin@nuvoton.com>
 Date: Wed, 24 Nov 2021 10:36:09 +0800
 Subject: [PATCH] fru-modify-dts-for-eeprom
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  arch/arm/boot/dts/nuvoton-npcm750-evb.dts | 5 +++++
  1 file changed, 5 insertions(+)

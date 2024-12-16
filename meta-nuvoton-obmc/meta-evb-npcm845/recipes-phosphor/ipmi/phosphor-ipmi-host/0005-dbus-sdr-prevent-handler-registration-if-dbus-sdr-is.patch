@@ -10,6 +10,8 @@ implementations alway registered.
 Managing the handlers like this all code to be compiled during CI while
 providing some control over the handlers used.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Change-Id: I6e9cffacfac4127d2307e8c5e548c84323742c94
 Signed-off-by: Willy Tu <wltu@google.com>
 ---

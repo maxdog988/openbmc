@@ -3,6 +3,8 @@ From: Eddielu <Eddie.Lu@quantatw.com>
 Date: Mon, 27 Jul 2020 20:30:22 +0800
 Subject: [PATCH] Update lev-add-poweron-monitor-feature patch.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  Makefile.am    |   2 ++
  mainloop.cpp   | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 26 Jul 2022 12:09:14 +0800
 Subject: [PATCH] update chassishandler from intel oem ipmi
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  chassishandler.cpp | 243 +++++++++++++++++++++++++++++++++------------

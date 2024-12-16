@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Wed, 1 Mar 2023 15:49:03 +0800
 Subject: [PATCH 8/8] Get powersupplyName from config setting
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 ---
  power-supply/power_supply.cpp | 14 +++++---------

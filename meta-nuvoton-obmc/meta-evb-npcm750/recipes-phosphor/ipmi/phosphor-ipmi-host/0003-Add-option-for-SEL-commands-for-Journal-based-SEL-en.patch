@@ -9,6 +9,9 @@ journal-based SEL entries.
 It adds an option for Get SEL Info, Get SEL Entry, Add SEL
 Entry, and Clear SEL, to get and add entries using the journal.
 
+Upstream-Status: Inappropriate [oe-specific]
+
+
 Signed-off-by: Jason M. Bills <jason.m.bills@linux.intel.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---

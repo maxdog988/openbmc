@@ -4,6 +4,8 @@ Date: Fri, 29 Nov 2024 15:53:22 +0800
 Subject: [PATCH 1/1] Implement Power{Equipment, Distribution, Supply,
  SupplyMetrics} schema
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Eason Yang <j2anfernee@gmail.com>
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>

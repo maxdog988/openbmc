@@ -13,19 +13,19 @@ FILES:${PN}:append = " ${datadir}/phosphor-gpio-monitor/"
 
 do_install:append() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/dp_hotplug.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/dp_hotplug.sh ${D}${bindir}/
 }
 
 do_install:append:scm-npcm845() {
     install -d ${D}${datadir}/phosphor-gpio-monitor
     rm -f ${D}${datadir}/phosphor-gpio-monitor/*.json
-    install -m 0644 -D ${WORKDIR}/GpioMonitorConfig.json \
+    install -m 0644 -D ${UNPACKDIR}/GpioMonitorConfig.json \
             ${D}${datadir}/phosphor-gpio-monitor/GpioMonitorConfig.json
 }
 
 do_install:append:m1120-c2195() {
     install -d ${D}${datadir}/phosphor-gpio-monitor
     rm -f ${D}${datadir}/phosphor-gpio-monitor/*.json
-    install -m 0644 -D ${WORKDIR}/GpioMonitorConfig-m1120.json \
+    install -m 0644 -D ${UNPACKDIR}/GpioMonitorConfig-m1120.json \
             ${D}${datadir}/phosphor-gpio-monitor/GpioMonitorConfig.json
 }

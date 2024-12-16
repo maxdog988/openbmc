@@ -3,6 +3,8 @@ From: Allen Kang <jhkang@nuvoton.com>
 Date: Thu, 23 Mar 2023 10:58:27 +0800
 Subject: [PATCH] dts: add two test PSUs settings
 
+Upstream-Status: Inappropriate [oe-specific]
+
 ---
  arch/arm/boot/dts/nuvoton-npcm750-buv-runbmc.dts | 14 +++++++++-----
  1 file changed, 9 insertions(+), 5 deletions(-)

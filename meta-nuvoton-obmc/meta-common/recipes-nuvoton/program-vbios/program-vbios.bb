@@ -25,11 +25,11 @@ FILES:${PN} += "${sysconfdir}/modprobe.d/dontload.conf"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/program-vbios.sh ${D}${bindir}/
-    install -m 0755 ${WORKDIR}/program-vbios ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/program-vbios.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/program-vbios ${D}${bindir}/
     install -d ${D}${datadir}/vbios
-    install -m 0644 -D ${WORKDIR}/vbios.bin \
+    install -m 0644 -D ${UNPACKDIR}/vbios.bin \
         ${D}${datadir}/vbios/vbios.bin
     install -d ${D}${sysconfdir}/modprobe.d/
-    install -m 644 ${WORKDIR}/dontload.conf ${D}${sysconfdir}/modprobe.d/dontload.conf
+    install -m 644 ${UNPACKDIR}/dontload.conf ${D}${sysconfdir}/modprobe.d/dontload.conf
 }

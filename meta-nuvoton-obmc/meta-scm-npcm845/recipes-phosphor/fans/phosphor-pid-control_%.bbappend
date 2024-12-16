@@ -13,10 +13,10 @@ do_install:append() {
     install -d ${D}/${bindir}
 
     install -d ${D}${datadir}/swampd
-    install -m 0644 -D ${WORKDIR}/config.json \
+    install -m 0644 -D ${UNPACKDIR}/config.json \
         ${D}${datadir}/swampd/
 
     install -d ${D}${systemd_system_unitdir}
-    install -m 0644 ${WORKDIR}/phosphor-pid-control.service \
+    install -m 0644 ${UNPACKDIR}/phosphor-pid-control.service \
         ${D}${systemd_system_unitdir}
 }

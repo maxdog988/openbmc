@@ -3,6 +3,8 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 28 Mar 2023 11:56:33 +0800
 Subject: [PATCH] Add more PSU devices support
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  src/PSUSensorMain.cpp | 2 ++

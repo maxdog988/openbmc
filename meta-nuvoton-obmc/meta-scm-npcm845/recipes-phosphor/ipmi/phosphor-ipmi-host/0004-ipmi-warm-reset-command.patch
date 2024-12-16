@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Tue, 5 Jul 2022 12:56:01 +0800
 Subject: [PATCH 04/18] ipmi warm reset command
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  globalhandler.cpp | 64 ++++++++++++++++++++++++++++++++++++++++++++++-

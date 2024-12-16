@@ -13,14 +13,14 @@ FILES:${PN}:append = " ${datadir}/ipmi-providers/fw.json"
 FILES:${PN}:append = " ${datadir}/ipmi-providers/system_guid.json"
 
 do_install:append() {
-    install -m 0644 -D ${WORKDIR}/channel_config.json \
+    install -m 0644 -D ${UNPACKDIR}/channel_config.json \
         ${D}${datadir}/ipmi-providers/channel_config.json
-    install -m 0644 -D ${WORKDIR}/dev_id.json \
+    install -m 0644 -D ${UNPACKDIR}/dev_id.json \
         ${D}${datadir}/ipmi-providers/dev_id.json
-    install -m 0644 -D ${WORKDIR}/fw.json \
+    install -m 0644 -D ${UNPACKDIR}/fw.json \
         ${D}${datadir}/ipmi-providers/fw.json
-    install -m 0644 -D ${WORKDIR}/system_guid.json \
+    install -m 0644 -D ${UNPACKDIR}/system_guid.json \
         ${D}${datadir}/ipmi-providers/system_guid.json
-    install -m 0644 -D ${WORKDIR}/power_reading.json \
+    install -m 0644 -D ${UNPACKDIR}/power_reading.json \
         ${D}${datadir}/ipmi-providers/power_reading.json
 }

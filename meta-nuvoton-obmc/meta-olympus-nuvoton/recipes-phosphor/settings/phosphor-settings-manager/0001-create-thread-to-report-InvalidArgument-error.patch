@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 20 Jul 2020 11:04:31 +0800
 Subject: [PATCH] create thread to report InvalidArgument error
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  settings_main.cpp         | 12 ++++++++++++

@@ -3,6 +3,8 @@ From: Stanley Chu <yschu@nuvoton.com>
 Date: Thu, 28 Jul 2022 09:59:17 +0800
 Subject: [PATCH 17/18] set channel security keys
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  app/channel.hpp             |  15 ++++

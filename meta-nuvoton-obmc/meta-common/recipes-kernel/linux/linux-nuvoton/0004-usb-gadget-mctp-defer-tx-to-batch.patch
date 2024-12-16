@@ -11,6 +11,8 @@ transfer.
 Intended for testing only; helps to excersise the host-side driver's
 packet parsing.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 ---
  drivers/usb/gadget/function/f_mctp.c | 164 +++++++++++++++++++++++----
