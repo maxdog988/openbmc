@@ -23,5 +23,5 @@ SRC_URI += "file://pldm.json "
 
 do_install:append() {
     install -d ${D}${sysconfdir}/default
-    install -m 0644 ${WORKDIR}/pldm.json ${D}${sysconfdir}/default
+    install -m 0644 ${UNPACKDIR}/pldm.json ${D}${sysconfdir}/default
 }

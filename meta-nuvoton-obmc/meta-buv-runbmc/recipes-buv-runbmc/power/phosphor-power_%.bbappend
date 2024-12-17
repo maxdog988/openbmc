@@ -48,10 +48,10 @@ do_install:append:buv-runbmc(){
     is_entity="${@entity_enabled(d, 'yes', '')}"
     install -d ${D}${datadir}/phosphor-power
     if [ -z "${is_entity}" ];then
-        install -m 0644 -D ${WORKDIR}/psu.json \
+        install -m 0644 -D ${UNPACKDIR}/psu.json \
             ${D}${datadir}/phosphor-power/psu.json
     else
-        install -m 0644 -D ${WORKDIR}/psu_em.json \
+        install -m 0644 -D ${UNPACKDIR}/psu_em.json \
             ${D}${datadir}/phosphor-power/psu.json
     fi
 }

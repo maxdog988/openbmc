@@ -27,5 +27,5 @@ SYSTEMD_SERVICE:${PN} += "mcu-version@13.service"
 
 do_install:append() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/mcu-version.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/mcu-version.sh ${D}${bindir}/
 }

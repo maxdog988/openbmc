@@ -14,7 +14,7 @@ SRC_URI += "file://toggle_caterr_led.sh"
 
 do_install() {
         install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/toggle_caterr_led.sh \
+        install -m 0755 ${UNPACKDIR}/toggle_caterr_led.sh \
             ${D}${bindir}/toggle_caterr_led.sh
 }
 

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-specific]
+
 diff --git a/obmc-flash-bmc b/obmc-flash-bmc
 index 032096a..187f231 100644
 --- a/obmc-flash-bmc

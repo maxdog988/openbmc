@@ -21,13 +21,13 @@ do_install:append:buv-runbmc() {
     install -d ${D}${datadir}/phosphor-gpio-monitor
     rm -f ${D}${datadir}/phosphor-gpio-monitor/*.json
     if [ -z "${is_entity}" ];then
-        install -m 0644 -D ${WORKDIR}/BUV-GpioMonitorConfig-IM.json \
+        install -m 0644 -D ${UNPACKDIR}/BUV-GpioMonitorConfig-IM.json \
             ${D}${datadir}/phosphor-gpio-monitor/BUV-GpioMonitorConfig.json
     else
-        install -m 0644 -D ${WORKDIR}/BUV-GpioMonitorConfig-EM.json \
+        install -m 0644 -D ${UNPACKDIR}/BUV-GpioMonitorConfig-EM.json \
             ${D}${datadir}/phosphor-gpio-monitor/BUV-GpioMonitorConfig.json
     fi
 
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/psu_hotplug_action.sh ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/psu_hotplug_action.sh ${D}${bindir}/
 }

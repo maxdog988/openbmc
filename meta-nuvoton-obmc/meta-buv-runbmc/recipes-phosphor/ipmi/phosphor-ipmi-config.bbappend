@@ -11,19 +11,21 @@ python do_patch:buv-runbmc() {
     from shutil import copyfile
     version_id = do_get_version(d)
 
-    # count from the commit version
+    # count from the commit version, minimum of one digit
     count = re.findall("-(\d{1,4})-", version_id)
-    if len(count) == 0:
-        count.append("0")
+    if count:
+        commit = count[0]
+    else:
+        commit = "0"
 
     release = re.findall("-r(\d{1,4})", version_id)
     if release:
-        auxVer = count[0] + "{0:0>4}".format(release[0])
+        auxVer = commit + "{0:0>4}".format(release[0])
     else:
-        auxVer = count[0] + "0000"
+        auxVer = commit + "0000"
 
-    workdir = d.getVar('WORKDIR', True)
-    file = os.path.join(workdir, 'dev_id.json')
+    unpackdir = d.getVar('UNPACKDIR', True)
+    file = os.path.join(unpackdir, 'dev_id.json')
 
     # Update dev_id.json with the auxiliary firmware revision
     with open(file, "r+") as jsonFile:

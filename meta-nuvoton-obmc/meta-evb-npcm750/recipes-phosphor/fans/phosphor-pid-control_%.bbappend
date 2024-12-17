@@ -27,26 +27,26 @@ SYSTEMD_SERVICE:${PN}:append =" \
 
 do_install:append() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/fan-default-speed.sh ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/fan-default-speed.sh ${D}/${bindir}
 
     install -d ${D}${datadir}/swampd
-    install -m 0644 -D ${WORKDIR}/config-evb-nuvoton.json \
+    install -m 0644 -D ${UNPACKDIR}/config-evb-nuvoton.json \
         ${D}${datadir}/swampd/config.json
 
     install -d ${D}${systemd_unitdir}/system/
 
     ENTITY_MANAGER_ENABLE="${@entity_enabled(d, 'true', 'false')}"
     if [ "${ENTITY_MANAGER_ENABLE}" = "true" ]; then
-        install -m 0644 ${WORKDIR}/phosphor-pid-control_evb_entity.service \
+        install -m 0644 ${UNPACKDIR}/phosphor-pid-control_evb_entity.service \
             ${D}${systemd_unitdir}/system/phosphor-pid-control.service
     else
-        install -m 0644 ${WORKDIR}/phosphor-pid-control_evb.service \
+        install -m 0644 ${UNPACKDIR}/phosphor-pid-control_evb.service \
             ${D}${systemd_unitdir}/system/phosphor-pid-control.service
     fi
 
-    install -m 0644 ${WORKDIR}/fan-reboot-control.service \
+    install -m 0644 ${UNPACKDIR}/fan-reboot-control.service \
         ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/fan-boot-control.service \
+    install -m 0644 ${UNPACKDIR}/fan-boot-control.service \
         ${D}${systemd_unitdir}/system
 }
 
