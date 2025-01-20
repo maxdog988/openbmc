@@ -1,7 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " file://start_hwmon.sh"
-SRC_URI:append = " file://0001-support-hwmon-sysfs-in-sys-devices-virtual.patch"
 
 NAMES = " \
         i2c@86000/tmp100@48 \

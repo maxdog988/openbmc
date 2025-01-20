@@ -1,7 +1,7 @@
-From e011833e25e4e283edc616ebf7f1f314aade3264 Mon Sep 17 00:00:00 2001
+From 422810b0f5d8befb90562cd35b54c38f3872fcf1 Mon Sep 17 00:00:00 2001
 From: Mia Lin <mimi05633@gmail.com>
 Date: Wed, 30 Aug 2023 16:49:40 +0800
-Subject: [PATCH 1/1] Add mctp discovery command
+Subject: [PATCH] Add mctp i2c discovery command
 
 Usage:
   mctp discovery <busnum>
@@ -22,10 +22,10 @@ Signed-off-by: Mia Lin <mimi05633@gmail.com>
  2 files changed, 74 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index 7d605cb..0210f86 100644
+index 419bc77..f61b125 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -15,6 +15,9 @@ add_project_arguments('-Wno-unused-parameter', language : 'c')
+@@ -16,6 +16,9 @@ add_project_arguments('-Wno-unused-parameter', language : 'c')
  
  libsystemd = dependency('libsystemd', version: '>=247', required: false)
  
@@ -35,10 +35,10 @@ index 7d605cb..0210f86 100644
  conf = configuration_data()
  conf.set10('HAVE_LINUX_MCTP_H',
      cc.has_header('linux/mctp.h'),
-@@ -31,6 +34,10 @@ netlink_sources = ['src/mctp-netlink.c']
+@@ -50,6 +53,10 @@ toml_dep = declare_dependency(
  
  executable('mctp',
-     sources: ['src/mctp.c'] + netlink_sources + util_sources,
+     sources: ['src/mctp.c'] + netlink_sources + util_sources + ops_sources,
 +    dependencies: [
 +        libsystemd,
 +        i2c,
@@ -47,7 +47,7 @@ index 7d605cb..0210f86 100644
  )
  
 diff --git a/src/mctp.c b/src/mctp.c
-index 72ab7db..7193ec3 100644
+index cc717f4..c9afcc4 100644
 --- a/src/mctp.c
 +++ b/src/mctp.c
 @@ -21,6 +21,7 @@
@@ -58,7 +58,7 @@ index 72ab7db..7193ec3 100644
  
  #include <sys/ioctl.h>
  #include <sys/socket.h>
-@@ -29,6 +30,10 @@
+@@ -29,12 +30,19 @@
  #include <linux/netlink.h>
  #include <linux/rtnetlink.h>
  #include <linux/netdevice.h>
@@ -69,9 +69,8 @@ index 72ab7db..7193ec3 100644
  
  #include "mctp.h"
  #include "mctp-util.h"
-@@ -39,6 +44,9 @@
- 
- #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
+ #include "mctp-netlink.h"
+ #include "mctp-ops.h"
  
 +static uint8_t slave_addr_min = 0x08;
 +static uint8_t slave_addr_max = 0x78;
@@ -79,7 +78,7 @@ index 72ab7db..7193ec3 100644
  struct ctx {
  	mctp_nl			*nl;
  	bool			verbose;
-@@ -1208,6 +1216,64 @@ static int cmd_monitor(struct ctx *ctx, int argc, const char **argv) {
+@@ -1210,6 +1218,64 @@ static int cmd_monitor(struct ctx *ctx, int argc, const char **argv) {
  	return 0;
  }
  
@@ -144,7 +143,7 @@ index 72ab7db..7193ec3 100644
  static int cmd_help(struct ctx * ctx, int argc, const char** argv);
  
  struct command {
-@@ -1220,6 +1286,7 @@ struct command {
+@@ -1222,6 +1288,7 @@ struct command {
  	{ "route", cmd_route, 0 },
  	{ "neighbour", cmd_neigh, 0 },
  	{ "monitor", cmd_monitor, 0 },
@@ -153,5 +152,5 @@ index 72ab7db..7193ec3 100644
  };
  
 -- 
-2.17.1
+2.43.0
 

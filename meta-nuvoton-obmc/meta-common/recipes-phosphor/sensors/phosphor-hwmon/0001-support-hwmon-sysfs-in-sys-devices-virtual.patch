@@ -1,4 +1,4 @@
-From aab823b1c23cd656ae4568ff58be3ca1733acbc3 Mon Sep 17 00:00:00 2001
+From adabba6ddddc6259fe3e01f03da23fe1a075aebd Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Thu, 24 Jun 2021 14:09:03 +0800
 Subject: [PATCH] support hwmon sysfs in /sys/devices/virtual
@@ -14,10 +14,10 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  3 files changed, 56 insertions(+), 6 deletions(-)
 
 diff --git a/readd.cpp b/readd.cpp
-index 06e7d8c..fca54b1 100644
+index 733e9bc..c5ffb81 100644
 --- a/readd.cpp
 +++ b/readd.cpp
-@@ -50,7 +50,11 @@ int main(int argc, char** argv)
+@@ -51,7 +51,11 @@ int main(int argc, char** argv)
      {
          // This path may either be a device path (starts with
          // /devices), or an open firmware device tree path.
@@ -30,7 +30,7 @@ index 06e7d8c..fca54b1 100644
          {
              path = sysfs::findHwmonFromDevPath(path);
          }
-@@ -72,12 +76,20 @@ int main(int argc, char** argv)
+@@ -73,12 +77,20 @@ int main(int argc, char** argv)
                          "Path not specified or invalid.");
      }
  
@@ -57,10 +57,10 @@ index 06e7d8c..fca54b1 100644
  
      hwmonio::HwmonIO io(path);
 diff --git a/sysfs.cpp b/sysfs.cpp
-index f5b12bc..6f94e79 100644
+index 4ff7a67..02aef16 100644
 --- a/sysfs.cpp
 +++ b/sysfs.cpp
-@@ -238,6 +238,43 @@ std::string findHwmonFromDevPath(const std::string& devPath)
+@@ -239,4 +239,41 @@ std::string findHwmonFromDevPath(const std::string& devPath)
      return emptyString;
  }
  
@@ -102,13 +102,11 @@ index f5b12bc..6f94e79 100644
 +}
 +
  } // namespace sysfs
- 
- // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 diff --git a/sysfs.hpp b/sysfs.hpp
-index 80fb3d6..71e76c6 100644
+index 6a84cba..5098603 100644
 --- a/sysfs.hpp
 +++ b/sysfs.hpp
-@@ -61,6 +61,7 @@ std::string findHwmonFromOFPath(const std::string& ofNode);
+@@ -60,6 +60,7 @@ std::string findHwmonFromOFPath(const std::string& ofNode);
   *            string if no match is found.
   */
  std::string findHwmonFromDevPath(const std::string& devPath);
@@ -117,5 +115,5 @@ index 80fb3d6..71e76c6 100644
  /** @brief Return the path to use for a call out.
   *
 -- 
-2.25.1
+2.43.0
 

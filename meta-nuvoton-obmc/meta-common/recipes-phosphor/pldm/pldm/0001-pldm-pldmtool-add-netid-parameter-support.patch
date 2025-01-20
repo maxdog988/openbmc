@@ -1,4 +1,4 @@
-From c7e426dfed55f0f0383a86a163ab41d20b09ac51 Mon Sep 17 00:00:00 2001
+From 7aa5460668247fb0d2c47e2c297e7ae5feca485a Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
 Subject: [PATCH] pldm: pldmtool: add netid parameter support
@@ -11,10 +11,10 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  common/transport.cpp         |  7 +++++++
  common/transport.hpp         |  4 ++++
- pldmd/pldmd.cpp              | 34 ++++++++++++++++++++++------------
+ pldmd/pldmd.cpp              | 35 ++++++++++++++++++++++-------------
  pldmtool/pldm_cmd_helper.cpp |  4 ++++
  pldmtool/pldm_cmd_helper.hpp |  4 +++-
- 5 files changed, 40 insertions(+), 13 deletions(-)
+ 5 files changed, 40 insertions(+), 14 deletions(-)
 
 diff --git a/common/transport.cpp b/common/transport.cpp
 index 9641c38c5..0c4bd1d61 100644
@@ -50,7 +50,7 @@ index e9e1808ec..d3d95b4ff 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index 2352b60c5..fdd4116c9 100644
+index 0b6d129e1..02002cda1 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
 @@ -68,6 +68,7 @@ PHOSPHOR_LOG2_USING;
@@ -61,7 +61,7 @@ index 2352b60c5..fdd4116c9 100644
  constexpr const char* PLDMService = "xyz.openbmc_project.PLDM";
  
  using namespace pldm;
-@@ -170,25 +171,32 @@ void optionUsage(void)
+@@ -170,25 +171,31 @@ void optionUsage(void)
      info("Usage: pldmd [options]");
      info("Options:");
      info(" [--verbose] - would enable verbosity");
@@ -72,9 +72,9 @@ index 2352b60c5..fdd4116c9 100644
  {
 +    int argflag;
      bool verbose = false;
-     static struct option long_options[] = {{"verbose", no_argument, 0, 'v'},
-+                                           {"netid", required_argument, 0, 'x'},
-                                            {0, 0, 0, 0}};
+     static struct option long_options[] = {
+-        {"verbose", no_argument, nullptr, 'v'}, {nullptr, 0, nullptr, 0}};
++        {"verbose", no_argument, nullptr, 'v'}, {"netid", required_argument, nullptr, 'x'}, {nullptr, 0, nullptr, 0}};
  
 -    auto argflag = getopt_long(argc, argv, "v", long_options, nullptr);
 -    switch (argflag)
@@ -105,7 +105,7 @@ index 2352b60c5..fdd4116c9 100644
      }
      // Setup PLDM requester transport
      auto hostEID = pldm::utils::readHostEID();
-@@ -212,7 +220,6 @@ int main(int argc, char** argv)
+@@ -212,7 +219,6 @@ int main(int argc, char** argv)
      Invoker invoker{};
      requester::Handler<requester::Request> reqHandler(&pldmTransport, event,
                                                        instanceIdDb, verbose);
@@ -113,7 +113,7 @@ index 2352b60c5..fdd4116c9 100644
      std::unique_ptr<pldm_pdr, decltype(&pldm_pdr_destroy)> pdrRepo(
          pldm_pdr_init(), pldm_pdr_destroy);
      if (!pdrRepo)
-@@ -225,6 +232,9 @@ int main(int argc, char** argv)
+@@ -225,6 +231,9 @@ int main(int argc, char** argv)
              std::make_unique<pldm::host_effecters::HostEffecterParser>(
                  &instanceIdDb, pldmTransport.getEventSource(), pdrRepo.get(),
                  &dbusHandler, HOST_JSONS_DIR, &reqHandler);
@@ -163,5 +163,5 @@ index e66897413..29033f356 100644
  
    protected:
 -- 
-2.34.1
+2.43.0
 
