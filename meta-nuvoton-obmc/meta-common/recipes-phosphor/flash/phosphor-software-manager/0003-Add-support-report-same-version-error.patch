@@ -1,4 +1,4 @@
-From 1bebe4ee64ce52c186dd645bf123145b3d8c771c Mon Sep 17 00:00:00 2001
+From bcfb99df768b3fc2f111b3918352cdab3007f4a3 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 17 Feb 2022 08:55:45 +0800
 Subject: [PATCH] Add support report same version error
@@ -8,13 +8,13 @@ Upstream-Status: Inappropriate [oe-specific]
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- image_manager.cpp | 9 +++++++--
+ bmc/image_manager.cpp | 9 +++++++--
  1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/image_manager.cpp b/image_manager.cpp
-index 46f023a..cafd4a2 100644
---- a/image_manager.cpp
-+++ b/image_manager.cpp
+diff --git a/bmc/image_manager.cpp b/bmc/image_manager.cpp
+index a7687c63..ffa570bb 100644
+--- a/bmc/image_manager.cpp
++++ b/bmc/image_manager.cpp
 @@ -15,6 +15,7 @@
  #include <phosphor-logging/elog.hpp>
  #include <phosphor-logging/lg2.hpp>
@@ -37,7 +37,7 @@ index 46f023a..cafd4a2 100644
  namespace fs = std::filesystem;
  
  struct RemovablePath
-@@ -229,8 +232,10 @@ int Manager::processImage(const std::string& tarFilePath)
+@@ -234,8 +237,10 @@ int Manager::processImage(const std::string& tarFilePath)
      }
      else
      {
@@ -51,5 +51,5 @@ index 46f023a..cafd4a2 100644
      return 0;
  }
 -- 
-2.34.1
+2.43.0
 

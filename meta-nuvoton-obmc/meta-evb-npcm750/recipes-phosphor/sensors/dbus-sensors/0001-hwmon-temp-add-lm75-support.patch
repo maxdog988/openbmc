@@ -1,4 +1,4 @@
-From 18c82521deac72f772b903bf472cc96c6b0a8854 Mon Sep 17 00:00:00 2001
+From 7721070d2187d0d8536879f30099fd8d0fb3672c Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 19 Nov 2024 09:23:38 +0800
 Subject: [PATCH] hwmon temp: add lm75 support
@@ -11,11 +11,11 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/hwmon-temp/HwmonTempMain.cpp b/src/hwmon-temp/HwmonTempMain.cpp
-index f7ccb4f0..edd728cf 100644
+index a9ec2c13..0a9ffc49 100644
 --- a/src/hwmon-temp/HwmonTempMain.cpp
 +++ b/src/hwmon-temp/HwmonTempMain.cpp
-@@ -65,6 +65,7 @@ static constexpr double minValueTemperature = -128;     // DegreesC
- namespace fs = std::filesystem;
+@@ -63,6 +63,7 @@ static constexpr double maxValueTemperature = 127;      // DegreesC
+ static constexpr double minValueTemperature = -128;     // DegreesC
  
  static const I2CDeviceTypeMap sensorTypes{
 +    {"LM75", I2CDeviceType{"lm75", true}},

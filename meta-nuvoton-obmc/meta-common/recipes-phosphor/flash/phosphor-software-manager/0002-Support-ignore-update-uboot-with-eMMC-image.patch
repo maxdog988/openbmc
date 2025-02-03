@@ -1,4 +1,4 @@
-From 400f9524f333c3115ba069fecc65e508492300b5 Mon Sep 17 00:00:00 2001
+From 7426f00de372d6c53e95e7085fd630f66de86170 Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Thu, 17 Feb 2022 08:50:52 +0800
 Subject: [PATCH] Support ignore update uboot with eMMC image
@@ -7,13 +7,13 @@ Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Brian Ma <chma0@nuvoton.com>
 ---
- obmc-flash-bmc | 41 +++++++++++++++++++++++++++++------------
+ bmc/obmc-flash-bmc | 41 +++++++++++++++++++++++++++++------------
  1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/obmc-flash-bmc b/obmc-flash-bmc
-index 442bb7a..5e4c1e2 100644
---- a/obmc-flash-bmc
-+++ b/obmc-flash-bmc
+diff --git a/bmc/obmc-flash-bmc b/bmc/obmc-flash-bmc
+index c72bece3..f8837336 100644
+--- a/bmc/obmc-flash-bmc
++++ b/bmc/obmc-flash-bmc
 @@ -1,6 +1,8 @@
  #!/bin/bash
  set -eo pipefail
@@ -23,7 +23,7 @@ index 442bb7a..5e4c1e2 100644
  # Get the root mtd device number (mtdX) from "/dev/ubiblockX_Y on /"
  function findrootmtd() {
      rootmatch=" on / "
-@@ -387,7 +389,7 @@ function ubi_setenv() {
+@@ -400,7 +402,7 @@ function ubi_setenv() {
  function mtd_write() {
      flashmtd="$(findmtd "${reqmtd}")"
      img="/tmp/images/${version}/${imgfile}"
@@ -32,7 +32,7 @@ index 442bb7a..5e4c1e2 100644
  }
  
  function backup_env_vars() {
-@@ -491,6 +493,13 @@ function cmp_uboot() {
+@@ -504,6 +506,13 @@ function cmp_uboot() {
      device="$1"
      image="$2"
  
@@ -46,7 +46,7 @@ index 442bb7a..5e4c1e2 100644
      # Since the image file can be smaller than the device, copy the device to a
      # tmp file and write the image file on top, then compare the sum of each.
      # Use cat / redirection since busybox does not have the conv=notrunc option.
-@@ -501,6 +510,9 @@ function cmp_uboot() {
+@@ -514,6 +523,9 @@ function cmp_uboot() {
      imgSum="$(sha256sum "${tmpFile}")"
      rm -f "${tmpFile}"
  
@@ -56,7 +56,7 @@ index 442bb7a..5e4c1e2 100644
      if [ "${imgSum}" == "${devSum}" ]; then
          echo "0";
      else
-@@ -562,36 +574,34 @@ function mmc_mount() {
+@@ -575,36 +587,34 @@ function mmc_mount() {
  }
  
  function mmc_update() {
@@ -101,7 +101,7 @@ index 442bb7a..5e4c1e2 100644
      if [ -f "${imgpath}"/"${version}"/image-hostfw ]; then
          # Remove patches
          hostfw_alt="hostfw/alternate"
-@@ -610,7 +620,14 @@ function mmc_update() {
+@@ -623,7 +633,14 @@ function mmc_update() {
          mount "${hostfwdir}"/hostfw-"${label}" "${hostfwdir}"/alternate -o ro
      fi
  
@@ -118,5 +118,5 @@ index 442bb7a..5e4c1e2 100644
  
  function mmc_remove() {
 -- 
-2.34.1
+2.43.0
 

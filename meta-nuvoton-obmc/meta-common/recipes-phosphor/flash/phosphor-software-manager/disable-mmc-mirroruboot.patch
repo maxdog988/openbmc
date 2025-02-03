@@ -1,18 +1,21 @@
-From e5fc2cf05370a58e003a18db1348a065ff1cbb93 Mon Sep 17 00:00:00 2001
-From: Brian Ma <chma0@nuvoton.com>
-Date: Tue, 17 Dec 2024 09:19:15 +0800
+From 2b99e882308bf4c31d334c6383620689938b107b Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Mon, 3 Feb 2025 11:51:25 +0800
 Subject: [PATCH] disable mmc mirroruboot
 
 Upstream-Status: Inappropriate [oe-specific]
+
+Signed-off-by: Brian Ma <chma0@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- obmc-flash-bmc | 1 +
+ bmc/obmc-flash-bmc | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/obmc-flash-bmc b/obmc-flash-bmc
-index 5e4c1e2..e51a589 100644
---- a/obmc-flash-bmc
-+++ b/obmc-flash-bmc
-@@ -650,6 +650,7 @@ function mmc_setprimary() {
+diff --git a/bmc/obmc-flash-bmc b/bmc/obmc-flash-bmc
+index f9cc4e25..c72bece3 100644
+--- a/bmc/obmc-flash-bmc
++++ b/bmc/obmc-flash-bmc
+@@ -646,6 +646,7 @@ function mmc_setprimary() {
  }
  
  function mmc_mirroruboot() {
@@ -21,5 +24,5 @@ index 5e4c1e2..e51a589 100644
      bootdev=$(cat /sys/kernel/debug/aspeed/sbc/abr_image)
      if [[ "${bootdev}" == "0" ]]; then
 -- 
-2.34.1
+2.43.0
 

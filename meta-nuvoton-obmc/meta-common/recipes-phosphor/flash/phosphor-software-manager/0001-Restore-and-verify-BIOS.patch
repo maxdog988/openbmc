@@ -1,19 +1,19 @@
-From a9f83d0b34fa553e74dd5d8fc82f4213e4f05e46 Mon Sep 17 00:00:00 2001
+From ca9069b4b11bf1274179c719b412998d07a2b82c Mon Sep 17 00:00:00 2001
 From: Brian Ma <chma0@nuvoton.com>
 Date: Wed, 15 Jun 2022 16:07:53 +0800
 Subject: [PATCH] Restore and verify BIOS
 
 Upstream-Status: Inappropriate [oe-specific]
 ---
- image_verify.cpp |  1 +
- item_updater.cpp | 24 +++++++++++++++++++++++-
- meson.build      |  2 ++
+ bmc/image_verify.cpp |  1 +
+ bmc/item_updater.cpp | 24 +++++++++++++++++++++++-
+ bmc/meson.build      |  2 ++
  3 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/image_verify.cpp b/image_verify.cpp
-index 687fff7..c99d70b 100644
---- a/image_verify.cpp
-+++ b/image_verify.cpp
+diff --git a/bmc/image_verify.cpp b/bmc/image_verify.cpp
+index 687fff70..c99d70b5 100644
+--- a/bmc/image_verify.cpp
++++ b/bmc/image_verify.cpp
 @@ -107,6 +107,7 @@ bool Signature::verifyFullImage()
      }
  
@@ -22,11 +22,11 @@ index 687fff7..c99d70b 100644
          fs::path(imageDirPath) / "image-bmc.sig",
          fs::path(imageDirPath) / "image-hostfw.sig",
          fs::path(imageDirPath) / "image-kernel.sig",
-diff --git a/item_updater.cpp b/item_updater.cpp
-index 356a2ac..6f54f7c 100644
---- a/item_updater.cpp
-+++ b/item_updater.cpp
-@@ -939,6 +939,28 @@ bool ItemUpdater::checkImage(const std::string& filePath,
+diff --git a/bmc/item_updater.cpp b/bmc/item_updater.cpp
+index 351fc4c4..cd9d81e5 100644
+--- a/bmc/item_updater.cpp
++++ b/bmc/item_updater.cpp
+@@ -944,6 +944,28 @@ bool ItemUpdater::checkImage(const std::string& filePath,
  }
  
  #ifdef HOST_BIOS_UPGRADE
@@ -55,7 +55,7 @@ index 356a2ac..6f54f7c 100644
  void ItemUpdater::createBIOSObject()
  {
      std::string path = BIOS_OBJPATH;
-@@ -955,7 +977,7 @@ void ItemUpdater::createBIOSObject()
+@@ -960,7 +982,7 @@ void ItemUpdater::createBIOSObject()
      createUpdateableAssociation(path);
  
      auto versionId = path.substr(pos + 1);
@@ -64,11 +64,11 @@ index 356a2ac..6f54f7c 100644
      AssociationList assocs;
      biosActivation = std::make_unique<Activation>(
          bus, path, *this, versionId, server::Activation::Activations::Active,
-diff --git a/meson.build b/meson.build
-index b81d4bf..10b9896 100644
---- a/meson.build
-+++ b/meson.build
-@@ -57,6 +57,8 @@ conf.set_quoted('UPDATEABLE_REV_ASSOCIATION', 'software_version')
+diff --git a/bmc/meson.build b/bmc/meson.build
+index 0ff1c178..45a3d4e0 100644
+--- a/bmc/meson.build
++++ b/bmc/meson.build
+@@ -33,6 +33,8 @@ conf.set_quoted('UPDATEABLE_REV_ASSOCIATION', 'software_version')
  conf.set_quoted('BMC_ROFS_PREFIX', get_option('media-dir') + '/rofs-')
  # The name of the BMC table of contents file
  conf.set_quoted('OS_RELEASE_FILE', '/etc/os-release')
@@ -78,5 +78,5 @@ index b81d4bf..10b9896 100644
  conf.set_quoted('PERSIST_DIR', '/var/lib/phosphor-bmc-code-mgmt/')
  
 -- 
-2.34.1
+2.43.0
 
