@@ -7,7 +7,7 @@ DEPENDS += " \
         sdbusplus \
         systemd \
         "
-SRCREV = "d25367bd9726a479eddbec85c51722d62043c724"
+SRCREV = "0e78828ce927548b4dd679e06fdaf2f294983289"
 PV = "1.0+git${SRCPV}"
 PR = "r1"
 
@@ -37,10 +37,14 @@ def pdi_meson_config(d):
         ])
 pdi_meson_config[vardeps] = "OBMC_ORG_YAML_SUBDIRS"
 EXTRA_OEMESON += "${@pdi_meson_config(d)}"
-# Remove all schemas by default regardless of the meson_options.txt config
+# Remove all schemas by default regardless of the meson.options config
 do_write_config:append() {
-    for intf in $(grep "^option('data_" ${S}/meson_options.txt | sed "s,^.*\(data_[^']*\).*$,\1,"); do
+    for intf in $(grep "^option('data_" ${S}/meson.options | sed "s,^.*\(data_[^']*\).*$,\1,"); do
         sed -i "/^\[built-in options\]\$/a$intf = false" ${WORKDIR}/meson.cross
     done
 }
-do_write_config[deptask] += "do_unpack"
+
+# The write-config needs to happen after the unpack and patch steps.
+# Unpack is what creates the original source.  Someone could apply patches to
+# the repository that affects meson.options.
+do_write_config[depends] += "${PN}:do_unpack ${PN}:do_patch"

@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# 88E6393X PWRGD gpio number
+CHIP_PWRGD=100
+
+set_bmc_ready()
+{
+    local bmc_ready="/sys/class/leds/bmc_ready_noled/brightness"
+    echo 1 > ${bmc_ready}
+
+    return 0
+}
+
+#Meta request Quanta thermal team set fixed PWM to 70% before fan table finished.
+set_fan_pwm_fixed()
+{
+    echo $((255 * 70/100 )) >/sys/class/i2c-dev/i2c-18/device/18-0020/hwmon/hwmon*/pwm1
+    echo $((255 * 70/100 )) >/sys/class/i2c-dev/i2c-18/device/18-0020/hwmon/hwmon*/pwm3
+    echo $((255 * 70/100 )) >/sys/class/i2c-dev/i2c-18/device/18-0020/hwmon/hwmon*/pwm4
+    echo $((255 * 70/100 )) >/sys/class/i2c-dev/i2c-18/device/18-0020/hwmon/hwmon*/pwm6
+}
+
+power_on_led_init() {
+    systemctl start obmc-led-group-start@power_on.service
+}
+
+mdio_setting_for_marvell_chip()
+{
+    # Enable 802.1Q mode with secure mode (0x03) on port 0/2/9
+    mdio 1* 0x00 0x08 0x2c80
+    mdio 1* 0x02 0x08 0x2c80
+    mdio 1* 0x09 0x08 0x2c80
+
+    # Table 67: Default Port VLAN ID & Priority (Offset: 0x07
+    # Set default VID
+    # Port 2 = 10
+    # Port 9 = 20
+    mdio 1* 0x02 0x07 0x000a
+    mdio 1* 0x09 0x07 0x0014
+    sleep 1
+    # Setting VLAN Table Unit (VTU)
+    # Vid = 10
+    mdio 1* 0x1b 0x02 0x0000
+    mdio 1* 0x1b 0x03 0x0000
+    mdio 1* 0x1b 0x06 0x100a
+    # Port 0 = 2 (egress tagged)
+    # Port 2 = 1 (egress untagged)
+    mdio 1* 0x1b 0x07 0xffde
+    mdio 1* 0x1b 0x08 0x003f
+    mdio 1* 0x1b 0x05 0xb000
+
+    sleep 3
+    # Setting VLAN Table Unit (VTU)
+    # Vid = 2
+    mdio 1* 0x1b 0x02 0x0000
+    mdio 1* 0x1b 0x03 0x0000
+    mdio 1* 0x1b 0x06 0x1014
+    # Port 0 = 2 (egress tagged)
+    # Port 9 = 1 (egress untagged)
+    mdio 1* 0x1b 0x07 0xfffe
+    mdio 1* 0x1b 0x08 0x0037
+    mdio 1* 0x1b 0x05 0xb000
+}
+
+# Change the i2c path to the eeprom to the 88E6393X
+set_gpio FM_88E6393X_BIN_UPDATE_EN_N 1
+# Sleep 2s
+sleep 2s
+# Enable the pwrgd to the 88E6393X
+# Temp setting by gpio group and number directly, need to discuss whether need to define in the DTS (long term solution)
+gpioset 0 "$CHIP_PWRGD"=1
+
+set_fan_pwm_fixed
+set_bmc_ready
+power_on_led_init
+mdio_setting_for_marvell_chip
+
+exit 0
