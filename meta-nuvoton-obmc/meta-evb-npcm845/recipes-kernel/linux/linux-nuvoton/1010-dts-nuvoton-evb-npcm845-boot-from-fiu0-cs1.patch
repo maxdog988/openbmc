@@ -3,8 +3,7 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 26 Oct 2021 15:20:42 +0800
 Subject: [PATCH 2/2] dts: nuvoton: evb-npcm845: boot from fiu0 cs1
 
-Upstream-Status: Inappropriate [oe-specific]
-
+Upstream-Status: Pending [Not submitted to upstream yet]
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts | 6 +++---

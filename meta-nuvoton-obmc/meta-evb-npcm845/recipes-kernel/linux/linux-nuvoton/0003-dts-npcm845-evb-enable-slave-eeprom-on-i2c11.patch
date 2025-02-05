@@ -3,7 +3,7 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Mon, 11 Mar 2024 09:32:06 +0800
 Subject: [PATCH] dts: npcm845-evb: enable slave-eeprom on i2c11
 
-Upstream-Status: Inappropriate [oe-specific]
+Upstream-Status: Pending [Not submitted to upstream yet]
 
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts | 6 ++++++

@@ -1,0 +1,37 @@
+From b8394aea627d6d2c941594d3ba6f7ca65a2c8dea Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Wed, 5 Feb 2025 10:45:49 +0800
+Subject: [PATCH] dts: arm64: evb-npcm845: enable gdma on i3c0
+
+Upstream-Status: Pending [Not submitted to upstream yet]
+---
+ arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+index aa4b512b3a94..9808e15abc4e 100644
+--- a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
++++ b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+@@ -351,6 +351,10 @@ &pcimbox {
+ 	status = "okay";
+ };
+ 
++&gdma0 {
++	status = "okay";
++};
++
+ &udc0 {
+ 	status = "okay";
+ };
+@@ -670,6 +674,8 @@ &i3c0 {
+ 	status = "okay";
+ 	i3c-scl-hz = <12500000>;
+ 	i2c-scl-hz = <400000>;
++	dmas = <&gdma0 0>, <&gdma0 1>;
++	dma-names = "tx", "rx";
+ };
+ 
+ &i3c1 {
+-- 
+2.43.0
+

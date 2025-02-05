@@ -3,8 +3,7 @@ From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 14 Mar 2023 09:39:39 +0800
 Subject: [PATCH 1/2] dts: nuvoton: evb-npcm845: support openbmc partition
 
-Upstream-Status: Inappropriate [oe-specific]
-
+Upstream-Status: Pending [Not submitted to upstream yet]
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
  .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts  | 51 ++++++-------------

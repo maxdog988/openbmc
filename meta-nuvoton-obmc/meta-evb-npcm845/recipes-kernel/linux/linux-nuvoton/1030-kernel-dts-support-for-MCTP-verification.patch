@@ -3,8 +3,7 @@ From: Mia Lin <mimi05633@gmail.com>
 Date: Wed, 24 May 2023 10:22:20 +0800
 Subject: [PATCH 1/1] kernel dts support for MCTP verification
 
-Upstream-Status: Inappropriate [oe-specific]
-
+Upstream-Status: Pending [Not submitted to upstream yet]
 Signed-off-by: Mia Lin <mimi05633@gmail.com>
 ---
  arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 7 +++++++
