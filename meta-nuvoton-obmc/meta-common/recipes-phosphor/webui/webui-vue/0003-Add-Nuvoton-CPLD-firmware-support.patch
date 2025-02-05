@@ -1,7 +1,7 @@
-From af475f1f01dddf7263a6569463b4cb5f69f39507 Mon Sep 17 00:00:00 2001
+From 9aebca7c30983354171f7f3a9e8e41f095d355f7 Mon Sep 17 00:00:00 2001
 From: jhkang <jhkang@nuvoton.com>
 Date: Wed, 29 Jun 2022 02:30:36 -0700
-Subject: [PATCH 3/4] Add Nuvoton CPLD firmware support
+Subject: [PATCH] Add Nuvoton CPLD firmware support
 
 Upstream-Status: Inappropriate [oe-specific]
 
@@ -16,28 +16,28 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsCpld.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index 7a2eef27..71b2052d 100644
+index 58ee6779..686aec75 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
 @@ -334,6 +334,7 @@
          "sectionTitleBmcCardsCombined": "BMC and server",
-         "sectionTitleHostCards": "Host",
- 	"sectionTitleMcuCards": "MCU",
-+	"sectionTitleCpldCards": "CPLD",
- 	"sectionTitleUpdateFirmware": "Update firmware",
+         "sectionTitleBiosCards": "BIOS",
+         "sectionTitleMcuCards": "MCU",
++        "sectionTitleCpldCards": "CPLD",
+         "sectionTitleUpdateFirmware": "Update firmware",
          "alert": {
              "operationInProgress": "Server power operation in progress.",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index 0b23fbd3..587d93ef 100644
+index d7ddacf8..f64ef6c3 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -7,6 +7,7 @@ const FirmwareStore = {
      bmcFirmware: [],
-     hostFirmware: [],
+     biosFirmware: [],
      mcuFirmware: null,
 +    cpldFirmware: null,
      bmcActiveFirmwareId: null,
-     hostActiveFirmwareId: null,
+     biosActiveFirmwareId: null,
      applyTime: null,
 @@ -26,6 +27,7 @@ const FirmwareStore = {
        );
@@ -49,7 +49,7 @@ index 0b23fbd3..587d93ef 100644
          (firmware) => firmware.id !== state.bmcActiveFirmwareId,
 @@ -43,6 +45,7 @@ const FirmwareStore = {
      setBmcFirmware: (state, firmware) => (state.bmcFirmware = firmware),
-     setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
+     setBiosFirmware: (state, firmware) => (state.biosFirmware = firmware),
      setMcuFirmware: (state, firmware) => (state.mcuFirmware = firmware),
 +    setCpldFirmware: (state, firmware) => (state.cpldFirmware = firmware),
      setApplyTime: (state, applyTime) => (state.applyTime = applyTime),
@@ -67,7 +67,7 @@ index 0b23fbd3..587d93ef 100644
                .split('/')
                .pop();
 diff --git a/src/views/Operations/Firmware/Firmware.vue b/src/views/Operations/Firmware/Firmware.vue
-index 89d53c3a..5917e469 100644
+index ec8f9467..ee18eebe 100644
 --- a/src/views/Operations/Firmware/Firmware.vue
 +++ b/src/views/Operations/Firmware/Firmware.vue
 @@ -20,6 +20,9 @@
@@ -82,7 +82,7 @@ index 89d53c3a..5917e469 100644
  
 @@ -46,6 +49,7 @@ import BmcCards from './FirmwareCardsBmc';
  import FormUpdate from './FirmwareFormUpdate';
- import HostCards from './FirmwareCardsHost';
+ import BiosCards from './FirmwareCardsBios';
  import McuCards from './FirmwareCardsMcu';
 +import CpldCards from './FirmwareCardsCpld';
  import PageSection from '@/components/Global/PageSection';
@@ -90,7 +90,7 @@ index 89d53c3a..5917e469 100644
  
 @@ -60,6 +64,7 @@ export default {
      FormUpdate,
-     HostCards,
+     BiosCards,
      McuCards,
 +    CpldCards,
      PageSection,
@@ -145,5 +145,5 @@ index 00000000..230d0af2
 +}
 +</style>
 -- 
-2.34.1
+2.43.0
 

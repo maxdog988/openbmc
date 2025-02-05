@@ -1,47 +1,43 @@
-From 8fedc4e600f68aee91b8d763ea1129ec6e3b6947 Mon Sep 17 00:00:00 2001
+From dbf761303a1092b16120cbf109cb8da3f91153e0 Mon Sep 17 00:00:00 2001
 From: Allen Kang <jhkang@nuvoton.com>
 Date: Tue, 21 Feb 2023 13:46:21 +0800
-Subject: [PATCH 4/4] Add Nuvoton PSU firmware support
+Subject: [PATCH] Add Nuvoton PSU firmware support
 
 Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Allen Kang <jhkang@nuvoton.com>
 Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- src/locales/en-US.json                        |  5 ++-
+ src/locales/en-US.json                        |  1 +
  src/store/modules/Operations/FirmwareStore.js |  7 ++++
  src/views/Operations/Firmware/Firmware.vue    |  5 +++
  .../Operations/Firmware/FirmwareCardsPsu.vue  | 42 +++++++++++++++++++
- 4 files changed, 57 insertions(+), 2 deletions(-)
+ 4 files changed, 55 insertions(+)
  create mode 100644 src/views/Operations/Firmware/FirmwareCardsPsu.vue
 
 diff --git a/src/locales/en-US.json b/src/locales/en-US.json
-index 71b2052d..3319ec62 100644
+index 686aec75..c2b73097 100644
 --- a/src/locales/en-US.json
 +++ b/src/locales/en-US.json
-@@ -333,8 +333,9 @@
-         "sectionTitleBmcCards": "BMC",
-         "sectionTitleBmcCardsCombined": "BMC and server",
-         "sectionTitleHostCards": "Host",
--	"sectionTitleMcuCards": "MCU",
--	"sectionTitleCpldCards": "CPLD",
-+        "sectionTitleMcuCards": "MCU",
-+        "sectionTitleCpldCards": "CPLD",
+@@ -335,6 +335,7 @@
+         "sectionTitleBiosCards": "BIOS",
+         "sectionTitleMcuCards": "MCU",
+         "sectionTitleCpldCards": "CPLD",
 +        "sectionTitlePsuCards": "PSU",
- 	"sectionTitleUpdateFirmware": "Update firmware",
+         "sectionTitleUpdateFirmware": "Update firmware",
          "alert": {
              "operationInProgress": "Server power operation in progress.",
 diff --git a/src/store/modules/Operations/FirmwareStore.js b/src/store/modules/Operations/FirmwareStore.js
-index 587d93ef..54e4d210 100644
+index f64ef6c3..d044f128 100644
 --- a/src/store/modules/Operations/FirmwareStore.js
 +++ b/src/store/modules/Operations/FirmwareStore.js
 @@ -8,6 +8,7 @@ const FirmwareStore = {
-     hostFirmware: [],
+     biosFirmware: [],
      mcuFirmware: null,
      cpldFirmware: null,
 +    psuFirmware: null,
      bmcActiveFirmwareId: null,
-     hostActiveFirmwareId: null,
+     biosActiveFirmwareId: null,
      applyTime: null,
 @@ -28,6 +29,7 @@ const FirmwareStore = {
      },
@@ -52,7 +48,7 @@ index 587d93ef..54e4d210 100644
        return state.bmcFirmware.find(
          (firmware) => firmware.id !== state.bmcActiveFirmwareId,
 @@ -46,6 +48,7 @@ const FirmwareStore = {
-     setHostFirmware: (state, firmware) => (state.hostFirmware = firmware),
+     setBiosFirmware: (state, firmware) => (state.biosFirmware = firmware),
      setMcuFirmware: (state, firmware) => (state.mcuFirmware = firmware),
      setCpldFirmware: (state, firmware) => (state.cpldFirmware = firmware),
 +    setPsuFirmware: (state, firmware) => (state.psuFirmware = firmware),
@@ -71,7 +67,7 @@ index 587d93ef..54e4d210 100644
                .split('/')
                .pop();
 diff --git a/src/views/Operations/Firmware/Firmware.vue b/src/views/Operations/Firmware/Firmware.vue
-index 5917e469..9fb28e84 100644
+index ee18eebe..3ab6cf8b 100644
 --- a/src/views/Operations/Firmware/Firmware.vue
 +++ b/src/views/Operations/Firmware/Firmware.vue
 @@ -23,6 +23,9 @@
@@ -85,7 +81,7 @@ index 5917e469..9fb28e84 100644
      </b-row>
  
 @@ -50,6 +53,7 @@ import FormUpdate from './FirmwareFormUpdate';
- import HostCards from './FirmwareCardsHost';
+ import BiosCards from './FirmwareCardsBios';
  import McuCards from './FirmwareCardsMcu';
  import CpldCards from './FirmwareCardsCpld';
 +import PsuCards from './FirmwareCardsPsu';
@@ -93,7 +89,7 @@ index 5917e469..9fb28e84 100644
  import PageTitle from '@/components/Global/PageTitle';
  
 @@ -65,6 +69,7 @@ export default {
-     HostCards,
+     BiosCards,
      McuCards,
      CpldCards,
 +    PsuCards,
@@ -149,5 +145,5 @@ index 00000000..c0b94319
 +}
 +</style>
 -- 
-2.34.1
+2.43.0
 
