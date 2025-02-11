@@ -5,6 +5,6 @@ require recipes-bsp/u-boot/u-boot-nuvoton.inc
 
 PROVIDES += "u-boot"
 
-DEPENDS += "dtc-native"
+DEPENDS += "dtc-native gnutls-native"
 
 SRC_URI:append:df-phosphor-mmc = " file://u-boot-emmc.cfg"
