@@ -33,17 +33,23 @@ source /usr/share/gbmc-br-lib.sh || exit
 # hooks that are executed after each event.
 gbmc_br_source_dir /usr/share/gbmc-br-dhcp || exit
 
-# We don't want to allow 2 simultaneous sessions. Check for a pidfile
-PID_FILE=/run/gbmc-br-dhcp.pid
-exec {PID_FD}<>$PID_FILE
-# If we can't acquire the lock we already have a successful DHCP process in the works
-flock -xn $PID_FD || exit 0
-
-# Write out the current PID and cleanup when complete
-trap 'rm -f $PID_FILE' EXIT
-echo "$$" >&$PID_FD
-
 if [ "$1" = bound ]; then
+  # We don't want to allow 2 simultaneous sessions. Check for a pidfile
+  PID_FILE=/run/gbmc-br-dhcp.pid
+  exec {PID_FD}<>$PID_FILE
+  # If we can't acquire the lock we already have a successful DHCP process in the works
+  flock -xn $PID_FD || exit 0
+
+  # Write out the current PID and cleanup when complete
+  trap 'rm -f $PID_FILE' EXIT
+  echo "$$" >&$PID_FD
+
+  # Don't let other DHCP processes start by hogging the pidfile indefinitely
+  # on successful termination.
+  # This intentionally comes after the pidfile hook to replace it, since we
+  # won't need to remove the pidfile if we never terminate.
+  trap '(( $? == 0 )) && sleep infinity' EXIT
+
   # Variable is from the environment via udhcpc6
   # shellcheck disable=SC2154
   echo "DHCPv6(gbmcbr): $ipv6/128" >&2
