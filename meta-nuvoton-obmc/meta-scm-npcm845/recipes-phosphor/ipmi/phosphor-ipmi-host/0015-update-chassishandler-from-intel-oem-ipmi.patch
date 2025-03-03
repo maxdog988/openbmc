@@ -1,4 +1,4 @@
-From 4a96eaf5b9fa5ed0a27730c88971508299da9620 Mon Sep 17 00:00:00 2001
+From 477151cd5cd9d29585d6a510e56b2a49a54d7978 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Tue, 26 Jul 2022 12:09:14 +0800
 Subject: [PATCH] update chassishandler from intel oem ipmi
@@ -11,7 +11,7 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  1 file changed, 177 insertions(+), 66 deletions(-)
 
 diff --git a/chassishandler.cpp b/chassishandler.cpp
-index 850b0905..f66ed5b2 100644
+index e48816fd..224effc3 100644
 --- a/chassishandler.cpp
 +++ b/chassishandler.cpp
 @@ -59,6 +59,7 @@ static constexpr size_t ipAddrOffset = 17;
@@ -47,7 +47,7 @@ index 850b0905..f66ed5b2 100644
  // Phosphor Host State manager
  namespace State = sdbusplus::server::xyz::openbmc_project::state;
  namespace fs = std::filesystem;
-@@ -1008,42 +1011,39 @@ std::optional<bool> getPowerStatus()
+@@ -1006,42 +1009,39 @@ std::optional<bool> getPowerStatus()
   */
  bool getACFailStatus()
  {
@@ -77,7 +77,7 @@ index 850b0905..f66ed5b2 100644
      catch (const std::exception& e)
      {
          lg2::error(
--            "Failed to fetch PFail property ({PATH}/{INTERFAC}): {ERROR}",
+-            "Failed to fetch PFail property ({PATH}/{INTERFACE}): {ERROR}",
 -            "PATH", powerControlObj, "INTERFACE", powerControlIntf, "ERROR", e);
 +            "Failed to fetch ACBoot property ({PATH}/{INTERFAC}): {ERROR}",
 +            "PATH", acBootObj, "INTERFACE", acBootIntf, "ERROR", e);
@@ -106,7 +106,7 @@ index 850b0905..f66ed5b2 100644
      }
      catch (const sdbusplus::exception_t& e)
      {
-@@ -1054,25 +1054,64 @@ static std::optional<bool> getButtonEnabled(const std::string& buttonPath,
+@@ -1052,25 +1052,64 @@ static std::optional<bool> getButtonEnabled(const std::string& buttonPath,
      return std::make_optional(buttonDisabled);
  }
  
@@ -181,7 +181,7 @@ index 850b0905..f66ed5b2 100644
      return true;
  }
  
-@@ -1153,8 +1192,7 @@ ipmi::RspType<bool,    // Power is on
+@@ -1151,8 +1190,7 @@ ipmi::RspType<bool,    // Power is on
      }
  
      //  Front Panel Button Capabilities and disable/enable status(Optional)
@@ -191,7 +191,7 @@ index 850b0905..f66ed5b2 100644
      // allow disable if the interface is present
      bool powerButtonDisableAllow = static_cast<bool>(powerButtonReading);
      // default return the button is enabled (not disabled)
-@@ -1165,8 +1203,7 @@ ipmi::RspType<bool,    // Power is on
+@@ -1163,8 +1201,7 @@ ipmi::RspType<bool,    // Power is on
          powerButtonDisabled = *powerButtonReading;
      }
  
@@ -201,7 +201,7 @@ index 850b0905..f66ed5b2 100644
      // allow disable if the interface is present
      bool resetButtonDisableAllow = static_cast<bool>(resetButtonReading);
      // default return the button is enabled (not disabled)
-@@ -1177,8 +1214,27 @@ ipmi::RspType<bool,    // Power is on
+@@ -1175,8 +1212,27 @@ ipmi::RspType<bool,    // Power is on
          resetButtonDisabled = *resetButtonReading;
      }
  
@@ -229,7 +229,7 @@ index 850b0905..f66ed5b2 100644
      bool chassisIntrusionActive = false;
      std::optional<bool> chassisIntrusionStatus = getChassisIntrusionStatus(ctx);
      if (chassisIntrusionStatus)
-@@ -1195,16 +1251,13 @@ ipmi::RspType<bool,    // Power is on
+@@ -1193,16 +1249,13 @@ ipmi::RspType<bool,    // Power is on
      constexpr bool powerDownOverload = false;
      constexpr bool powerDownInterlock = false;
      constexpr bool powerDownPowerFault = false;
@@ -246,7 +246,7 @@ index 850b0905..f66ed5b2 100644
      constexpr bool sleepButtonDisableAllow = false;
  
      return ipmi::responseSuccess(
-@@ -1220,12 +1273,12 @@ ipmi::RspType<bool,    // Power is on
+@@ -1218,12 +1271,12 @@ ipmi::RspType<bool,    // Power is on
          coolingFanFault, chassisIdentifyState, chassisIdentifySupport,
          false, // reserved
  
@@ -262,7 +262,7 @@ index 850b0905..f66ed5b2 100644
  {
      Unknown = 0x0,
      RemoteCommand = 0x1,
-@@ -1279,14 +1332,14 @@ static IpmiRestartCause
+@@ -1277,14 +1330,14 @@ static IpmiRestartCause
              return IpmiRestartCause::Unknown;
          }
      }
@@ -279,7 +279,7 @@ index 850b0905..f66ed5b2 100644
  {
      constexpr const char* restartCausePath = "/xyz/openbmc_project/state/host0";
      constexpr const char* restartCauseIntf = "xyz.openbmc_project.State.Host";
-@@ -1314,23 +1367,81 @@ static std::optional<uint4_t> getRestartCause(ipmi::Context::ptr ctx)
+@@ -1312,23 +1365,81 @@ static std::optional<uint4_t> getRestartCause(ipmi::Context::ptr ctx)
          "ERROR", ec.message(), "PATH", restartCausePath, "INTERFACE",
          restartCauseIntf);
      return std::nullopt;
@@ -366,7 +366,7 @@ index 850b0905..f66ed5b2 100644
  }
  /** @brief Implementation of chassis control command
   *
-@@ -2313,23 +2424,23 @@ ipmi::RspType<uint3_t, // policy support
+@@ -2311,23 +2422,23 @@ ipmi::RspType<uint3_t, // policy support
      return ipmi::responseSuccess(power_policy::allSupport, reserved);
  }
  
@@ -404,5 +404,5 @@ index 850b0905..f66ed5b2 100644
      }
      return ipmi::responseSuccess();
 -- 
-2.34.1
+2.43.0
 

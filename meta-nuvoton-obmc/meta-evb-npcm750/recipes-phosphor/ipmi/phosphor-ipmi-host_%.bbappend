@@ -14,7 +14,7 @@ EXTRA_OEMESON:append =" -Di2c-whitelist-check=disabled"
 
 # Add send/get message support
 # ipmid <-> ipmb <-> i2c
-SRC_URI:append =" file://0002-Support-bridging-commands.patch"
+# SRC_URI:append =" file://0002-Support-bridging-commands.patch"
 
 PACKAGECONFIG:append  =" ${@entity_enabled(d, 'dynamic-sensors', '')}"
 
