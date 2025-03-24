@@ -1,28 +1,29 @@
-From 1ff24df3b9517f1f28ff282e7230b4ef82b89e78 Mon Sep 17 00:00:00 2001
-From: Brian Ma <chma0@nuvoton.com>
-Date: Fri, 13 May 2022 10:30:14 +0800
-Subject: [PATCH] Add set BIOS version support
+From 9fac8d68fb8494b8163ea923a866b24c231816a3 Mon Sep 17 00:00:00 2001
+From: Stanley Chu <yschu@nuvoton.com>
+Date: Mon, 15 Aug 2022 16:46:21 +0800
+Subject: [PATCH] Add-set-BIOS-version-support
 
 Upstream-Status: Inappropriate [oe-specific]
 
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  apphandler.cpp | 45 +++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 45 insertions(+)
 
 diff --git a/apphandler.cpp b/apphandler.cpp
-index 0577c07..615c329 100644
+index 1e320615..d78188f4 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
-@@ -50,6 +50,8 @@ static constexpr auto versionIntf = "xyz.openbmc_project.Software.Version";
+@@ -56,6 +56,8 @@ static constexpr auto versionIntf = "xyz.openbmc_project.Software.Version";
  static constexpr auto activationIntf =
      "xyz.openbmc_project.Software.Activation";
  static constexpr auto softwareRoot = "/xyz/openbmc_project/software";
 +static constexpr auto biosObjPath = "/xyz/openbmc_project/software/bios_active";
 +static constexpr auto biosFile = "/var/lib/phosphor-bmc-code-mgmt/bios-release";
  
- void register_netfn_app_functions() __attribute__((constructor));
+ void registerNetFnAppFunctions() __attribute__((constructor));
  
-@@ -1366,6 +1368,46 @@ ipmi::RspType<uint8_t,                // Parameter revision
+@@ -1482,6 +1484,46 @@ ipmi::RspType<uint8_t,                // Parameter revision
      return ipmi::responseSuccess(paramRevision, setSelector, configData);
  }
  
@@ -69,7 +70,7 @@ index 0577c07..615c329 100644
  ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
                                       std::vector<uint8_t> configData)
  {
-@@ -1455,6 +1497,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
+@@ -1572,6 +1614,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
          std::copy_n(configData.begin(), count, paramString.begin() + offset);
      }
      sysInfoParamStore->update(paramSelector, paramString);
@@ -80,5 +81,5 @@ index 0577c07..615c329 100644
  }
  
 -- 
-2.17.1
+2.43.0
 

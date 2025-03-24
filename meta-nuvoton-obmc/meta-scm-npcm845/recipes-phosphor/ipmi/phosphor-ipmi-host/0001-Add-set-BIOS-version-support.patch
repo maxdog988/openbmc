@@ -1,7 +1,7 @@
-From 33a5867b8361813a66c29449e146f51ffb6f6ca6 Mon Sep 17 00:00:00 2001
+From 9fac8d68fb8494b8163ea923a866b24c231816a3 Mon Sep 17 00:00:00 2001
 From: Stanley Chu <yschu@nuvoton.com>
 Date: Mon, 15 Aug 2022 16:46:21 +0800
-Subject: [PATCH 01/18] Add-set-BIOS-version-support
+Subject: [PATCH] Add-set-BIOS-version-support
 
 Upstream-Status: Inappropriate [oe-specific]
 
@@ -11,19 +11,19 @@ Signed-off-by: Stanley Chu <yschu@nuvoton.com>
  1 file changed, 45 insertions(+)
 
 diff --git a/apphandler.cpp b/apphandler.cpp
-index c7b1c37f..0da8d29f 100644
+index 1e320615..d78188f4 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
-@@ -55,6 +55,8 @@ static constexpr auto versionIntf = "xyz.openbmc_project.Software.Version";
+@@ -56,6 +56,8 @@ static constexpr auto versionIntf = "xyz.openbmc_project.Software.Version";
  static constexpr auto activationIntf =
      "xyz.openbmc_project.Software.Activation";
  static constexpr auto softwareRoot = "/xyz/openbmc_project/software";
 +static constexpr auto biosObjPath = "/xyz/openbmc_project/software/bios_active";
 +static constexpr auto biosFile = "/var/lib/phosphor-bmc-code-mgmt/bios-release";
  
- void register_netfn_app_functions() __attribute__((constructor));
+ void registerNetFnAppFunctions() __attribute__((constructor));
  
-@@ -1427,6 +1429,46 @@ ipmi::RspType<uint8_t,                // Parameter revision
+@@ -1482,6 +1484,46 @@ ipmi::RspType<uint8_t,                // Parameter revision
      return ipmi::responseSuccess(paramRevision, setSelector, configData);
  }
  
@@ -70,7 +70,7 @@ index c7b1c37f..0da8d29f 100644
  ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
                                       std::vector<uint8_t> configData)
  {
-@@ -1521,6 +1563,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
+@@ -1572,6 +1614,9 @@ ipmi::RspType<> ipmiAppSetSystemInfo(uint8_t paramSelector, uint8_t data1,
          std::copy_n(configData.begin(), count, paramString.begin() + offset);
      }
      sysInfoParamStore->update(paramSelector, paramString);
@@ -81,5 +81,5 @@ index c7b1c37f..0da8d29f 100644
  }
  
 -- 
-2.34.1
+2.43.0
 

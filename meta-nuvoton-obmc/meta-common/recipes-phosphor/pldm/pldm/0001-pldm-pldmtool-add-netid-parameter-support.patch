@@ -1,4 +1,4 @@
-From 7aa5460668247fb0d2c47e2c297e7ae5feca485a Mon Sep 17 00:00:00 2001
+From dae974042052fdc74835992d890eb4987eaa7513 Mon Sep 17 00:00:00 2001
 From: Joseph Liu <kwliu@nuvoton.com>
 Date: Fri, 27 Oct 2023 16:16:40 +0800
 Subject: [PATCH] pldm: pldmtool: add netid parameter support
@@ -17,7 +17,7 @@ Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
  5 files changed, 40 insertions(+), 14 deletions(-)
 
 diff --git a/common/transport.cpp b/common/transport.cpp
-index 9641c38c5..0c4bd1d61 100644
+index 5c9678af9..6eba4e7f7 100644
 --- a/common/transport.cpp
 +++ b/common/transport.cpp
 @@ -134,6 +134,13 @@ PldmTransport::~PldmTransport()
@@ -50,7 +50,7 @@ index e9e1808ec..d3d95b4ff 100644
       *
       * The message may be either a request or a response.
 diff --git a/pldmd/pldmd.cpp b/pldmd/pldmd.cpp
-index 0b6d129e1..02002cda1 100644
+index bbee01360..0d91284cb 100644
 --- a/pldmd/pldmd.cpp
 +++ b/pldmd/pldmd.cpp
 @@ -68,6 +68,7 @@ PHOSPHOR_LOG2_USING;
@@ -113,12 +113,12 @@ index 0b6d129e1..02002cda1 100644
      std::unique_ptr<pldm_pdr, decltype(&pldm_pdr_destroy)> pdrRepo(
          pldm_pdr_init(), pldm_pdr_destroy);
      if (!pdrRepo)
-@@ -225,6 +231,9 @@ int main(int argc, char** argv)
-             std::make_unique<pldm::host_effecters::HostEffecterParser>(
+@@ -230,6 +236,9 @@ int main(int argc, char** argv)
                  &instanceIdDb, pldmTransport.getEventSource(), pdrRepo.get(),
-                 &dbusHandler, HOST_JSONS_DIR, &reqHandler);
+                 &dbusHandler, HOST_JSONS_DIR, &reqHandler,
+                 platformManager.get());
 +
-+     pldmTransport.setNetid(netid);
++    pldmTransport.setNetid(netid);
 +
  #ifdef LIBPLDMRESPONDER
      using namespace pldm::state_sensor;

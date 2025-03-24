@@ -46,7 +46,6 @@ RDEPENDS:${PN}-system = " \
     loadmcu \
     openssl-bin \
     openssl-engines \
-    nuvoton-ipmi-oem \
     phosphor-power-systemd-links-monitor \
     phosphor-power-utils \
     phosphor-power \

@@ -1,25 +1,24 @@
-From bd590bdfbe6745bf96433321690c2609adb53618 Mon Sep 17 00:00:00 2001
-From: Stanley Chu <yschu@nuvoton.com>
-Date: Thu, 28 Jul 2022 09:59:17 +0800
-Subject: [PATCH 17/18] set channel security keys
+From f863d22fef6d18583616762cfd602a9a46441a49 Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Mon, 24 Mar 2025 15:08:25 +0800
+Subject: [PATCH] set channel security keys
 
 Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
  app/channel.hpp             |  15 ++++
- apphandler.cpp              | 156 ++++++++++++++++++++++++++++++++++++
- apphandler.hpp              |   1 +
+ apphandler.cpp              | 158 ++++++++++++++++++++++++++++++++++++
  include/ipmid/api.h         |   5 ++
  user_channel/user_layer.cpp |  34 ++++++++
  user_channel/user_layer.hpp |   5 ++
- 6 files changed, 216 insertions(+)
+ 5 files changed, 217 insertions(+)
 
 diff --git a/app/channel.hpp b/app/channel.hpp
-index 8e5accbc..aca02bd9 100644
+index a6b8703d..e9f24c9c 100644
 --- a/app/channel.hpp
 +++ b/app/channel.hpp
-@@ -92,3 +92,18 @@ static constexpr auto conf = "confidentiality";
+@@ -41,3 +41,18 @@ static constexpr auto conf = "confidentiality";
  static constexpr auto confTag = 0x80;
  
  } // namespace cipher
@@ -39,10 +38,10 @@ index 8e5accbc..aca02bd9 100644
 +}__attribute__((packed));
 +
 diff --git a/apphandler.cpp b/apphandler.cpp
-index acfcab32..82c5b8ff 100644
+index 1e320615..e6116999 100644
 --- a/apphandler.cpp
 +++ b/apphandler.cpp
-@@ -68,7 +68,21 @@ using Activation =
+@@ -67,7 +67,21 @@ using Activation =
  using BMC = sdbusplus::server::xyz::openbmc_project::state::BMC;
  namespace fs = std::filesystem;
  
@@ -64,10 +63,11 @@ index acfcab32..82c5b8ff 100644
  typedef struct
  {
      uint8_t busId;
-@@ -1828,6 +1842,144 @@ ipmi::RspType<std::vector<uint8_t>>
+@@ -1785,6 +1799,145 @@ ipmi::RspType<std::vector<uint8_t>> ipmiControllerWriteRead(
      return ipmi::responseSuccess(readBuf);
  }
  
++ 
 +bool CheckNullValue(uint8_t* keys, uint8_t* testNull)
 +{
 +        for(int i = 0; i < KEYSIZE ; i++ )
@@ -206,36 +206,25 @@ index acfcab32..82c5b8ff 100644
 +        return IPMI_CC_OK;
 +}
 +
- void register_netfn_app_functions()
+ void registerNetFnAppFunctions()
  {
      // <Get Device ID>
-@@ -1912,5 +2064,9 @@ void register_netfn_app_functions()
+@@ -1869,5 +2022,10 @@ void registerNetFnAppFunctions()
      ipmi::registerHandler(ipmi::prioOpenBmcBase, ipmi::netFnApp,
                            ipmi::app::cmdSetSystemInfoParameters,
                            ipmi::Privilege::Admin, ipmiAppSetSystemInfo);
++
 +    // <Set Channel Security Keys>
-+    ipmi_register_callback(NETFUN_APP, IPMI_CMD_SET_CHAN_SECURITY_KEYS , NULL,
++    ipmi_register_callback(NETFUN_APP, ipmi::app::cmdSetChannelSecurityKeys , NULL,
 +                           ipmi_set_chan_security_keys, PRIVILEGE_ADMIN);
 +
      return;
  }
-diff --git a/apphandler.hpp b/apphandler.hpp
-index 4f03121d..4710ddc7 100644
---- a/apphandler.hpp
-+++ b/apphandler.hpp
-@@ -19,6 +19,7 @@ enum ipmi_netfn_app_cmds
-     IPMI_CMD_SET_CHAN_ACCESS = 0x40,
-     IPMI_CMD_GET_CHANNEL_ACCESS = 0x41,
-     IPMI_CMD_GET_CHAN_INFO = 0x42,
-+    IPMI_CMD_SET_CHAN_SECURITY_KEYS = 0x56,
-     IPMI_CMD_SET_SYSTEM_INFO = 0x58,
-     IPMI_CMD_GET_SYSTEM_INFO = 0x59,
- };
 diff --git a/include/ipmid/api.h b/include/ipmid/api.h
-index 188db4a9..8251b7f0 100644
+index fd6fee61..a1a00027 100644
 --- a/include/ipmid/api.h
 +++ b/include/ipmid/api.h
-@@ -116,6 +116,11 @@ enum ipmi_return_codes
+@@ -108,6 +108,11 @@ enum ipmi_return_codes
      IPMI_WDOG_CC_NOT_INIT = 0x80,
      IPMI_CC_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED = 0x80,
      IPMI_CC_SYSTEM_INFO_PARAMETER_SET_READ_ONLY = 0x82,
@@ -313,5 +302,5 @@ index ad215e39..688b0eec 100644
  
  } // namespace ipmi
 -- 
-2.34.1
+2.43.0
 

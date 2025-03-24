@@ -43,7 +43,6 @@ RDEPENDS:${PN}-system = " \
         obmc-ikvm \
         iperf3 \
         ipmitool \
-        nuvoton-ipmi-oem \
         openssl-bin \
         openssl-engines \
         phosphor-host-postd \

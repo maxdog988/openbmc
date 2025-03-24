@@ -60,7 +60,6 @@ RDEPENDS:${PN}-system = " \
         google-ipmi-sys \
         loadmcu \
         usb-network \
-	nuvoton-ipmi-oem \
         olympus-nuvoton-iptable-restore \
         srvcfg-manager \
         iperf3 \
