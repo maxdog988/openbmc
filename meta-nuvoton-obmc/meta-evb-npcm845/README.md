@@ -2479,20 +2479,28 @@ CONFIG_RESET_NPCM=y
 ```
 # QEMU
 
-**Build a BMC image**
-Since Qemu does not support NPCM SHA HW module, please enable the [config](https://github.com/Nuvoton-Israel/openbmc/blob/npcm-master/meta-nuvoton-obmc/meta-evb-npcm845/recipes-bsp/u-boot/u-boot-nuvoton_%25.bbappend#L8) to disable the SHA HW feature in the uboot recipe and rebuild the bmc image
-
+**Build BMC image**
+```
+$ . setup evb-npcm845-stage
+$ DISTRO=arbel-evb-entity bitbake obmc-phosphor-image
+```
 **Build QEMU**
 ```
+$ sudo apt install nettle-dev
 $ git clone git@github.com:Nuvoton-Israel/qemu.git
 $ cd qemu
-$ ./configure --target-list=aarch64-softmmu
+$ ./configure --target-list=aarch64-softmmu --enable-nettle
 $ make -j $(nproc)    // will generate a qemu-system-aarch64 binary file in the build floder
 ```
 **Run QEMU**
 ```
 $ cd build
-$ ./qemu-system-aarch64 -machine npcm845-evb -nographic -bios ../pc-bios/npcm8xx_bootrom.bin -mtdblock image-bmc
+$ ./qemu-system-aarch64 -machine npcm845-evb -nographic \
+	-drive file=workdir/image-bmc,if=mtd,bus=0,unit=0,format=raw \
+	-device loader,force-raw=on,addr=0x2000000,file=workdir/bl31.bin \
+	-device loader,cpu-num=3,addr=0x2000000 \
+	-device loader,cpu-num=2,addr=0x2000000 \
+	-device loader,cpu-num=1,addr=0x2000000
 ```
 # Troubleshooting
 
