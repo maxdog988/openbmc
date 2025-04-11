@@ -1,4 +1,4 @@
-From a43ffc2b7e61bac4c1f68690da0b19981211a6cc Mon Sep 17 00:00:00 2001
+From 7db01e61630d5c50e6e9aee43ab1df66bb09ffd9 Mon Sep 17 00:00:00 2001
 From: Ban Feng <kcfeng0@nuvoton.com>
 Date: Mon, 3 Mar 2025 11:53:26 +0800
 Subject: [PATCH] Support Entity-Manager for power supply monitoring
@@ -19,10 +19,10 @@ Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
  create mode 100644 services/power-supply-monitor-em@.service
 
 diff --git a/meson.build b/meson.build
-index 07f50a44..64b0cd48 100644
+index d11437a6..872c5c2a 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -98,6 +98,7 @@ servicedir = systemd.get_variable('systemdsystemunitdir')
+@@ -109,6 +109,7 @@ servicedir = systemd.get_variable('systemdsystemunitdir')
  
  services = [
      ['supply-monitor', 'power-supply-monitor@.service'],
@@ -30,15 +30,15 @@ index 07f50a44..64b0cd48 100644
      ['sequencer-monitor', 'pseq-monitor-pgood.service'],
      ['sequencer-monitor', 'pseq-monitor.service'],
      ['supply-monitor-ng', 'phosphor-psu-monitor.service'],
-@@ -144,6 +145,7 @@ conf.set_quoted('PSU_JSON_PATH', '/usr/share/phosphor-power/psu.json')
- conf.set('SEQUENCER', sequencer_class)
+@@ -156,6 +157,7 @@ conf.set('SEQUENCER', sequencer_class)
  conf.set10('DEVICE_ACCESS', get_option('device-access'))
  conf.set10('IBM_VPD', get_option('ibm-vpd'))
+ conf.set('PGOOD_TIMEOUT', get_option('pgood-timeout-value'))
 +conf.set10('NUVOTON_ENTITY', get_option('nuvoton-entity'))
  
  configure_file(output: 'config.h', configuration: conf)
  
-@@ -190,7 +192,7 @@ endif
+@@ -202,7 +204,7 @@ endif
  if get_option('power-control')
      subdir('phosphor-power-sequencer')
  endif
@@ -48,7 +48,7 @@ index 07f50a44..64b0cd48 100644
  endif
  if get_option('supply-monitor-ng')
 diff --git a/meson.options b/meson.options
-index d8d3c84a..93714ce4 100644
+index c7019605..13c0111e 100644
 --- a/meson.options
 +++ b/meson.options
 @@ -46,6 +46,11 @@ option(
