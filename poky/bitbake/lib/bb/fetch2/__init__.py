@@ -353,6 +353,14 @@ def decodeurl(url):
     user, password, parameters).
     """
 
+    uri = URI(url)
+    path = uri.path if uri.path else "/"
+    return uri.scheme, uri.hostport, path, uri.username, uri.password, uri.params
+
+def decodemirrorurl(url):
+    """Decodes a mirror URL into the tokens (scheme, network location, path,
+    user, password, parameters).
+    """
     m = re.compile('(?P<type>[^:]*)://((?P<user>[^/;]+)@)?(?P<location>[^;]+)(;(?P<parm>.*))?').match(url)
     if not m:
         raise MalformedUrl(url)
@@ -371,6 +379,9 @@ def decodeurl(url):
     elif type.lower() == 'file':
         host = ""
         path = location
+        if user:
+            path = user + '@' + path
+            user = ""
     else:
         host = location
         path = "/"
@@ -403,32 +414,34 @@ def encodeurl(decoded):
 
     if not type:
         raise MissingParameterError('type', "encoded from the data %s" % str(decoded))
-    url = ['%s://' % type]
+    uri = URI()
+    uri.scheme = type
     if user and type != "file":
-        url.append("%s" % user)
+        uri.username = user
         if pswd:
-            url.append(":%s" % pswd)
-        url.append("@")
+            uri.password = pswd
     if host and type != "file":
-        url.append("%s" % host)
+        uri.hostname = host
     if path:
         # Standardise path to ensure comparisons work
         while '//' in path:
             path = path.replace("//", "/")
-        url.append("%s" % urllib.parse.quote(path))
+        uri.path = path
+        if type == "file":
+            # Use old not IETF compliant style
+            uri.relative = False
     if p:
-        for parm in p:
-            url.append(";%s=%s" % (parm, p[parm]))
+        uri.params = p
 
-    return "".join(url)
+    return str(uri)
 
 def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
     if not ud.url or not uri_find or not uri_replace:
         logger.error("uri_replace: passed an undefined value, not replacing")
         return None
-    uri_decoded = list(decodeurl(ud.url))
-    uri_find_decoded = list(decodeurl(uri_find))
-    uri_replace_decoded = list(decodeurl(uri_replace))
+    uri_decoded = list(decodemirrorurl(ud.url))
+    uri_find_decoded = list(decodemirrorurl(uri_find))
+    uri_replace_decoded = list(decodemirrorurl(uri_replace))
     logger.debug2("For url %s comparing %s to %s" % (uri_decoded, uri_find_decoded, uri_replace_decoded))
     result_decoded = ['', '', '', '', '', {}]
     # 0 - type, 1 - host, 2 - path, 3 - user,  4- pswd, 5 - params
@@ -1182,7 +1195,7 @@ def trusted_network(d, url):
     if bb.utils.to_boolean(d.getVar("BB_NO_NETWORK")):
         return True
 
-    pkgname = d.expand(d.getVar('PN', False))
+    pkgname = d.getVar('PN')
     trusted_hosts = None
     if pkgname:
         trusted_hosts = d.getVarFlag('BB_ALLOWED_NETWORKS', pkgname, False)
@@ -1271,7 +1284,7 @@ def get_checksum_file_list(d):
             found = False
             paths = ud.method.localfile_searchpaths(ud, d)
             for f in paths:
-                pth = ud.decodedurl
+                pth = ud.path
                 if os.path.exists(f):
                     found = True
                 filelist.append(f + ":" + str(os.path.exists(f)))
@@ -1817,7 +1830,7 @@ class Fetch(object):
             self.ud[url] = FetchData(url, self.d)
 
         self.ud[url].setup_localpath(self.d)
-        return self.d.expand(self.ud[url].localpath)
+        return self.ud[url].localpath
 
     def localpaths(self):
         """
