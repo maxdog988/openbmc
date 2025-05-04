@@ -7,13 +7,13 @@ Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
 ---
- src/entity_manager.cpp | 29 +++++++++++++++++++++++++++++
+ src/entity_manager/entity_manager.cpp | 29 +++++++++++++++++++++++++++++
  1 file changed, 29 insertions(+)
 
-Index: git/src/entity_manager.cpp
+Index: git/src/entity_manager/entity_manager.cpp
 ===================================================================
---- git.orig/src/entity_manager.cpp
-+++ git/src/entity_manager.cpp
+--- git.orig/src/entity_manager/entity_manager.cpp
++++ git/src/entity_manager/entity_manager.cpp
 @@ -633,6 +633,34 @@ void postToDbus(const nlohmann::json& ne
              }
          }
@@ -39,7 +39,7 @@ Index: git/src/entity_manager.cpp
 +                        findPath->get<std::string>());
 +                }
 +            }
-+            auto ifacePtr = createInterface(
++             std::shared_ptr<sdbusplus::asio::dbus_interface> ifacePtr = dbus_interface::createInterface(
 +                objServer, boardPath,
 +		"xyz.openbmc_project.Association.Definitions", boardNameOrig);
 +            ifacePtr->register_property("Associations", associations);

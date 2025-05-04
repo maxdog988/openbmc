@@ -1,4 +1,4 @@
-From c7d0ac1e421ffaab1b634d376f83f4e9e9a4db0f Mon Sep 17 00:00:00 2001
+From f567f670bbe0da360a3efd164a28f4c29bdb2acb Mon Sep 17 00:00:00 2001
 From: Ban Feng <kcfeng0@nuvoton.com>
 Date: Fri, 3 Mar 2023 11:17:05 +0800
 Subject: [PATCH] Add new type of settable interface - PowerSupply
@@ -6,35 +6,35 @@ Subject: [PATCH] Add new type of settable interface - PowerSupply
 Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
 ---
- src/entity_manager.cpp | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ src/entity_manager/entity_manager.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/src/entity_manager.cpp b/src/entity_manager.cpp
-index 15446809..c59f89e0 100644
---- a/src/entity_manager.cpp
-+++ b/src/entity_manager.cpp
-@@ -60,8 +60,8 @@ const boost::container::flat_map<const char*, probe_type_codes, CmpStr>
-                 {"FOUND", probe_type_codes::FOUND},
-                 {"MATCH_ONE", probe_type_codes::MATCH_ONE}}};
+diff --git a/src/entity_manager/entity_manager.cpp b/src/entity_manager/entity_manager.cpp
+index 2b6560457..ac5116ba8 100644
+--- a/src/entity_manager/entity_manager.cpp
++++ b/src/entity_manager/entity_manager.cpp
+@@ -50,8 +50,8 @@
+ constexpr const char* tempConfigDir = "/tmp/configuration/";
+ constexpr const char* lastConfiguration = "/tmp/configuration/last.json";
  
 -static constexpr std::array<const char*, 6> settableInterfaces = {
 -    "FanProfile", "Pid", "Pid.Zone", "Stepwise", "Thresholds", "Polling"};
 +static constexpr std::array<const char*, 7> settableInterfaces = {
 +    "FanProfile", "Pid", "Pid.Zone", "Stepwise", "Thresholds", "Polling", "PowerSupply"};
- using JsonVariantType =
-     std::variant<std::vector<std::string>, std::vector<double>, std::string,
-                  int64_t, uint64_t, double, int32_t, uint32_t, int16_t,
-@@ -627,7 +627,8 @@ void postToDbus(const nlohmann::json& newConfiguration,
  
-                 populateInterfaceFromJson(systemConfiguration,
-                                           jsonPointerPath + propName, iface,
--                                          propValue, objServer);
-+                                          propValue, objServer,
-+                                          getPermission(boardType));
+ // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
+ 
+@@ -144,7 +144,7 @@ void postToDbus(const nlohmann::json& newConfiguration,
+ 
+                 dbus_interface::populateInterfaceFromJson(
+                     systemConfiguration, jsonPointerPath + propName, iface,
+-                    propValue, objServer);
++                    propValue, objServer, getPermission(boardType));
              }
          }
  
 -- 
-2.34.1
+2.43.0
 

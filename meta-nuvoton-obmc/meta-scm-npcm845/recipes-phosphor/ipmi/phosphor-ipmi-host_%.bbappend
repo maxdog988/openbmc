@@ -16,10 +16,10 @@ SRC_URI:append = " file://0011-fix-percentage-type-show.patch"
 SRC_URI:append = " file://0012-sensor-reading-optional-zero.patch"
 SRC_URI:append = " file://0013-add-sensor-reading-factory-support.patch"
 SRC_URI:append = " file://0014-add-oem-sel-support.patch"
-SRC_URI:append = " file://0015-update-chassishandler-from-intel-oem-ipmi.patch"
-SRC_URI:append = " file://0016-save-no-supported-boot-options.patch"
+#SRC_URI:append = " file://0015-update-chassishandler-from-intel-oem-ipmi.patch"
+#SRC_URI:append = " file://0016-save-no-supported-boot-options.patch"
 SRC_URI:append = " file://0017-set-channel-security-keys.patch"
-SRC_URI:append = " file://0018-Use-BMC-state-is-POR-to-get-ACfail-status.patch"
+#SRC_URI:append = " file://0018-Use-BMC-state-is-POR-to-get-ACfail-status.patch"
 
 PACKAGECONFIG:append = " dynamic-sensors"
 
