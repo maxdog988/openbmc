@@ -1,0 +1,44 @@
+From 084942e587cba389c962051e5c0b84694acb61cf Mon Sep 17 00:00:00 2001
+From: Joseph Liu <kwliu@nuvoton.com>
+Date: Fri, 9 May 2025 13:59:54 +0800
+Subject: [PATCH] uart2 clock source to 24Mhz
+
+
+Upstream-Status: Inappropriate [oe-specific]
+
+
+Signed-off-by: Joseph Liu <kwliu@nuvoton.com>
+---
+ arch/arm/dts/nuvoton-npcm845-evb.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/dts/nuvoton-npcm845-evb.dts b/arch/arm/dts/nuvoton-npcm845-evb.dts
+index 0d3aaa0fff..0f1fc21ba9 100644
+--- a/arch/arm/dts/nuvoton-npcm845-evb.dts
++++ b/arch/arm/dts/nuvoton-npcm845-evb.dts
+@@ -13,6 +13,7 @@
+ 
+ 	aliases {
+ 		serial0 = &serial0;
++		serial4 = &serial4;
+ 		ethernet0 = &gmac0;
+ 		ethernet1 = &gmac1;
+ 		ethernet2 = &gmac2;
+@@ -103,6 +104,14 @@
+ 	status = "okay";
+ };
+ 
++&serial4 {
++	status = "okay";
++	clock-frequency = <24000000>;
++	assigned-clocks = <&clk NPCM8XX_CLK_UART2>;
++	assigned-clock-parents = <&clk NPCM8XX_CLK_PLL2DIV2>;
++	assigned-clock-rates = <24000000>;
++};
++
+ &watchdog1 {
+ 	status = "okay";
+ };
+-- 
+2.43.0
+
