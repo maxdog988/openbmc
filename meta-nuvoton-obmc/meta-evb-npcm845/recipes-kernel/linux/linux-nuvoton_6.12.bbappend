@@ -25,3 +25,6 @@ SRC_URI:append = " file://af_mctp.cfg"
 
 # Enable UDC8 on usb phy3
 SRC_URI:append = " file://0007-dts-evb-npcm845-enable-udc8.patch"
+
+# Enable ttyS1, ttyS2, ttyS3, ttyS4, ttyS5
+SRC_URI:append = " file://0001-arm64-dts-npcm845-evb-enable-more-serial-interfaces.patch"
