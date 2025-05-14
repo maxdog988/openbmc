@@ -1,0 +1,95 @@
+From efa10e98f3128cd70fd674fa3db6c4d176bc0b0d Mon Sep 17 00:00:00 2001
+From: Michael Chang <hwchang2@nuvoton.com>
+Date: Wed, 14 May 2025 13:23:16 +0800
+Subject: [PATCH] driver: misc: enable the FIFO overrun/underrun interrupt
+
+1. enable the FIFO overrun/underrun interrupt.
+2. reserve the memory of vcd/ece memory
+
+Signed-off-by: Michael Chang <hwchang2@nuvoton.com>
+---
+ .../boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi    |  4 ++++
+ arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts |  9 +++++++++
+ drivers/misc/npcm750_vcd.c                          | 13 +++++++++++--
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+index a8b05c3b86cd..2a187719ff5a 100644
+--- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
++++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+@@ -357,6 +357,10 @@ vcd: vcd@f0810000 {
+ 			nuvoton,sysgcr = <&gcr>;
+ 			nuvoton,sysgfxi = <&gfxi>;
+ 			nuvoton,ece = <&ece>;
++			nuvoton,hsync-mode;
++			nuvoton,hsync-delay-add = <0>;
++			nuvoton,vsync-delay-add = <0>;
++			nuvoton,use-head1-source;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+index 755d0e09587a..28daaed75371 100644
+--- a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
++++ b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
+@@ -132,6 +132,13 @@ tip_shared_memory: tip_sh@6000000 {
+ 			reg = <0x0 0x6000000 0x0 0x200000>;
+ 			no-map;
+ 		};
++
++		video_memory: video_memory@0x33000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x33000000 0x0 0x01800000>;
++			reusable;
++			linux,cma-default;
++		};
+ 	};
+ 
+ 	tip_sram: sram@fffce000 {
+@@ -378,10 +385,12 @@ udc8:udc@f0838000 {
+ 
+ 		vcd: vcd@f0810000 {
+ 			status = "okay";
++			memory-region = <&video_memory>;
+ 		};
+ 
+ 		ece: video-codec@f0820000 {
+ 			status = "okay";
++			memory-region = <&video_memory>;
+ 		};
+ 
+ 		tip_mbox: mailbox@f080d000 {
+diff --git a/drivers/misc/npcm750_vcd.c b/drivers/misc/npcm750_vcd.c
+index fcf3aa7d95c0..e1ca5d79acf7 100644
+--- a/drivers/misc/npcm750_vcd.c
++++ b/drivers/misc/npcm750_vcd.c
+@@ -1295,7 +1295,7 @@ static long npcm_do_vcd_ioctl(struct npcm750_vcd *priv, unsigned int cmd,
+ 
+ 			regmap_update_bits(vcd, VCD_MODE, VCD_MODE_VCDE, VCD_MODE_VCDE);
+ 			regmap_write(vcd, VCD_STAT, VCD_STAT_CLEAR);
+-			regmap_write(vcd, VCD_INTE, VCD_INTE_DONE_IE);
++			regmap_write(vcd, VCD_INTE, VCD_INTE_DONE_IE | VCD_INTE_IFOT_IE | VCD_INTE_IFOR_IE);
+ 
+ 			npcm750_vcd_command(priv, vcd_cmd);
+ 			timeout = wait_for_completion_interruptible_timeout(&priv->complete,
+@@ -1304,7 +1304,16 @@ static long npcm_do_vcd_ioctl(struct npcm750_vcd *priv, unsigned int cmd,
+ 			regmap_write(vcd, VCD_INTE, 0);
+ 			regmap_update_bits(vcd, VCD_MODE, VCD_MODE_VCDE, 0);
+ 
+-			if (timeout <= 0 || !npcm750_vcd_op_done(priv)) {
++			if (priv->status & VCD_STAT_IFOR || priv->status & VCD_STAT_IFOT) {
++				dev_info(priv->dev, "FIFO overrun, vcd_cmd 0x%x\n", vcd_cmd);
++				regmap_update_bits(vcd, VCD_MODE, VCD_MODE_IDBC, 0);
++				npcm_short_vcd_reset(priv);
++
++				if (copy_to_user(argp, &priv->status, sizeof(priv->status)))
++					ret = -EFAULT;
++				else
++					ret = -EBUSY;
++			} else if (timeout <= 0 || !npcm750_vcd_op_done(priv)) {
+ 				dev_dbg(priv->dev, "VCD_OP_BUSY\n");
+ 
+ 				if (priv->status == 0)
+-- 
+2.34.1
+

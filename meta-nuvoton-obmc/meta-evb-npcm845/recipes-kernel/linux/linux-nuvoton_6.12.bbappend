@@ -7,6 +7,7 @@ SRC_URI:append = " file://remove-svc-i3c.cfg"
 
 # enable legavcy kvm driver, mutex vl42 driver 
 # SRC_URI:append = " file://enable-legacy-kvm.cfg"
+# SRC_URI:append = " file://0001-driver-misc-enable-the-FIFO-overrun-underrun-interru.patch"
 
 # support OpenBMC flash partition
 SRC_URI:append = " file://0001-dts-nuvoton-evb-npcm845-support-openbmc-partition.patch"
