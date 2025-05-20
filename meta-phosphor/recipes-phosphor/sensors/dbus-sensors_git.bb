@@ -11,7 +11,7 @@ DEPENDS = " \
     phosphor-logging \
     sdbusplus \
     "
-SRCREV = "43b074d7424c4c674d1d03670278585080927c73"
+SRCREV = "02c4366be0eb2409c81784c989dfb690cd41af58"
 PACKAGECONFIG ??= " \
     adcsensor \
     exitairtempsensor \
@@ -21,9 +21,11 @@ PACKAGECONFIG ??= " \
     intelcpusensor \
     intrusionsensor \
     ipmbsensor \
-    mctpreactor \
     mcutempsensor \
     psusensor \
+    "
+PACKAGECONFIG:append:df-mctp = "\
+    mctpreactor \
     "
 PACKAGECONFIG[adcsensor] = "-Dadc=enabled, -Dadc=disabled"
 PACKAGECONFIG[exitairtempsensor] = "-Dexit-air=enabled, -Dexit-air=disabled"

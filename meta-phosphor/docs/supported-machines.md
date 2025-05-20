@@ -36,14 +36,12 @@ covered by [Jenkins](https://jenkins.openbmc.org/job/ci-openbmc/) CI testing.
 * facebook
   * bletchley
   * catalina
-  * greatlakes
   * harma
   * minerva
   * tiogapass
   * ventura
   * yosemite4
   * yosemite4n
-  * yosemitev2
 * fii
   * kudo
   * mori

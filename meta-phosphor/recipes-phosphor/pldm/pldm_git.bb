@@ -2,7 +2,7 @@ HOMEPAGE = "https://github.com/openbmc/pldm"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 SRC_URI = "git://github.com/openbmc/pldm;branch=master;protocol=https"
-SRCREV = "4602326fd45af79ae07efbaf021643a62a695e71"
+SRCREV = "93ad795e2f1c7e7e2859d88c2b2b3448c4cd5970"
 
 SUMMARY = "PLDM Stack"
 DESCRIPTION = "Implementation of the PLDM specifications"
@@ -17,9 +17,15 @@ DEPENDS += "phosphor-logging"
 PV = "1.0+git${SRCPV}"
 PR = "r1"
 
+PACKAGE_BEFORE_PN:append = " pldmtool pldm-libs"
+RRECOMMENDS:${PN}:append = "pldmtool"
+
 S = "${WORKDIR}/git"
 SYSTEMD_SERVICE:${PN} += "pldmd.service"
 SYSTEMD_SERVICE:${PN} += "pldmSoftPowerOff.service"
+
+FILES:pldmtool = "${bindir}/pldmtool"
+FILES:pldm-libs = "${libdir}/lib*${SOLIBS}"
 
 inherit meson pkgconfig
 inherit systemd

@@ -2,12 +2,12 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 inherit obmc-phosphor-dbus-service
 
-PACKAGECONFIG = " \
-    adcsensor \
-    hwmontempsensor \
-    psusensor \
+FACEBOOK_REMOVED_DBUS_SENSORS:remove = " \
+    external \
+"
+
+PACKAGECONFIG:append = " \
     nvmesensor \
-    fansensor \
 "
 
 SYSTEMD_OVERRIDE:${PN}:append = "\

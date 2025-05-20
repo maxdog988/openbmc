@@ -11,14 +11,15 @@ DEPENDS = "boost \
            valijson \
            phosphor-dbus-interfaces \
 "
-SRCREV = "46072c45b6c820d559828cd4b492377c44ff20bc"
+SRCREV = "809fbdc2d7052dc7eb3612562eb7b0d2820b924b"
 PACKAGECONFIG ??= "ipmi-fru"
 
 PACKAGECONFIG[ipmi-fru] = "-Dfru-device=true, -Dfru-device=false, i2c-tools,"
 PACKAGECONFIG[dts-vpd] = "-Ddevicetree-vpd=true, -Ddevicetree-vpd=false"
-PACKAGECONFIG[validate-json] = "-Dvalidate-json=true, \
-                                -Dvalidate-json=false, \
-                                ${PYTHON_PN}-jsonschema-native"
+PACKAGECONFIG[validate-json] = "\
+    -Dvalidate-json=true, \
+    -Dvalidate-json=false, \
+    ${PYTHON_PN}-jsonschema-native ${PYTHON_PN}-referencing"
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/openbmc/entity-manager.git;branch=master;protocol=https \
